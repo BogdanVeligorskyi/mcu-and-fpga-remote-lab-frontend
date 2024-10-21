@@ -52,7 +52,7 @@
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
 }
 
-.interaction-component {
+.digital-inputs {
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
 }
 
@@ -64,6 +64,15 @@
   border: 10px solid gray;
   border-radius: 5px;
   margin: auto
+}
+
+.digital-input-ch1, .digital-input-ch2, .digital-input-ch3, .digital-input-ch4 {
+  display: inline-block;
+}
+
+.digital-input-types {
+  display: inline-block;
+  text-align: left;
 }
 
 .switch {
@@ -111,6 +120,10 @@ input:focus + .slider {
   box-shadow: 0 0 1px green;
 }
 
+h2 {
+  text-align: center;
+}
+
 input:checked + .slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
@@ -127,4 +140,8 @@ input:checked + .slider:before {
 
 .camera-switch {
   margin: 5px;
+}
+
+.instructions-set {
+  text-align: left;
 }

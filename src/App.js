@@ -12,7 +12,7 @@ function App() {
           <div class="row">
             <div class="col instructions-set">
               <h2>Instructions Set</h2>
-              <p>
+              <p class="intructions-text">
                 1. .... <br/>
                 2. .... <br/>
                 3. .... <br/>
@@ -29,8 +29,74 @@ function App() {
           </div>
 
           <div class="row">
-            <div class="col interaction-component">
-              <h2>Interaction Part</h2>
+            <div class="col digital-inputs">
+              <h2>Digital Inputs</h2>
+
+              <div class="digital-input-types">
+                Button  <br/>
+                Switch  <br/>
+                Gen  <br/>
+                None  <br/>
+              </div>
+
+             
+              <div class="digital-input-ch1">
+                <fieldset>
+                  <legend> 1 </legend>
+                  &nbsp;&nbsp;
+                  <input type="radio" id="buttonCh1" name="di_channel_1" value=""/>
+                  <label for="buttonCh1"></label><br/>
+                  <input type="radio" id="switchCh1" name="di_channel_1" value=""/>
+                  <label for="switchCh1"></label><br/>
+                  <input type="radio" id="genCh1" name="di_channel_1" value=""/>
+                  <label for="genCh1"></label><br/>
+                  <input type="radio" id="noneCh1" name="di_channel_1" value=""/>
+                  <label for="noneCh1"></label><br/>
+                </fieldset>
+              </div>
+             
+              <div class="digital-input-ch2">
+              <fieldset>
+                  <legend> 2 </legend>
+                  &nbsp;&nbsp;
+                <input type="radio" id="buttonCh2" name="di_channel_2" value=""/>
+                <label for="buttonCh2"></label><br/>
+                <input type="radio" id="switchCh2" name="di_channel_2" value=""/>
+                <label for="switchCh2"></label><br/>
+                <input type="radio" id="genCh2" name="di_channel_2" value=""/>
+                <label for="genCh2"></label><br/>
+                <input type="radio" id="noneCh2" name="di_channel_2" value=""/>
+                <label for="noneCh2"></label><br/>
+                </fieldset>
+              </div>
+              <div class="digital-input-ch3">
+              <fieldset>
+                  <legend> 3 </legend>
+                  &nbsp;&nbsp;
+                <input type="radio" id="buttonCh3" name="di_channel_3" value=""/>
+                <label for="buttonCh3"></label><br/>
+                <input type="radio" id="switchCh3" name="di_channel_3" value=""/>
+                <label for="switchCh3"></label><br/>
+                <input type="radio" id="genCh3" name="di_channel_2" value=""/>
+                <label for="genCh3"></label><br/>
+                <input type="radio" id="noneCh3" name="di_channel_3" value=""/>
+                <label for="noneCh3"></label><br/>
+                </fieldset>
+              </div>
+              <div class="digital-input-ch4">
+              <fieldset>
+                  <legend> 4 </legend>
+                  &nbsp;&nbsp;
+                <input type="radio" id="buttonCh4" name="di_channel_4" value=""/>
+                <label for="buttonCh4"></label><br/>
+                <input type="radio" id="switchCh4" name="di_channel_4" value=""/>
+                <label for="switchCh4"></label><br/>
+                <input type="radio" id="genCh4" name="di_channel_4" value=""/>
+                <label for="genCh4"></label><br/>
+                <input type="radio" id="noneCh4" name="di_channel_4" value=""/>
+                <label for="noneCh4"></label><br/>
+                </fieldset>
+              </div>
             </div>
 
             <div class="col camera-view">
@@ -38,10 +104,12 @@ function App() {
               <div class="camera-frame">
               </div>
               <div class="camera-switch">
+                off
                 <label class="switch">
                   <input type="checkbox"/>
                   <span class="slider"></span>
                 </label>
+                on
               </div>
             </div>
           </div>
