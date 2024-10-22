@@ -28,6 +28,19 @@ function DigitalInputs() {
         setChannel4Mode(e.target.value)
     }
 
+    // render necessary components based on the chosen channel mode
+    const renderChannelMode = (channel) => {
+        if (channel === "button") {
+            return <DigitalInputsButton/>
+        }
+        if (channel === "switch") {
+            return <DigitalInputsSwitch/>
+        } 
+        if (channel === "gen") {
+            return <DigitalInputsGen/>
+        }
+    }
+
     return(
         <div>
             <h2>Digital Inputs</h2>
@@ -55,12 +68,14 @@ function DigitalInputs() {
                   </td>
                   <td>&nbsp;&nbsp;
                     <input type="radio" id="buttonCh3" name="di_channel_3" value="button"
-                    checked={di_channel_3 === "button"}/>
+                    checked={di_channel_3 === "button"}
+                    onChange={onChannel3ModeChange}/>
                     <label for="buttonCh3"></label>
                   </td>
                   <td>&nbsp;&nbsp;
                     <input type="radio" id="buttonCh4" name="di_channel_4" value="button"
-                    checked={di_channel_4 === "button"}/>
+                    checked={di_channel_4 === "button"}
+                    onChange={onChannel4ModeChange}/>
                     <label for="buttonCh4"></label>
                   </td>
                 </tr>
@@ -149,24 +164,23 @@ function DigitalInputs() {
                   <td></td>
                   <td>
                     <div class="digital-input-wrapper">
-                        <DigitalInputsButton/>
+                        {renderChannelMode(di_channel_1)}                        
                     </div>
                   </td>
                   <td>
                     <div class="digital-input-wrapper">
-                      <DigitalInputsSwitch/>
+                        {renderChannelMode(di_channel_2)}                        
                     </div>
                   </td>
                   
                   <td>
                     <div class="digital-input-wrapper">
-                      <DigitalInputsGen/>
+                        {renderChannelMode(di_channel_3)}                        
                     </div>
                   </td>
                   <td>
                     <div class="digital-input-wrapper">           
-                      <button class="digital-input-turn-on"/>
-                      
+                        {renderChannelMode(di_channel_4)}                                              
                     </div>
                   </td>
                 </tr>
