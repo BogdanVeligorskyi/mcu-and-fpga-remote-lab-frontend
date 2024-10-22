@@ -1,0 +1,18 @@
+.camera-switch {
+    margin: 5px;
+}
+
+.camera-view {
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+}
+
+.camera-frame {
+    height: 248px;
+    width: 330px;
+    background-color: black;
+    align-items: center;
+    border: 10px solid gray;
+    border-radius: 5px;
+    margin: auto
+}
+  

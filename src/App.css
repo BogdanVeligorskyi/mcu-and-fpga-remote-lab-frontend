@@ -2,17 +2,6 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
   background-color: #deddc5;
   min-height: 100vh;
@@ -35,105 +24,8 @@
 }
 
 .timer::before {
-  content: url("clock.png");
+  content: url("img/clock.png");
   margin-right: 5px;
-  transform: scale(1.5);
-}
-
-.instructions-set {
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
-}
-
-.program-fpga {
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
-}
-
-.camera-view {
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
-}
-
-.digital-inputs {
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
-}
-
-.camera-frame {
-  height: 248px;
-  width: 330px;
-  background-color: black;
-  align-items: center;
-  border: 10px solid gray;
-  border-radius: 5px;
-  margin: auto
-}
-
-table {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.digital-input-ch1, .digital-input-ch2, .digital-input-ch3, .digital-input-ch4 {
-  display: inline-block;
-}
-
-.digital-input-types {
-  display: inline-block;
-  text-align: left;
-}
-
-input[type="radio"] {
-  height: 20px;
-  width: 20px;
-}
-
-.digital-input-wrapper {
-  height: 120px;
-  width: 80px;
-  justify-content: center;
-  align-items: center;
-  font-size: 14px;
-  display: block;
-}
-
-.digital-input-duty-value {
-  display: block;
-  border: 2px solid black;
-}
-
-.digital-input-label-in-slider {
-  display: block;
-}
-
-.digital-input-button {
-  height: 20px;
-  width: 20px;
-  border-radius: 10px;
-}
-
-input[type="number"] {
-  text-align: center;
-  width: 54px;
-  margin: 0 auto;
-  display: block;
-}
-
-.digital-input-switch {
-  height: 40px;
-  width: 20px;
-}
-
-.digital-input-turn-off {
-  background: url("turn_off.png") no-repeat;
-  width: 32px;
-  height: 20px;
-  border: 0px;
-  transform: scale(1.5);
-}
-
-.digital-input-turn-on {
-  background: url("turn_on.png") no-repeat;
-  width: 32px;
-  height: 20px;
-  border: 0px;
   transform: scale(1.5);
 }
 
@@ -231,10 +123,3 @@ input:checked + .slider-vertical:before {
   border-radius: 50%;
 }
 
-.camera-switch {
-  margin: 5px;
-}
-
-.instructions-set {
-  text-align: left;
-}

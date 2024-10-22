@@ -1,0 +1,74 @@
+.digital-inputs {
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+}
+
+table {
+    margin-left: auto;
+    margin-right: auto;
+}
+  
+.digital-input-ch1, .digital-input-ch2, .digital-input-ch3, .digital-input-ch4 {
+    display: inline-block;
+}
+  
+.digital-input-types {
+    display: inline-block;
+    text-align: left;
+}
+  
+input[type="radio"] {
+    height: 20px;
+    width: 20px;
+}
+  
+.digital-input-wrapper {
+    height: 120px;
+    width: 80px;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    display: block;
+}
+  
+.digital-input-duty-value {
+    display: block;
+    border: 2px solid black;
+}
+  
+.digital-input-label-in-slider {
+    display: block;
+}
+  
+.digital-input-button {
+    height: 20px;
+    width: 20px;
+    border-radius: 10px;
+}
+  
+input[type="number"] {
+    text-align: center;
+    width: 54px;
+    margin: 0 auto;
+    display: block;
+}
+  
+.digital-input-switch {
+    height: 40px;
+    width: 20px;
+}
+  
+.digital-input-turn-off {
+    background: url("img/turn_off.png") no-repeat;
+    width: 32px;
+    height: 20px;
+    border: 0px;
+    transform: scale(1.5);
+}
+  
+.digital-input-turn-on {
+    background: url("img/turn_on.png") no-repeat;
+    width: 32px;
+    height: 20px;
+    border: 0px;
+    transform: scale(1.5);
+}
