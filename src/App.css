@@ -80,12 +80,27 @@ table {
   text-align: left;
 }
 
+input[type="radio"] {
+  height: 20px;
+  width: 20px;
+}
+
 .digital-input-wrapper {
-  height: 95px;
-  width: 60px;
+  height: 120px;
+  width: 80px;
   justify-content: center;
   align-items: center;
-  display: flex;
+  font-size: 14px;
+  display: block;
+}
+
+.digital-input-duty-value {
+  display: block;
+  border: 2px solid black;
+}
+
+.digital-input-label-in-slider {
+  display: block;
 }
 
 .digital-input-button {
@@ -94,9 +109,32 @@ table {
   border-radius: 10px;
 }
 
+input[type="number"] {
+  text-align: center;
+  width: 54px;
+  margin: 0 auto;
+  display: block;
+}
+
 .digital-input-switch {
   height: 40px;
   width: 20px;
+}
+
+.digital-input-turn-off {
+  background: url("turn_off.png") no-repeat;
+  width: 32px;
+  height: 20px;
+  border: 0px;
+  transform: scale(1.5);
+}
+
+.digital-input-turn-on {
+  background: url("turn_on.png") no-repeat;
+  width: 32px;
+  height: 20px;
+  border: 0px;
+  transform: scale(1.5);
 }
 
 .switch {
