@@ -4,7 +4,6 @@ import DigitalInputsSwitch from './DigitalInputsSwitch';
 import DigitalInputsGen from './DigitalInputsGen';
 import { useState } from "react"
 
-
 function DigitalInputs() {
 
     const [di_channel_1, setChannel1Mode] = useState("none") 
@@ -28,7 +27,7 @@ function DigitalInputs() {
         setChannel4Mode(e.target.value)
     }
 
-    // render necessary components based on the chosen channel mode
+    // render neccessary components based on the chosen channel mode
     const renderChannelMode = (channel) => {
         if (channel === "button") {
             return <DigitalInputsButton/>
