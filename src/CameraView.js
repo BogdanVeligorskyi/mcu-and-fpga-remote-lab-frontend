@@ -3,15 +3,15 @@ import './CameraView.css'
 
 function CameraView() {
 
-    const [cameraOnOff, setCameraOnOff] = useState(false)
+    const [cameraOn, setCameraOn] = useState(false)
 
     const onCameraOnOffChange = () => {
-        setCameraOnOff(!cameraOnOff);
+        setCameraOn(!cameraOn);
     }
 
-    const renderVideoOrVoidBlock = (cameraOnOff) => {
-        if (cameraOnOff) {
-            return <iframe src='http://195.69.76.135:8082/api/stream' scrolling='no'></iframe>
+    const renderVideoOrVoidBlock = (cameraOn) => {
+        if (cameraOn) {
+            return <iframe src='http://195.69.76.135:8082/api/stream' title='CameraView' scrolling='no'></iframe>
         }
     }
 
@@ -19,12 +19,12 @@ function CameraView() {
         <div>
             <h2>Camera View From Lab</h2>
             <div class="camera-frame">
-                {renderVideoOrVoidBlock(cameraOnOff)}
+                {renderVideoOrVoidBlock(cameraOn)}
             </div>
             <div class="camera-switch">
                 off
             <label class="switch">
-                <input type="checkbox" checked={cameraOnOff} onChange={onCameraOnOffChange}/>
+                <input type="checkbox" checked={cameraOn} onChange={onCameraOnOffChange}/>
                 <span class="slider"></span>
             </label>
                on

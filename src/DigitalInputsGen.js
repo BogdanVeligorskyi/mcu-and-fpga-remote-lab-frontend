@@ -20,9 +20,9 @@ function DigitalInputsGen() {
     return(
         <div>
             {renderOnOffButton(isOn)}
-            <input type="number" class="digital-input-duty-value" value="50"/>
+            <input type="number" class="digital-input-duty-value" min="1" max="99" defaultValue="50"/>
             Duty, %
-            <input type="number" class="digital-input-frequency-value" value="10"/>
+            <input type="number" class="digital-input-frequency-value" min="1" max="30" defaultValue="10"/>
             Freq, kHz
         </div>
     );

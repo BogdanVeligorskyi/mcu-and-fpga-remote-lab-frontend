@@ -1,16 +1,24 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
+import Countdown, { zeroPad } from 'react-countdown'
 import Instructions from './Instructions';
 import ProgramFPGA from './ProgramFPGA';
 import DigitalInputs from './DigitalInputs';
 import CameraView from './CameraView';
+
+// formatting countdown
+const renderer = ({ minutes, seconds }) => {
+    return <span>{zeroPad(minutes)}:{zeroPad(seconds)}</span>;
+};
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <div class="timer">
-          Time left: 04:00
+          <Countdown 
+          date={Date.now() + 600000}
+          renderer={renderer}/>
         </div>
         <div class="container-fluid">
           <div class="row">
