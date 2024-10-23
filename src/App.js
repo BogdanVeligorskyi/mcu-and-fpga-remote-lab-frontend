@@ -12,24 +12,24 @@ function App() {
         <div class="timer">
           Time left: 04:00
         </div>
-        <div class="container align-top">
+        <div class="container-fluid">
           <div class="row">
-            <div class="col instructions-set">
+            <div class="col-xl instructions-set">
               <Instructions/>
             </div>
 
-            <div class="col program-fpga align-text-top">
+            <div class="col-xl program-fpga">
               <ProgramFPGA/>
             </div>
 
           </div>
 
           <div class="row">
-            <div class="col digital-inputs">
+            <div class="col-xl digital-inputs">
               <DigitalInputs/>
             </div>
 
-            <div class="col camera-view">
+            <div class="col-xl camera-view">
               <CameraView/>
             </div>
           </div>

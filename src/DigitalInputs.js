@@ -1,4 +1,5 @@
 import './DigitalInputs.css'
+import 'bootstrap/dist/css/bootstrap.css';
 import DigitalInputsButton from './DigitalInputsButton';
 import DigitalInputsSwitch from './DigitalInputsSwitch';
 import DigitalInputsGen from './DigitalInputsGen';
@@ -43,6 +44,7 @@ function DigitalInputs() {
     return(
         <div>
             <h2>Digital Inputs</h2>
+            <br/>
             <table>
                 <tr>
                   <th></th>

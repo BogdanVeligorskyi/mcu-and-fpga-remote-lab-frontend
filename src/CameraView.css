@@ -7,12 +7,18 @@
 }
 
 .camera-frame {
-    height: 248px;
-    width: 330px;
+    height: 400px;
+    width: 540px;
     background-color: black;
     align-items: center;
     border: 10px solid gray;
     border-radius: 5px;
-    margin: auto
+    margin: auto;
+}
+
+iframe {
+    height: 100%;
+    width: 100%;
+    justify-content: center;
 }
   
