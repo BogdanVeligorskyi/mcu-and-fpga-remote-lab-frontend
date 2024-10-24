@@ -29,15 +29,15 @@ function DigitalInputs() {
     }
 
     // render neccessary components based on the chosen channel mode
-    const renderChannelMode = (channel) => {
-        if (channel === "button") {
-            return <DigitalInputsButton/>
+    const renderChannelMode = (channelType, pin) => {
+        if (channelType === "button") {
+            return <DigitalInputsButton pinNum={pin}/>
         }
-        if (channel === "switch") {
-            return <DigitalInputsSwitch/>
+        if (channelType === "switch") {
+            return <DigitalInputsSwitch pinNum={pin}/>
         } 
-        if (channel === "gen") {
-            return <DigitalInputsGen/>
+        if (channelType === "gen") {
+            return <DigitalInputsGen pinNum={pin}/>
         }
     }
 
@@ -165,23 +165,23 @@ function DigitalInputs() {
                   <td></td>
                   <td>
                     <div class="digital-input-wrapper">
-                        {renderChannelMode(di_channel_1)}                        
+                        {renderChannelMode(di_channel_1, 1)}                        
                     </div>
                   </td>
                   <td>
                     <div class="digital-input-wrapper">
-                        {renderChannelMode(di_channel_2)}                        
+                        {renderChannelMode(di_channel_2, 2)}                        
                     </div>
                   </td>
                   
                   <td>
                     <div class="digital-input-wrapper">
-                        {renderChannelMode(di_channel_3)}                        
+                        {renderChannelMode(di_channel_3, 3)}                        
                     </div>
                   </td>
                   <td>
                     <div class="digital-input-wrapper">           
-                        {renderChannelMode(di_channel_4)}                                              
+                        {renderChannelMode(di_channel_4, 4)}                                              
                     </div>
                   </td>
                 </tr>

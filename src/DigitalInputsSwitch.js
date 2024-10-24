@@ -1,4 +1,4 @@
-function DigitalInputsSwitch() {
+function DigitalInputsSwitch(pinNum) {
     return(
         <div>
             <label class="digital-input-label-in-slider">On</label>
