@@ -1,5 +1,4 @@
 import './DigitalInputs.css'
-import 'bootstrap/dist/css/bootstrap.css';
 import DigitalInputsButton from './DigitalInputsButton';
 import DigitalInputsSwitch from './DigitalInputsSwitch';
 import DigitalInputsGen from './DigitalInputsGen';
