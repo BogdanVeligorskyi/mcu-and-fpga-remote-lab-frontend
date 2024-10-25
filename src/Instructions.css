@@ -5,3 +5,7 @@
 .instructions-set {
   text-align: left;
 }
+
+.instructions-text {
+  text-align: justify;
+}
