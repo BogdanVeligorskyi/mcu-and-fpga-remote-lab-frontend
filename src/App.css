@@ -11,8 +11,22 @@
   font-size: calc(10px + 2vmin);
 }
 
+.dblock {
+  display: block;
+  width: 200px;
+}
+
 .App-link {
   color: #61dafb;
+}
+
+.collapse-image {
+  color: black;
+}
+
+.collapse-image::before {
+  content: url("img/collapse.png");
+  transform: scale(0.5);
 }
 
 .timer {
@@ -34,7 +48,7 @@
 }
 
 #sidebar-nav {
-  width: 160px;
+  width: 200px;
 }
 
 .timer-completed-info {

@@ -44,25 +44,27 @@ function App() {
     <div className="App">
       <header className="App-header">
         <div class="container-fluid">
-          <div class="row flex-nowrap">
+          <div class="row">
             <div class="col-auto px-0">
               <div id="sidebar" class="collapse collapse-horizontal show border-end">
-                <div id="sidebar-nav" class="list-group border-0 rounded-0 text-sm-start min-vh-100">
-                <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-bootstrap"></i> <span>Item</span> </a>
-                    <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-film"></i> <span>Item</span></a>
-                    <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-heart"></i> <span>Item</span></a>
-                    <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-bricks"></i> <span>Item</span></a>
-                    <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-clock"></i> <span>Item</span></a>
-                    <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-archive"></i> <span>Item</span></a>
-                    <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-gear"></i> <span>Item</span></a>
-                    <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-calendar"></i> <span>Item</span></a>
-                    <a href="#" class="list-group-item border-end-0 d-inline-block text-truncate" data-bs-parent="#sidebar"><i class="bi bi-envelope"></i> <span>Item</span></a>
-                    <input type='checkbox'/>
+                <div id="sidebar-nav" class="border-0 rounded-0 text-sm-start min-vh-100 dblock">
+                <input type="checkbox" id="instructionsCB" name="instructionsCB" value="Instructions"/>
+                <label for="vehicle1"> Instructions</label><br/>
+                <input type="checkbox" id="programFPGACB" name="programFPGACB" value="ProgramFPGA"/>
+                <label for="vehicle2"> Program FPGA</label><br/>
+                <input type="checkbox" id="digitalInputsCB" name="digitalInputsCB" value="DigitalInputs"/>
+                <label for="vehicle3"> Digital Inputs</label><br/>
+                <input type="checkbox" id="cameraViewCB" name="cameraViewCB" value="CameraView"/>
+                <label for="vehicle4"> Camera View</label>
+                <br/><br/>
+                  
                 </div>
               </div>
             </div>
           <main class="col ps-md-2 pt-2">
-            <a href="#" data-bs-target="#sidebar" data-bs-toggle="collapse" class="text-start border rounded-3 p-1 text-decoration-none"><i class="bi bi-list bi-lg py-2 p-1"></i> Menu</a>
+            <div class="row text-start">
+              <a href="#" data-bs-target="#sidebar" data-bs-toggle="collapse" class="border rounded-3 text-decoration-none collapse-image"> Components List</a>
+            </div>
             <div class="row">
                 <div class="col-12">
                 <div class="timer">
