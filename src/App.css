@@ -24,6 +24,17 @@
   color: black;
 }
 
+.collapse-and-timer {
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+  border-bottom: 2px solid black;
+  height: 51px;
+  width: 100%;
+}
+
+.collapse-item {
+  display: inline-block;
+}
+
 .collapse-image::before {
   content: url("img/collapse.png");
   transform: scale(0.5);
@@ -31,10 +42,9 @@
 
 .timer {
   height: 50px;
-  width: 100%;
-  border-bottom: 2px solid black;
+  width: 95%;
   align-content: center;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+  display: inline-block;
 }
 
 .timer-completed {
@@ -49,6 +59,7 @@
 
 #sidebar-nav {
   width: 200px;
+  margin: 10px;
 }
 
 .timer-completed-info {
