@@ -4,7 +4,9 @@ import Instructions from './Instructions';
 import ProgramFPGA from './ProgramFPGA';
 import DigitalInputs from './DigitalInputs';
 import CameraView from './CameraView';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+const getLocalStorageValue = (s) => localStorage.getItem(s);
 
 // formatting countdown
 const renderer = ({ minutes, seconds }) => {
@@ -19,6 +21,26 @@ function App() {
   const [isProgramFPGAEnabled, setIsProgramFPGAEnabled] = useState(true);
   const [isDigitalInputsEnabled, setIsDigitalInputsEnabled] = useState(true);
   const [isCameraViewEnabled, setIsCameraViewEnabled] = useState(true);
+  const [data, setData] = useState({ date: Date.now(), delay: 600000 });
+  const wantedDelay = data.delay;
+
+  // use effect to store countdown value in local storage
+  useEffect(() => {
+
+    const savedDate = getLocalStorageValue("end_time");
+    console.log(savedDate);
+    if (savedDate != null && !isNaN(savedDate)) {
+      const currentTime = Date.now();
+      const delta = parseInt(savedDate, 10) - currentTime;
+
+      if (delta > wantedDelay) {
+        if (localStorage.getItem("end_time").length > 0)
+          localStorage.removeItem("end_time");
+      } else {
+        setData({ date: currentTime, delay: delta });
+      }
+    }
+  }, [wantedDelay]);
   
   const onInstructionsCBChange = () => {
     console.log("onInstructionsCBchange");
@@ -42,7 +64,16 @@ function App() {
 
   const onCountdownComplete = () => {
     console.log("onCountdownComplete");
+    if (localStorage.getItem("end_time") != null) {
+      localStorage.removeItem("end_time");
+    }
     setIsCompleted(true);
+  }
+
+  const onCountdownStart = () => {
+    if (localStorage.getItem("end_time") == null) {
+      localStorage.setItem("end_time", JSON.stringify(data.date + data.delay));
+    }
   }
 
   const onTimerCompletedOk = () => {
@@ -53,13 +84,13 @@ function App() {
   const renderOnCountdownComplete = (isCompleted) => {
     if (isCompleted) {
       if (!isCompletedOk) {
-      return <div class="timer-completed">
-        <div class="timer-completed-info">Your experiment time is over! 
+      return <div className="timer-completed">
+        <div className="timer-completed-info">Your experiment time is over! 
         <br/>Please, let other students use this lab.
-        <button class="timer-completed-ok" onClick={onTimerCompletedOk}>Ok</button></div>
+        <button className="timer-completed-ok" onClick={onTimerCompletedOk}>Ok</button></div>
       </div>
       } else {
-        return <div class="timer-completed"></div>
+        return <div className="timer-completed"></div>
       }
     }
   }
@@ -99,12 +130,12 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-auto px-0">
-              <div id="sidebar" class="collapse collapse-horizontal show border-end">
-                <div id="sidebar-nav" class="border-0 rounded-0 text-sm-start min-vh-100 dblock">
-                  <h2 class="compnents-side-menu">Components</h2>
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-auto px-0">
+              <div id="sidebar" className="collapse collapse-horizontal show border-end">
+                <div id="sidebar-nav" className="border-0 rounded-0 text-sm-start min-vh-100 dblock">
+                  <h2 className="compnents-side-menu">Components</h2>
                   <input type="checkbox" id="instructionsCB" name="instructionsCB" value="Instructions" 
                   checked={isInstructionsEnabled === true} 
                   onChange={onInstructionsCBChange}/>
@@ -127,35 +158,36 @@ function App() {
                 </div>
               </div>
             </div>
-            <main class="col ps-md-2 pt-2">
-              <div class="row">
-                  <div class="collapse-and-timer">
-                    <div class="collapse-item">
-                      <a href="#" data-bs-target="#sidebar" data-bs-toggle="collapse" 
-                      class="border rounded-3 text-decoration-none collapse-image"><span></span></a>
+            <main className="col ps-md-2 pt-2">
+              <div className="row">
+                  <div className="collapse-and-timer">
+                    <div className="collapse-item">
+                      <button data-bs-target="#sidebar" data-bs-toggle="collapse" 
+                      className="text-decoration-none collapse-image"></button>
                     </div>
-                    <div class="timer">
+                    <div className="timer">
                     <Countdown 
-                      date={Date.now() + 600000}
+                      date={data.date + data.delay}
                       renderer={renderer}
+                      onStart={onCountdownStart}
                       onComplete={onCountdownComplete}/>
                     {renderOnCountdownComplete(isCompleted)}
                   </div>
                   </div>
                   <div>
-                    <div class="row">
-                      <div class="col-xl instructions-set">
+                    <div className="row">
+                      <div className="col-xl instructions-set">
                        {renderInstructions(isInstructionsEnabled)}
                       </div>
-                      <div class="col-xl program-fpga">
+                      <div className="col-xl program-fpga">
                         {renderProgramFPGA(isProgramFPGAEnabled)}
                       </div>
                     </div>
-                    <div class="row">
-                      <div class="col-xl digital-inputs">
+                    <div className="row">
+                      <div className="col-xl digital-inputs">
                         {renderDigitalInputs(isDigitalInputsEnabled)}
                       </div>
-                      <div class="col-xl camera-view">
+                      <div className="col-xl camera-view">
                         {renderCameraView(isCameraViewEnabled)}
                       </div>
                     </div>

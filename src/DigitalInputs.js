@@ -164,23 +164,23 @@ function DigitalInputs() {
                 <tr>
                   <td></td>
                   <td>
-                    <div class="digital-input-wrapper">
+                    <div className="digital-input-wrapper">
                         {renderPinMode(di_pin_1, 1)}                        
                     </div>
                   </td>
                   <td>
-                    <div class="digital-input-wrapper">
+                    <div className="digital-input-wrapper">
                         {renderPinMode(di_pin_2, 2)}                        
                     </div>
                   </td>
                   
                   <td>
-                    <div class="digital-input-wrapper">
+                    <div className="digital-input-wrapper">
                         {renderPinMode(di_pin_3, 3)}                        
                     </div>
                   </td>
                   <td>
-                    <div class="digital-input-wrapper">           
+                    <div className="digital-input-wrapper">           
                         {renderPinMode(di_pin_4, 4)}                                              
                     </div>
                   </td>

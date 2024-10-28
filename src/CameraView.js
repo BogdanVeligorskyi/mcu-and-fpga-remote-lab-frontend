@@ -18,14 +18,14 @@ function CameraView() {
     return (
         <div>
             <h2>Camera View From Lab</h2>
-            <div class="camera-frame">
+            <div className="camera-frame">
                 {renderVideoOrVoidBlock(cameraOn)}
             </div>
-            <div class="camera-switch">
+            <div className="camera-switch">
                 off
-            <label class="switch">
+            <label className="switch">
                 <input type="checkbox" checked={cameraOn} onChange={onCameraOnOffChange}/>
-                <span class="slider"></span>
+                <span className="slider"></span>
             </label>
                on
             </div>

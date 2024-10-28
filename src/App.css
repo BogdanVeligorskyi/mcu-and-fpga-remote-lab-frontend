@@ -22,6 +22,8 @@
 
 .collapse-image {
   color: black;
+  background-color: #deddc5;
+  border: 0;
 }
 
 .collapse-and-timer {
