@@ -33,14 +33,14 @@ function App() {
       const currentTime = Date.now();
       const delta = parseInt(savedDate, 10) - currentTime;
 
-      if (delta > wantedDelay) {
+      if (wantedDelay < delta) {
         if (localStorage.getItem("end_time").length > 0)
           localStorage.removeItem("end_time");
       } else {
         setData({ date: currentTime, delay: delta });
       }
     }
-  }, [wantedDelay]);
+  }, []);
   
   const onInstructionsCBChange = () => {
     console.log("onInstructionsCBchange");
