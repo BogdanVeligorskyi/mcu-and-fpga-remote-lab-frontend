@@ -1,36 +1,44 @@
 import { useState } from 'react';
-import './CameraView.css'
+import './CameraView.css';
+import { getUrlForRequest } from './utils/get-url-for-request';
 
 function CameraView() {
+  const [cameraOn, setCameraOn] = useState(false);
 
-    const [cameraOn, setCameraOn] = useState(false)
+  const onCameraOnOffChange = () => {
+    setCameraOn(!cameraOn);
+  };
 
-    const onCameraOnOffChange = () => {
-        setCameraOn(!cameraOn);
+  const renderVideoOrVoidBlock = (cameraOn) => {
+    if (cameraOn) {
+      return (
+        <iframe
+          src={getUrlForRequest('/api/stream')}
+          title="CameraView"
+          scrolling="no"
+        ></iframe>
+      );
     }
+  };
 
-    const renderVideoOrVoidBlock = (cameraOn) => {
-        if (cameraOn) {
-            return <iframe src='http://195.69.76.135:8082/api/stream' title='CameraView' scrolling='no'></iframe>
-        }
-    }
-
-    return (
-        <div>
-            <h2>Camera View From Lab</h2>
-            <div className="camera-frame">
-                {renderVideoOrVoidBlock(cameraOn)}
-            </div>
-            <div className="camera-switch">
-                off
-            <label className="switch">
-                <input type="checkbox" checked={cameraOn} onChange={onCameraOnOffChange}/>
-                <span className="slider"></span>
-            </label>
-               on
-            </div>
-        </div>
-    );
+  return (
+    <div>
+      <h2>Camera View From Lab</h2>
+      <div className="camera-frame">{renderVideoOrVoidBlock(cameraOn)}</div>
+      <div className="camera-switch">
+        off
+        <label className="switch">
+          <input
+            type="checkbox"
+            checked={cameraOn}
+            onChange={onCameraOnOffChange}
+          />
+          <span className="slider"></span>
+        </label>
+        on
+      </div>
+    </div>
+  );
 }
 
 export default CameraView;
