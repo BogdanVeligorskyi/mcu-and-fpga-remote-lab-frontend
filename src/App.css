@@ -13,7 +13,7 @@
 
 .dblock {
   display: block;
-  width: 200px;
+  width: 205px;
 }
 
 .App-link {
@@ -30,10 +30,10 @@
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
   border-bottom: 2px solid black;
   height: 51px;
-  width: 100%;
 }
 
 .collapse-item {
+  width: 3%;
   display: inline-block;
 }
 
@@ -44,8 +44,13 @@
 
 .timer {
   height: 50px;
-  width: 95%;
+  width: 93%;
   align-content: center;
+  display: inline-block;
+}
+
+.timer-space {
+  width: 4%;
   display: inline-block;
 }
 
@@ -60,12 +65,11 @@
 }
 
 #sidebar-nav {
-  width: 200px;
-  margin: 10px;
 }
 
 .timer-completed-info {
   position: absolute;
+  padding: 10px;
   top: 50%;
   left: 50%;
   transform:translate(-50%,-50%);  
@@ -159,6 +163,7 @@ input:focus + .slider, input:focus + .slider-vertical {
 }
 
 h2 {
+  padding: 10px;
   text-align: center;
 }
 

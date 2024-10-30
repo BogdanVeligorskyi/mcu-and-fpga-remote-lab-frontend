@@ -86,8 +86,8 @@ function App() {
       if (!isCompletedOk) {
       return <div className="timer-completed">
         <div className="timer-completed-info">Your experiment time is over! 
-        <br/>Please, let other students use this lab.
-        <button className="timer-completed-ok" onClick={onTimerCompletedOk}>Ok</button></div>
+        <br/>Please, let other students use this lab.<br/>
+        <button className="btn btn-primary timer-completed-ok" onClick={onTimerCompletedOk}>Ok</button></div>
       </div>
       } else {
         return <div className="timer-completed"></div>
@@ -132,9 +132,10 @@ function App() {
       <header className="App-header">
         <div className="container-fluid">
           <div className="row">
-            <div className="col-auto px-0">
-              <div id="sidebar" className="collapse collapse-horizontal show border-end">
-                <div id="sidebar-nav" className="border-0 rounded-0 text-sm-start min-vh-100 dblock">
+            <div className="col-auto center-block mx-auto px-0">
+              <div id="sidebar" className="collapsing in collapse-horizontal dblock">
+                <div id="sidebar-nav" className="border-0 rounded-0 text-sm-start">
+                  <div className="components-list">
                   <h2 className="compnents-side-menu">Components</h2>
                   <input type="checkbox" id="instructionsCB" name="instructionsCB" value="Instructions" 
                   checked={isInstructionsEnabled === true} 
@@ -154,11 +155,12 @@ function App() {
                   <input type="checkbox" id="cameraViewCB" name="cameraViewCB" value="CameraView"
                   checked={isCameraViewEnabled === true}
                   onChange={onCameraViewCBChange}/>
-                  <label htmlFor="cameraViewCB"> Camera View</label>                  
+                  <label htmlFor="cameraViewCB"> Camera View</label>       
+                  </div>           
                 </div>
               </div>
             </div>
-            <main className="col ps-md-2 pt-2">
+            <main className="col ps-xs-2 pt-2">
               <div className="row">
                   <div className="collapse-and-timer">
                     <div className="collapse-item">
@@ -172,7 +174,9 @@ function App() {
                       onStart={onCountdownStart}
                       onComplete={onCountdownComplete}/>
                     {renderOnCountdownComplete(isCompleted)}
-                  </div>
+                    </div>
+                    <div className="timer-space">
+                    </div>
                   </div>
                   <div>
                     <div className="row">

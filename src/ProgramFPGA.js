@@ -33,7 +33,7 @@ const ProgramFPGAForm = () => {
     return (
         <form onSubmit={handleSubmit}>
             <input type="file" id="programFPGAFile" name="programFPGAFile" onChange={handleChange}/> <br/>
-            <button type="submit">ProgramFPGA</button>
+            <button type="submit" className="btn btn-primary">ProgramFPGA</button>
         </form>
         
     );
