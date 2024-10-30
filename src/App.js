@@ -135,8 +135,9 @@ function App() {
             <div className="col-auto center-block mx-auto px-0">
               <div id="sidebar" className="collapsing in collapse-horizontal dblock">
                 <div id="sidebar-nav" className="border-0 rounded-0 text-sm-start">
-                  <div className="components-list">
+                  
                   <h2 className="compnents-side-menu">Components</h2>
+                  <div className="components-list">
                   <input type="checkbox" id="instructionsCB" name="instructionsCB" value="Instructions" 
                   checked={isInstructionsEnabled === true} 
                   onChange={onInstructionsCBChange}/>

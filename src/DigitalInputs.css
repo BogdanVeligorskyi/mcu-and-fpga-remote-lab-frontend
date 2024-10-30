@@ -74,3 +74,11 @@ input[type="number"] {
     border: 0px;
     transform: scale(1.5);
 }
+
+.digital-inputs-button-success {
+    color: green;
+}
+
+.digital-inputs-button-failure {
+    color: red;
+}

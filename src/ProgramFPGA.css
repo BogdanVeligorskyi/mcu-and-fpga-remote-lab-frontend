@@ -2,7 +2,24 @@
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
 }
 
+.program-fpga-component {
+    margin-top: 120px;
+    margin-bottom: 130px;
+}
+
 .program-fpga-file {
     display: block;
     margin: auto;
+}
+
+.program-fpga-success {
+    color: green;
+}
+
+.program-fpga-failure {
+    color: red;
+}
+
+.program-fpga-progress {
+    color: black;
 }
