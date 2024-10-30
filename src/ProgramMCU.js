@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { getUrlForRequest } from './utils/get-url-for-request';
-import './ProgramFPGA.css'
+import './ProgramMCU.css'
 
-const ProgramFPGAForm = () => {
+const ProgramMCUForm = () => {
 
     const [file, setFile] = useState()
     const [resultMessage, setResultMessage] = useState("")
@@ -12,11 +12,11 @@ const ProgramFPGAForm = () => {
     const renderResultBlock = (isRequestCompleted, status) => {
         console.log(status);
         if (isRequestCompleted && status === 200) {
-            return <div className="program-fpga-success">{resultMessage}</div>
+            return <div className="program-mcu-success">{resultMessage}</div>
         } else if (isRequestCompleted && status !== 200) {
-            return <div className="program-fpga-failure">{resultMessage}</div>
+            return <div className="program-mcu-failure">{resultMessage}</div>
         } else if (!isRequestCompleted) {
-            return <div className="program-fpga-progress">{resultMessage}</div>
+            return <div className="program-mcu-progress">{resultMessage}</div>
         }
     }
 
@@ -32,19 +32,18 @@ const ProgramFPGAForm = () => {
         formData.append('file', file);
         const requestOptions = {
             method: 'POST',
-            // headers: {'content-type': 'multipart/form-data'}, 
             body: formData       
         }
-        setResultMessage("Trying to program FPGA device...");
-        fetch(getUrlForRequest('/api/firmware/fpga'), requestOptions).then(
+        setResultMessage("Trying to program MCU device...");
+        fetch(getUrlForRequest('/api/firmware/mcu'), requestOptions).then(
             (response) => {
               console.log('response.status =', response.status);
                 if (response.status === 200) {
-                 setResultMessage("FPGA programmed successfully!");
+                 setResultMessage("MCU programmed successfully!");
                  setIsRequestCompleted(true);
                  setStatus(200);
                } else {
-                 setResultMessage("An error occured during FPGA programming!");
+                 setResultMessage("An error occured during MCU programming!");
                  setIsRequestCompleted(true);
                  setStatus(500);
                }
@@ -58,10 +57,10 @@ const ProgramFPGAForm = () => {
     
       }
     return (
-        <div className="program-fpga-component">
+        <div className="program-mcu-component">
         <form onSubmit={handleSubmit}>
-            <input type="file" id="programFPGAFile" className="btn btn-primary" name="programFPGAFile" onChange={handleChange}/> <br/>
-            <button type="submit" className="btn btn-primary my-2">Program FPGA</button>
+            <input type="file" id="programMCUFile" className="btn btn-primary" name="programMCUFile" onChange={handleChange}/> <br/>
+            <button type="submit" className="btn btn-primary my-2">Program MCU</button>
         </form>
         {renderResultBlock(isRequestCompleted, status)}
         </div>
@@ -69,15 +68,15 @@ const ProgramFPGAForm = () => {
     );
 }
 
-function ProgramFPGA() {
+function ProgramMCU() {
     return(
         <div>
-            <h2>Program FPGA</h2>
-            <div className="program-fpga-file">
-                <ProgramFPGAForm/>
+            <h2>Program MCU</h2>
+            <div className="program-mcu-file">
+                <ProgramMCUForm/>
             </div>
         </div>
     );
 }
 
-export default ProgramFPGA;
+export default ProgramMCU;

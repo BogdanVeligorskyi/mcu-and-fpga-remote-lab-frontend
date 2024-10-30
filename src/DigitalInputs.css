@@ -82,3 +82,7 @@ input[type="number"] {
 .digital-inputs-button-failure {
     color: red;
 }
+
+.digital-input-button-process {
+    color: black;
+}

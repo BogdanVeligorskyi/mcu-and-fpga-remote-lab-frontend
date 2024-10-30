@@ -5,6 +5,7 @@ import ProgramFPGA from './ProgramFPGA';
 import DigitalInputs from './DigitalInputs';
 import CameraView from './CameraView';
 import { useState, useEffect } from 'react';
+import ProgramMCU from './ProgramMCU';
 
 const getLocalStorageValue = (s) => localStorage.getItem(s);
 
@@ -19,6 +20,7 @@ function App() {
   const [isCompletedOk, setIsCompletedOk] = useState(false);
   const [isInstructionsEnabled, setIsInstructionsEnabled] = useState(true);  
   const [isProgramFPGAEnabled, setIsProgramFPGAEnabled] = useState(true);
+  const [isProgramMCUEnabled, setIsProgramMCUEnabled] = useState(false);
   const [isDigitalInputsEnabled, setIsDigitalInputsEnabled] = useState(true);
   const [isCameraViewEnabled, setIsCameraViewEnabled] = useState(true);
   const [data, setData] = useState({ date: Date.now(), delay: 600000 });
@@ -50,6 +52,13 @@ function App() {
   const onProgramFPGACBChange = () => {
     console.log("onProgramFPGACBChange");
     setIsProgramFPGAEnabled(!isProgramFPGAEnabled);
+    setIsProgramMCUEnabled(!isProgramMCUEnabled);
+  }  
+
+  const onProgramMCUCBChange = () => {
+    console.log("onProgramMCUCBChange");
+    setIsProgramFPGAEnabled(!isProgramFPGAEnabled);
+    setIsProgramMCUEnabled(!isProgramMCUEnabled);
   }  
 
   const onDigitalInputsCBChange = () => {
@@ -103,11 +112,11 @@ function App() {
     }
   }
 
-  const renderProgramFPGA = (isProgramFPGAEnabled) => {
+  const renderProgramFPGAorMCU = (isProgramFPGAEnabled) => {
     if (isProgramFPGAEnabled) {
       return <ProgramFPGA/>
     } else {
-      return <div><h2>Program FPGA</h2></div>
+      return <ProgramMCU/>
     }
   }
 
@@ -147,6 +156,11 @@ function App() {
                   checked={isProgramFPGAEnabled === true}
                   onChange={onProgramFPGACBChange}/>
                   <label htmlFor="programFPGACB"> Program FPGA</label><br/>
+
+                  <input type="checkbox" id="programMCUCB" name="programMCUCB" value="ProgramMCU"
+                  checked={isProgramMCUEnabled === true}
+                  onChange={onProgramMCUCBChange}/>
+                  <label htmlFor="programMCUCB"> Program MCU</label><br/>
                 
                   <input type="checkbox" id="digitalInputsCB" name="digitalInputsCB" value="DigitalInputs"
                   checked={isDigitalInputsEnabled === true}
@@ -185,7 +199,7 @@ function App() {
                        {renderInstructions(isInstructionsEnabled)}
                       </div>
                       <div className="col-xl program-fpga">
-                        {renderProgramFPGA(isProgramFPGAEnabled)}
+                        {renderProgramFPGAorMCU(isProgramFPGAEnabled)}
                       </div>
                     </div>
                     <div className="row">
