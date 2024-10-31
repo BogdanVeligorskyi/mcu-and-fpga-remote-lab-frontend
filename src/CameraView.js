@@ -26,7 +26,9 @@ function CameraView() {
       <h2>Camera View From Lab</h2>
       <div className="camera-frame">{renderVideoOrVoidBlock(cameraOn)}</div>
       <div className="camera-switch">
-        off
+        <div className="camera-view-onoff">
+          Off
+        </div>
         <label className="switch">
           <input
             type="checkbox"
@@ -35,7 +37,9 @@ function CameraView() {
           />
           <span className="slider"></span>
         </label>
-        on
+        <div className="camera-view-onoff">
+          On
+        </div>
       </div>
     </div>
   );

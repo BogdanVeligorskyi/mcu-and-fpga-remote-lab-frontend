@@ -34,11 +34,13 @@
 .collapse-and-timer {
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
   border-bottom: 2px solid black;
-  height: 51px;
+  padding: 15px;
 }
 
 .collapse-item {
-  width: 3%;
+  padding-left: 5px;
+  text-align: left;
+  width: 10%;
   display: inline-block;
 }
 
@@ -48,14 +50,14 @@
 }
 
 .timer {
-  height: 50px;
-  width: 93%;
+  height: 30px;
+  width: 79%;
   align-content: center;
   display: inline-block;
 }
 
 .timer-space {
-  width: 4%;
+  width: 11%;
   display: inline-block;
 }
 

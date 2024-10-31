@@ -35,4 +35,9 @@ iframe {
     width: 100%;
     justify-content: center;
 }
+
+.camera-view-onoff {
+    padding: 5px;
+    display: inline-block;
+}
   

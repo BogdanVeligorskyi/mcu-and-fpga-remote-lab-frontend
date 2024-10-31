@@ -1,11 +1,10 @@
 import './App.css';
 import Countdown, { zeroPad } from 'react-countdown'
 import Instructions from './Instructions';
-import ProgramFPGA from './ProgramFPGA';
+import ProgramDevice from './ProgramDevice';
 import DigitalInputs from './DigitalInputs';
 import CameraView from './CameraView';
 import { useState, useEffect } from 'react';
-import ProgramMCU from './ProgramMCU';
 
 const getLocalStorageValue = (s) => localStorage.getItem(s);
 
@@ -114,9 +113,10 @@ function App() {
 
   const renderProgramFPGAorMCU = (isProgramFPGAEnabled) => {
     if (isProgramFPGAEnabled) {
-      return <ProgramFPGA/>
+      console.log(4);
+      return <ProgramDevice isFPGADevice={true}/>
     } else {
-      return <ProgramMCU/>
+      return <ProgramDevice isFPGADevice={false}/>
     }
   }
 
@@ -198,7 +198,7 @@ function App() {
                       <div className="col-xl instructions-set">
                        {renderInstructions(isInstructionsEnabled)}
                       </div>
-                      <div className="col-xl program-fpga">
+                      <div className="col-xl program-device">
                         {renderProgramFPGAorMCU(isProgramFPGAEnabled)}
                       </div>
                     </div>
