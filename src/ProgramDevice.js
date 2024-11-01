@@ -50,9 +50,9 @@ const ProgramDeviceForm = ({isFPGADev}) => {
         console.log(isFPGADev);
         setIsRequestCompleted(false);
         setStatusMCU(0);
-        setStatusFPGA(0)
+        setStatusFPGA(0);
         
-        event.preventDefault()
+        event.preventDefault();
         const formData = new FormData();
         formData.append('file', file);
         
@@ -113,7 +113,10 @@ const ProgramDeviceForm = ({isFPGADev}) => {
         return (
         <div className="program-device-component">
         <form onSubmit={handleSubmitProgramDevice}>
-            <input type="file" id="programDeviceFile" className="btn btn-primary" name="programDeviceFile" onChange={handleFileChange}/> <br/>
+            <input type="file" id="programDeviceFile" 
+            className="btn btn-primary" 
+            name="programDeviceFile" 
+            onChange={handleFileChange}/> <br/>
             {renderProgramButton(isFPGADev)}
         </form>
         {renderResultBlock(isRequestCompleted, statusFPGA, statusMCU)}

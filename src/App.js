@@ -22,6 +22,7 @@ function App() {
   const [isProgramMCUEnabled, setIsProgramMCUEnabled] = useState(false);
   const [isDigitalInputsEnabled, setIsDigitalInputsEnabled] = useState(true);
   const [isCameraViewEnabled, setIsCameraViewEnabled] = useState(true);
+  const [isSubMenuCollapsed, setIsSubMenuCollapsed] = useState(true);
   const [data, setData] = useState({ date: Date.now(), delay: 600000 });
   const wantedDelay = data.delay;
 
@@ -42,6 +43,10 @@ function App() {
       }
     }
   }, []);
+
+  const onCollapseClicked = () => {
+    setIsSubMenuCollapsed(!isSubMenuCollapsed);
+  }
   
   const onInstructionsCBChange = () => {
     console.log("onInstructionsCBchange");
@@ -100,6 +105,14 @@ function App() {
       } else {
         return <div className="timer-completed"></div>
       }
+    }
+  }
+
+  const renderCollapseIcon = (isSubMenuCollapsed) => {
+    if (isSubMenuCollapsed) {
+      return <i className="bi bi-list"></i>
+    } else {
+      return <i className="bi bi-x"></i>
     }
   }
 
@@ -179,8 +192,10 @@ function App() {
               <div className="row">
                   <div className="collapse-and-timer">
                     <div className="collapse-item">
-                      <button data-bs-target="#sidebar" data-bs-toggle="collapse" 
-                      className="text-decoration-none collapse-image"></button>
+                      <button onClick={onCollapseClicked} data-bs-target="#sidebar" data-bs-toggle="collapse" 
+                      className="text-decoration-none collapse-image">
+                        {renderCollapseIcon(isSubMenuCollapsed)}
+                      </button>
                     </div>
                     <div className="timer">
                     <Countdown 

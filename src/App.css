@@ -29,6 +29,7 @@
   color: black;
   background-color: #deddc5;
   border: 0;
+  /* padding-top: 5px; */
 }
 
 .collapse-and-timer {
@@ -38,15 +39,14 @@
 }
 
 .collapse-item {
-  padding-left: 5px;
   text-align: left;
   width: 10%;
   display: inline-block;
 }
 
-.collapse-image::before {
-  content: url("img/collapse.png");
-  transform: scale(0.5);
+.collapse-image:hover {
+  background-color: #c2c2ac;
+  border-radius: 5px;
 }
 
 .timer {
