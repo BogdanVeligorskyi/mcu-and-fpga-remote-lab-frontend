@@ -17,15 +17,21 @@
 
 .collapse-menu-components {
   position: absolute;
+  height: auto;
   width: 220px;
   background-color: #deddc5;
-  z-index: 3;
   text-align: left;
+  -webkit-transition: opacity .5s;
+  transition: opacity .5s;
+  opacity: 1;
+  z-index: 3;
   display: block;
 }
 
 .collapse-menu-components-none {
-  display: none;
+  width: 0;
+  height: 0;
+  opacity: 0;
 }
 
 .collapse-menu-background {
@@ -108,15 +114,20 @@
   display: block;
 }
 
+.timer-value {
+  padding-left: 5px;
+  display: inline;
+}
+
 .timer-completed-ok {
   display: block;
   text-align: center;
   margin: auto;
 }
 
-.timer::before {
-  content: url("img/clock.png");
-  margin-right: 5px;
+input[type="checkbox"] {
+  text-align: center;
+  width: 30px;
   transform: scale(1.5);
 }
 

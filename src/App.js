@@ -157,7 +157,7 @@ function App() {
           <div className="row">
             <div className="collapse-and-timer">
               <div className={""+(isSubMenuCollapsed ? 'collapse-menu-background' : 'collapse-menu-background-none')}></div>
-              <div className={""+(isSubMenuCollapsed ? 'collapse-menu-components' : 'collapse-menu-components-none')}>
+              <div id="sidebar" className={""+(isSubMenuCollapsed ? 'collapse-menu-components' : 'collapse-menu-components-none')}>
                   <div className="collapse-item">
                     <button onClick={onCollapseClicked} className="text-decoration-none collapse-image">
                       {renderCollapseIcon(isSubMenuCollapsed)}
@@ -195,40 +195,42 @@ function App() {
                 <div className="collapse-item">
                   <button onClick={onCollapseClicked} className="text-decoration-none collapse-image">
                     {renderCollapseIcon(isSubMenuCollapsed)}
-                  </button>
-                       
-                    </div>
-                    <div className="timer">
+                  </button>     
+                </div>
+                <div className="timer">
+                  <span className="bi bi-stopwatch"></span>
+                  <div className="timer-value">
                     <Countdown 
                       date={data.date + data.delay}
                       renderer={renderer}
                       onStart={onCountdownStart}
                       onComplete={onCountdownComplete}/>
                     {renderOnCountdownComplete(isCompleted)}
-                    </div>
-                    <div className="timer-space">
-                    </div>
                   </div>
-                  <div>
-                    <div className="row">
-                      <div className="col-xl instructions-set">
-                       {renderInstructions(isInstructionsEnabled)}
-                      </div>
-                      <div className="col-xl program-device">
-                        {renderProgramFPGAorMCU(isProgramFPGAEnabled)}
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-xl digital-inputs">
-                        {renderDigitalInputs(isDigitalInputsEnabled)}
-                      </div>
-                      <div className="col-xl camera-view">
-                        {renderCameraView(isCameraViewEnabled)}
-                      </div>
-                    </div>
-                  </div>
+                </div>
+                <div className="timer-space">
+                </div>
               </div>
-        </div>
+              <div>
+                <div className="row">
+                  <div className="col-xl instructions-set">
+                    {renderInstructions(isInstructionsEnabled)}
+                  </div>
+                  <div className="col-xl program-device">
+                    {renderProgramFPGAorMCU(isProgramFPGAEnabled)}
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-xl digital-inputs">
+                    {renderDigitalInputs(isDigitalInputsEnabled)}
+                  </div>
+                  <div className="col-xl camera-view">
+                    {renderCameraView(isCameraViewEnabled)}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
       </header>
     </div>
   );

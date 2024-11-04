@@ -6,7 +6,7 @@
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
 }
 
- @media (max-width: 768px) {
+ @media (min-width: 576px) {
     .camera-frame {
         height: 270px;
         width: 360px;
@@ -29,6 +29,18 @@
         margin: auto;
     }
   } 
+
+  @media (max-width: 576px) {
+    .camera-frame {
+        height: 200px;
+        width: 266px;
+        background-color: black;
+        align-items: center;
+        border: 2px solid gray;
+        border-radius: 1px;
+        margin: auto;
+    }
+  }
 
 iframe {
     height: 100%;
