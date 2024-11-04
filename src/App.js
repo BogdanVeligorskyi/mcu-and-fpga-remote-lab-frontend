@@ -22,7 +22,7 @@ function App() {
   const [isProgramMCUEnabled, setIsProgramMCUEnabled] = useState(false);
   const [isDigitalInputsEnabled, setIsDigitalInputsEnabled] = useState(true);
   const [isCameraViewEnabled, setIsCameraViewEnabled] = useState(true);
-  const [isSubMenuCollapsed, setIsSubMenuCollapsed] = useState(true);
+  const [isSubMenuCollapsed, setIsSubMenuCollapsed] = useState(false);
   const [data, setData] = useState({ date: Date.now(), delay: 600000 });
   const wantedDelay = data.delay;
 
@@ -109,7 +109,8 @@ function App() {
   }
 
   const renderCollapseIcon = (isSubMenuCollapsed) => {
-    if (isSubMenuCollapsed) {
+    console.log(isSubMenuCollapsed);
+    if (!isSubMenuCollapsed) {
       return <i className="bi bi-list"></i>
     } else {
       return <i className="bi bi-x"></i>
@@ -152,50 +153,50 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <div className="container-fluid">
+        <div className="container">
           <div className="row">
-            <div className="col-auto center-block mx-auto px-0">
-              <div id="sidebar" className="collapsing in collapse-horizontal dblock">
-                <div id="sidebar-nav" className="border-0 rounded-0 text-sm-start">
-                  
-                  <h2 className="compnents-side-menu">Components</h2>
-                  <div className="components-list">
-                  <input type="checkbox" id="instructionsCB" name="instructionsCB" value="Instructions" 
-                  checked={isInstructionsEnabled === true} 
-                  onChange={onInstructionsCBChange}/>
-                  <label htmlFor="instructionsCB"> Instructions</label><br/>
-                
-                  <input type="checkbox" id="programFPGACB" name="programFPGACB" value="ProgramFPGA"
-                  checked={isProgramFPGAEnabled === true}
-                  onChange={onProgramFPGACBChange}/>
-                  <label htmlFor="programFPGACB"> Program FPGA</label><br/>
+            <div className="collapse-and-timer">
+              <div className={""+(isSubMenuCollapsed ? 'collapse-menu-background' : 'collapse-menu-background-none')}></div>
+              <div className={""+(isSubMenuCollapsed ? 'collapse-menu-components' : 'collapse-menu-components-none')}>
+                  <div className="collapse-item">
+                    <button onClick={onCollapseClicked} className="text-decoration-none collapse-image">
+                      {renderCollapseIcon(isSubMenuCollapsed)}
+                    </button> 
+                  </div>
 
-                  <input type="checkbox" id="programMCUCB" name="programMCUCB" value="ProgramMCU"
-                  checked={isProgramMCUEnabled === true}
-                  onChange={onProgramMCUCBChange}/>
-                  <label htmlFor="programMCUCB"> Program MCU</label><br/>
-                
-                  <input type="checkbox" id="digitalInputsCB" name="digitalInputsCB" value="DigitalInputs"
-                  checked={isDigitalInputsEnabled === true}
-                  onChange={onDigitalInputsCBChange}/>
-                  <label htmlFor="digitalInputsCB"> Digital Inputs</label><br/>
-                
-                  <input type="checkbox" id="cameraViewCB" name="cameraViewCB" value="CameraView"
-                  checked={isCameraViewEnabled === true}
-                  onChange={onCameraViewCBChange}/>
-                  <label htmlFor="cameraViewCB"> Camera View</label>       
-                  </div>           
+                  <h2>Components</h2>
+                    <div className="components-list text-sm-center">
+                      <input type="checkbox" id="instructionsCB" name="instructionsCB" value="Instructions" 
+                      checked={isInstructionsEnabled === true} 
+                      onChange={onInstructionsCBChange}/>
+                      <label htmlFor="instructionsCB"> Instructions</label><br/>
+                            
+                      <input type="checkbox" id="programFPGACB" name="programFPGACB" value="ProgramFPGA"
+                      checked={isProgramFPGAEnabled === true}
+                      onChange={onProgramFPGACBChange}/>
+                      <label htmlFor="programFPGACB"> Program FPGA</label><br/>
+
+                      <input type="checkbox" id="programMCUCB" name="programMCUCB" value="ProgramMCU"
+                      checked={isProgramMCUEnabled === true}
+                      onChange={onProgramMCUCBChange}/>
+                      <label htmlFor="programMCUCB"> Program MCU</label><br/>
+                            
+                      <input type="checkbox" id="digitalInputsCB" name="digitalInputsCB" value="DigitalInputs"
+                      checked={isDigitalInputsEnabled === true}
+                      onChange={onDigitalInputsCBChange}/>
+                      <label htmlFor="digitalInputsCB"> Digital Inputs</label><br/>
+                            
+                      <input type="checkbox" id="cameraViewCB" name="cameraViewCB" value="CameraView"
+                      checked={isCameraViewEnabled === true}
+                      onChange={onCameraViewCBChange}/>
+                      <label htmlFor="cameraViewCB"> Camera View</label>       
+                    </div>           
                 </div>
-              </div>
-            </div>
-            <main className="col ps-xs-2 pt-2">
-              <div className="row">
-                  <div className="collapse-and-timer">
-                    <div className="collapse-item">
-                      <button onClick={onCollapseClicked} data-bs-target="#sidebar" data-bs-toggle="collapse" 
-                      className="text-decoration-none collapse-image">
-                        {renderCollapseIcon(isSubMenuCollapsed)}
-                      </button>
+                <div className="collapse-item">
+                  <button onClick={onCollapseClicked} className="text-decoration-none collapse-image">
+                    {renderCollapseIcon(isSubMenuCollapsed)}
+                  </button>
+                       
                     </div>
                     <div className="timer">
                     <Countdown 
@@ -227,8 +228,6 @@ function App() {
                     </div>
                   </div>
               </div>
-            </main>
-          </div>
         </div>
       </header>
     </div>
