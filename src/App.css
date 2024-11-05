@@ -18,11 +18,11 @@
 .collapse-menu-components {
   position: absolute;
   height: auto;
-  width: 220px;
+  width: 230px;
   background-color: #deddc5;
   text-align: left;
-  -webkit-transition: opacity .5s;
-  transition: opacity .5s;
+  -webkit-transition: opacity 0.5s;
+  transition: opacity 0.5s;
   opacity: 1;
   z-index: 3;
   display: block;
@@ -31,7 +31,7 @@
 .collapse-menu-components-none {
   width: 0;
   height: 0;
-  opacity: 0;
+  opacity: 0.5;
 }
 
 .collapse-menu-background {
@@ -49,8 +49,19 @@
 }
 
 .components-list {
-  margin: 10px;
+  margin: 20px;
+}
+
+.components-list-none {
+  display: none;
+}
+
+.components-list-header {
   text-align: center;
+}
+
+.components-list-header-none {
+  display: none;
 }
 
 .collapse-image {

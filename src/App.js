@@ -157,80 +157,80 @@ function App() {
           <div className="row">
             <div className="collapse-and-timer">
               <div className={""+(isSubMenuCollapsed ? 'collapse-menu-background' : 'collapse-menu-background-none')}></div>
-              <div id="sidebar" className={""+(isSubMenuCollapsed ? 'collapse-menu-components' : 'collapse-menu-components-none')}>
-                  <div className="collapse-item">
-                    <button onClick={onCollapseClicked} className="text-decoration-none collapse-image">
-                      {renderCollapseIcon(isSubMenuCollapsed)}
-                    </button> 
-                  </div>
-
-                  <h2>Components</h2>
-                    <div className="components-list text-sm-center">
-                      <input type="checkbox" id="instructionsCB" name="instructionsCB" value="Instructions" 
-                      checked={isInstructionsEnabled === true} 
-                      onChange={onInstructionsCBChange}/>
-                      <label htmlFor="instructionsCB"> Instructions</label><br/>
-                            
-                      <input type="checkbox" id="programFPGACB" name="programFPGACB" value="ProgramFPGA"
-                      checked={isProgramFPGAEnabled === true}
-                      onChange={onProgramFPGACBChange}/>
-                      <label htmlFor="programFPGACB"> Program FPGA</label><br/>
-
-                      <input type="checkbox" id="programMCUCB" name="programMCUCB" value="ProgramMCU"
-                      checked={isProgramMCUEnabled === true}
-                      onChange={onProgramMCUCBChange}/>
-                      <label htmlFor="programMCUCB"> Program MCU</label><br/>
-                            
-                      <input type="checkbox" id="digitalInputsCB" name="digitalInputsCB" value="DigitalInputs"
-                      checked={isDigitalInputsEnabled === true}
-                      onChange={onDigitalInputsCBChange}/>
-                      <label htmlFor="digitalInputsCB"> Digital Inputs</label><br/>
-                            
-                      <input type="checkbox" id="cameraViewCB" name="cameraViewCB" value="CameraView"
-                      checked={isCameraViewEnabled === true}
-                      onChange={onCameraViewCBChange}/>
-                      <label htmlFor="cameraViewCB"> Camera View</label>       
-                    </div>           
-                </div>
+              <div className={""+(isSubMenuCollapsed ? 'collapse-menu-components' : 'collapse-menu-components-none')}>
                 <div className="collapse-item">
-                  <button onClick={onCollapseClicked} className="text-decoration-none collapse-image">
+                  <button onClick={onCollapseClicked} 
+                  className="text-decoration-none collapse-image">
                     {renderCollapseIcon(isSubMenuCollapsed)}
-                  </button>     
+                  </button> 
                 </div>
-                <div className="timer">
-                  <span className="bi bi-stopwatch"></span>
-                  <div className="timer-value">
-                    <Countdown 
-                      date={data.date + data.delay}
-                      renderer={renderer}
-                      onStart={onCountdownStart}
-                      onComplete={onCountdownComplete}/>
-                    {renderOnCountdownComplete(isCompleted)}
-                  </div>
-                </div>
-                <div className="timer-space">
+                <h2 className={""+(isSubMenuCollapsed ? 'components-list-header' : 'components-list-header-none')}>Components</h2>  
+                <div className={"text-start "+(isSubMenuCollapsed ? 'components-list' : 'components-list-none')} >
+                  <input type="checkbox" id="instructionsCB" name="instructionsCB" value="Instructions" 
+                  checked={isInstructionsEnabled === true} 
+                  onChange={onInstructionsCBChange}/>
+                  <label htmlFor="instructionsCB"> Instructions</label><br/>
+                            
+                  <input type="checkbox" id="programFPGACB" name="programFPGACB" value="ProgramFPGA"
+                  checked={isProgramFPGAEnabled === true}
+                  onChange={onProgramFPGACBChange}/>
+                  <label htmlFor="programFPGACB"> Program FPGA</label><br/>
+
+                  <input type="checkbox" id="programMCUCB" name="programMCUCB" value="ProgramMCU"
+                  checked={isProgramMCUEnabled === true}
+                  onChange={onProgramMCUCBChange}/>
+                  <label htmlFor="programMCUCB"> Program MCU</label><br/>
+                            
+                  <input type="checkbox" id="digitalInputsCB" name="digitalInputsCB" value="DigitalInputs"
+                  checked={isDigitalInputsEnabled === true}
+                  onChange={onDigitalInputsCBChange}/>
+                  <label htmlFor="digitalInputsCB"> Digital Inputs</label><br/>
+                            
+                  <input type="checkbox" id="cameraViewCB" name="cameraViewCB" value="CameraView"
+                  checked={isCameraViewEnabled === true}
+                  onChange={onCameraViewCBChange}/>
+                  <label htmlFor="cameraViewCB"> Camera View</label>       
+                </div>           
+              </div>
+              <div className="collapse-item">
+                <button onClick={onCollapseClicked} className="text-decoration-none collapse-image">
+                  {renderCollapseIcon(isSubMenuCollapsed)}
+                </button>     
+              </div>
+              <div className="timer">
+                <span className="bi bi-stopwatch"></span>
+                <div className="timer-value">
+                  <Countdown 
+                    date={data.date + data.delay}
+                    renderer={renderer}
+                    onStart={onCountdownStart}
+                    onComplete={onCountdownComplete}/>
+                  {renderOnCountdownComplete(isCompleted)}
                 </div>
               </div>
-              <div>
-                <div className="row">
-                  <div className="col-xl instructions-set">
-                    {renderInstructions(isInstructionsEnabled)}
-                  </div>
-                  <div className="col-xl program-device">
-                    {renderProgramFPGAorMCU(isProgramFPGAEnabled)}
-                  </div>
+              <div className="timer-space">
+              </div>
+            </div>
+            <div>
+              <div className="row">
+                <div className="col-xl instructions-set">
+                  {renderInstructions(isInstructionsEnabled)}
                 </div>
-                <div className="row">
-                  <div className="col-xl digital-inputs">
-                    {renderDigitalInputs(isDigitalInputsEnabled)}
-                  </div>
-                  <div className="col-xl camera-view">
-                    {renderCameraView(isCameraViewEnabled)}
-                  </div>
+                <div className="col-xl program-device">
+                  {renderProgramFPGAorMCU(isProgramFPGAEnabled)}
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-xl digital-inputs">
+                  {renderDigitalInputs(isDigitalInputsEnabled)}
+                </div>
+                <div className="col-xl camera-view">
+                  {renderCameraView(isCameraViewEnabled)}
                 </div>
               </div>
             </div>
           </div>
+        </div>
       </header>
     </div>
   );
