@@ -6,6 +6,7 @@ import DigitalInputs from './DigitalInputs';
 import CameraView from './CameraView';
 import { useState, useEffect } from 'react';
 import AnalogMultiplexer from './AnalogMultiplexer';
+import DigitalMultiplexer from './DigitalMultiplexer';
 
 const getLocalStorageValue = (s) => localStorage.getItem(s);
 
@@ -23,6 +24,8 @@ function App() {
   const [isProgramMCUEnabled, setIsProgramMCUEnabled] = useState(false);
   const [isDigitalInputsEnabled, setIsDigitalInputsEnabled] = useState(true);
   const [isCameraViewEnabled, setIsCameraViewEnabled] = useState(true);
+  const [isDigitalMuxEnabled, setIsDigitalMuxEnabled] = useState(false);
+  const [isAnalogMuxEnabled, setIsAnalogMuxEnabled] = useState(false);
   const [isSubMenuCollapsed, setIsSubMenuCollapsed] = useState(false);
   const [data, setData] = useState({ date: Date.now(), delay: 600000 });
   const wantedDelay = data.delay;
@@ -69,7 +72,17 @@ function App() {
   const onDigitalInputsCBChange = () => {
     console.log("onDigitalInputsCBChange");
     setIsDigitalInputsEnabled(!isDigitalInputsEnabled);
-  }  
+  }
+  
+  const onAnalogMuxCBChange = () => {
+    console.log("onAnalogMuxCBChange");
+    setIsAnalogMuxEnabled(!isAnalogMuxEnabled);
+  }
+
+  const onDigitalMuxCBChange = () => {
+    console.log("onDigitalMuxCBChange");
+    setIsDigitalMuxEnabled(!isDigitalMuxEnabled);
+  }
 
   const onCameraViewCBChange = () => {
     console.log("onCameraViewCBChange");
@@ -151,6 +164,22 @@ function App() {
     }
   }
 
+  const renderAnalogMultiplexer = (isAnalogMuxEnabled) => {
+    if (isAnalogMuxEnabled) {
+      return <AnalogMultiplexer/>
+    } else {
+      return <div><h2>Analog Multiplexer</h2></div>
+    }
+  }
+
+  const renderDigitalMultiplexer = (isDigitalMuxEnabled) => {
+    if (isDigitalMuxEnabled) {
+      return <DigitalMultiplexer/>
+    } else {
+      return <div><h2>Digital Multiplexer</h2></div>
+    }
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -190,7 +219,18 @@ function App() {
                   <input type="checkbox" id="cameraViewCB" name="cameraViewCB" value="CameraView"
                   checked={isCameraViewEnabled === true}
                   onChange={onCameraViewCBChange}/>
-                  <label htmlFor="cameraViewCB"> Camera View</label>       
+                  <label htmlFor="cameraViewCB"> Camera View</label><br/>
+
+                  <input type="checkbox" id="analogMuxCB" name="analogMuxCB" value="AnalogMux"
+                  checked={isAnalogMuxEnabled === true}
+                  onChange={onAnalogMuxCBChange}/>
+                  <label htmlFor="analogMuxCB"> Analog MUX</label><br/>
+                            
+                  <input type="checkbox" id="digitalMuxCB" name="digitalMuxCB" value="DigitalMux"
+                  checked={isDigitalMuxEnabled === true}
+                  onChange={onDigitalMuxCBChange}/>
+                  <label htmlFor="digitalMuxCB"> Digital MUX</label><br/>
+
                 </div>           
               </div>
               <div className="collapse-item">
@@ -214,27 +254,27 @@ function App() {
             </div>
             <div>
               <div className="row">
-                <div className="col-xl instructions-set">
+                <div className="col-xl app-component-box">
                   {renderInstructions(isInstructionsEnabled)}
                 </div>
-                <div className="col-xl program-device">
+                <div className="col-xl app-component-box">
                   {renderProgramFPGAorMCU(isProgramFPGAEnabled)}
                 </div>
               </div>
               <div className="row">
-                <div className="col-xl digital-inputs">
+                <div className="col-xl app-component-box">
                   {renderDigitalInputs(isDigitalInputsEnabled)}
                 </div>
-                <div className="col-xl camera-view">
+                <div className="col-xl app-component-box">
                   {renderCameraView(isCameraViewEnabled)}
                 </div>
               </div>
               <div className="row">
-                <div className="col-xl analog-multiplexer">
-                  <AnalogMultiplexer/>
+                <div className="col-xl app-component-box">
+                  {renderAnalogMultiplexer(isAnalogMuxEnabled)}
                 </div>
-                <div className="col-xl analog-multiplexer">
-                  {/* <AnalogMultiplexer/> */}
+                <div className="col-xl app-component-box">
+                  {renderDigitalMultiplexer(isDigitalMuxEnabled)}
                 </div>
               </div>
             </div>
