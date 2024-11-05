@@ -5,6 +5,7 @@ import ProgramDevice from './ProgramDevice';
 import DigitalInputs from './DigitalInputs';
 import CameraView from './CameraView';
 import { useState, useEffect } from 'react';
+import AnalogMultiplexer from './AnalogMultiplexer';
 
 const getLocalStorageValue = (s) => localStorage.getItem(s);
 
@@ -226,6 +227,14 @@ function App() {
                 </div>
                 <div className="col-xl camera-view">
                   {renderCameraView(isCameraViewEnabled)}
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-xl analog-multiplexer">
+                  <AnalogMultiplexer/>
+                </div>
+                <div className="col-xl analog-multiplexer">
+                  {/* <AnalogMultiplexer/> */}
                 </div>
               </div>
             </div>
