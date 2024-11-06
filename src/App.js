@@ -7,6 +7,7 @@ import CameraView from './CameraView';
 import { useState, useEffect } from 'react';
 import AnalogMultiplexer from './AnalogMultiplexer';
 import DigitalMultiplexer from './DigitalMultiplexer';
+import LogicAnalyzer from './LogicAnalyzer';
 
 const getLocalStorageValue = (s) => localStorage.getItem(s);
 
@@ -276,6 +277,9 @@ function App() {
                 <div className="col-xl app-component-box">
                   {renderDigitalMultiplexer(isDigitalMuxEnabled)}
                 </div>
+              </div>
+              <div className="row app-component-box">
+                  <LogicAnalyzer/>
               </div>
             </div>
           </div>

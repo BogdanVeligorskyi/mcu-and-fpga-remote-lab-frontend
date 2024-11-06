@@ -1,0 +1,28 @@
+.logic-analyzer-diagram {
+    height: 300px;
+    width: auto;
+    margin: 10px;
+    background-color: black;
+}
+
+.logic-analyzer-channels {
+    /* width: 75%; */
+    border: 2px dashed black;
+    /* display: inline-block; */
+}
+
+.logic-analyzer-trigger {
+    /* width: 25%; */
+    border: 2px dashed black;
+    /* display: inline-block; */
+}
+
+.fall-edge {
+    content: url("img/fall_edge.png");
+    transform: scale(0.7);
+}
+
+.rise-edge {
+    content: url("img/rise_edge.png");
+    transform: scale(0.7);
+}
