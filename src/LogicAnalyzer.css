@@ -1,12 +1,7 @@
 .logic-analyzer-diagram {
     height: 300px;
     width: auto;
-    margin: 10px;
     background-color: black;
-}
-
-.logic-analyzer-table {
-    border: 2px dashed black;
 }
 
 .fall-edge {
@@ -19,14 +14,43 @@
     transform: scale(0.7);
 }
 
-h3 {
-    padding: 10px;
+h5 {
+    padding-top: 10px;
 }
 
-.logic-analyzer-select {
-    width: 90px;
-    background-color: #deddc5;
-    border-radius: 2px;
-    padding: 5px;
-    margin: 10px;   
+@media (max-width: 576px) {
+    .logic-analyzer-table {
+        /* border: 1px dashed black; */
+        font-size: 10px;
+        margin-top: 100px;
+    }
+    .logic-analyzer-table-channels {
+        margin-top: 60px;
+    }
+    .logic-analyzer-select {
+        width: 60px;
+        background-color: #deddc5;
+        border-radius: 2px;
+        padding: 5px;
+        margin-bottom: 5px;
+    }
+}
+
+@media (min-width: 576px) {
+    .logic-analyzer-table {
+        /* border: 2px dashed black; */
+        font-size: 18px;
+    }
+
+    .logic-analyzer-table-channels {
+        margin-top: 40px;
+    }
+
+    .logic-analyzer-select {
+        width: 90px;
+        background-color: #deddc5;
+        border-radius: 2px;
+        padding: 5px;
+        margin-bottom: 5px;   
+    }
 }

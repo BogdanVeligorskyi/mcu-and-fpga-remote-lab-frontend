@@ -191,10 +191,10 @@ function LogicAnalyzer() {
         <div>
             <h2>Logic Analyzer</h2>
             <LogicAnalyzerTimingDiagram/>
-            <div className="row">
-            <div className="col-9 logic-analyzer-table">
-                <h3>Channels</h3>
-                <table>
+            <div className="row m-1">
+            <div className="col-9 px-1 logic-analyzer-table">
+                <h5>Channels</h5>
+                <table className="logic-analyzer-table-channels">
                     <tbody>
                         <tr>
                             <td>CH0</td>
@@ -303,8 +303,8 @@ function LogicAnalyzer() {
                     </tbody>
                 </table>
             </div>
-            <div className="col-3 logic-analyzer-table">
-                <h3>Trigger</h3>
+            <div className="col-3 px-1 logic-analyzer-table">
+                <h5>Trigger</h5>
                 <table>
                     <tbody>
                         <tr>
@@ -331,7 +331,7 @@ function LogicAnalyzer() {
                         </tr>
                     </tbody>
                 </table>
-                Source <br/>
+                <h6>Source </h6>
                 <select className="logic-analyzer-select" name="logicAnalyzerChannels">
                     {list.map((channel)=> {
                         return (

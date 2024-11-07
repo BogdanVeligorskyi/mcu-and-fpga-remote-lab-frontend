@@ -3,8 +3,7 @@ import './LogicAnalyzer.css';
 function LogicAnalyzerTimingDiagram() {
     return (
         <div>
-            <div className="logic-analyzer-diagram">
-            
+            <div className="mx-1 logic-analyzer-diagram">
             </div>
         </div>
     )

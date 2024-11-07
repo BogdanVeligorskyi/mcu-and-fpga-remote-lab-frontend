@@ -4,7 +4,7 @@ import Instructions from './Instructions';
 import ProgramDevice from './ProgramDevice';
 import DigitalInputs from './DigitalInputs';
 import CameraView from './CameraView';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import AnalogMultiplexer from './AnalogMultiplexer';
 import DigitalMultiplexer from './DigitalMultiplexer';
 import LogicAnalyzer from './LogicAnalyzer';
@@ -27,11 +27,12 @@ function App() {
   const [isCameraViewEnabled, setIsCameraViewEnabled] = useState(true);
   const [isDigitalMuxEnabled, setIsDigitalMuxEnabled] = useState(false);
   const [isAnalogMuxEnabled, setIsAnalogMuxEnabled] = useState(false);
+  const [isLogicAnalyzerEnabled, setIsLogicAnalyzerEnabled] = useState(false);
   const [isSubMenuCollapsed, setIsSubMenuCollapsed] = useState(false);
   const [data, setData] = useState({ date: Date.now(), delay: 600000 });
   const wantedDelay = data.delay;
 
-  // use effect to store countdown value in local storage
+  // ----- Countdown -----
   useEffect(() => {
 
     const savedDate = getLocalStorageValue("end_time");
@@ -48,6 +49,50 @@ function App() {
       }
     }
   }, []);
+
+  const onCountdownComplete = () => {
+    console.log("onCountdownComplete");
+    if (localStorage.getItem("end_time") != null) {
+      localStorage.removeItem("end_time");
+    }
+    setIsCompleted(true);
+  }
+
+  const onCountdownStart = () => {
+    if (localStorage.getItem("end_time") == null) {
+      localStorage.setItem("end_time", JSON.stringify(data.date + data.delay));
+    }
+  }
+
+  const onTimerCompletedOk = () => {
+    console.log("onTimerCompletedOk");
+    setIsCompletedOk(true);
+  }
+
+  // ----- Submenu -----
+  const handleClickOutsideSubmenu = () => {
+    setIsSubMenuCollapsed(false);
+  };
+
+  const useOutsideClick = (callback) => {
+    const ref = useRef();
+  
+    useEffect(() => {
+      const handleOutsideClick = (e) => {
+        if (ref.current && !ref.current.contains(e.target)) {
+          callback();
+        }
+      };
+  
+      document.addEventListener('click', handleOutsideClick, true);
+  
+      return () => {
+        document.removeEventListener('click', handleOutsideClick, true);
+      };
+    }, [ref]);
+  
+    return ref;
+  };
 
   const onCollapseClicked = () => {
     setIsSubMenuCollapsed(!isSubMenuCollapsed);
@@ -88,27 +133,14 @@ function App() {
   const onCameraViewCBChange = () => {
     console.log("onCameraViewCBChange");
     setIsCameraViewEnabled(!isCameraViewEnabled);
-  }  
-
-  const onCountdownComplete = () => {
-    console.log("onCountdownComplete");
-    if (localStorage.getItem("end_time") != null) {
-      localStorage.removeItem("end_time");
-    }
-    setIsCompleted(true);
+  }
+  
+  const onLogicAnalyzerCBChange = () => {
+    console.log("onLogicAnalyzerCBChange");
+    setIsLogicAnalyzerEnabled(!isLogicAnalyzerEnabled);
   }
 
-  const onCountdownStart = () => {
-    if (localStorage.getItem("end_time") == null) {
-      localStorage.setItem("end_time", JSON.stringify(data.date + data.delay));
-    }
-  }
-
-  const onTimerCompletedOk = () => {
-    console.log("onTimerCompletedOk");
-    setIsCompletedOk(true);
-  }
-
+  // ----- Render components based on conditions -----
   const renderOnCountdownComplete = (isCompleted) => {
     if (isCompleted) {
       if (!isCompletedOk) {
@@ -181,6 +213,14 @@ function App() {
     }
   }
 
+  const renderLogicAnalyzer = (isLogicAnalyzerEnabled) => {
+    if (isLogicAnalyzerEnabled) {
+      return <LogicAnalyzer/>
+    } else {
+      return <div><h2>Logic Analyzer</h2></div>
+    }
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -188,7 +228,7 @@ function App() {
           <div className="row">
             <div className="collapse-and-timer">
               <div className={""+(isSubMenuCollapsed ? 'collapse-menu-background' : 'collapse-menu-background-none')}></div>
-              <div className={""+(isSubMenuCollapsed ? 'collapse-menu-components' : 'collapse-menu-components-none')}>
+              <div ref={useOutsideClick(handleClickOutsideSubmenu)} className={""+(isSubMenuCollapsed ? 'collapse-menu-components' : 'collapse-menu-components-none')}>
                 <div className="collapse-item">
                   <button onClick={onCollapseClicked} 
                   className="text-decoration-none collapse-image">
@@ -231,6 +271,11 @@ function App() {
                   checked={isDigitalMuxEnabled === true}
                   onChange={onDigitalMuxCBChange}/>
                   <label htmlFor="digitalMuxCB"> Digital MUX</label><br/>
+
+                  <input type="checkbox" id="logicAnalyzerCB" name="logicAnalyzerCB" value="LogicAnalyzer"
+                  checked={isLogicAnalyzerEnabled === true}
+                  onChange={onLogicAnalyzerCBChange}/>
+                  <label htmlFor="logicAnalyzerCB"> Logic Analyzer</label><br/>
 
                 </div>           
               </div>
@@ -279,7 +324,7 @@ function App() {
                 </div>
               </div>
               <div className="row app-component-box">
-                  <LogicAnalyzer/>
+                  {renderLogicAnalyzer(isLogicAnalyzerEnabled)}
               </div>
             </div>
           </div>
