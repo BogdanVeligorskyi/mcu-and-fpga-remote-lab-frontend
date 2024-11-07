@@ -5,16 +5,8 @@
     background-color: black;
 }
 
-.logic-analyzer-channels {
-    /* width: 75%; */
+.logic-analyzer-table {
     border: 2px dashed black;
-    /* display: inline-block; */
-}
-
-.logic-analyzer-trigger {
-    /* width: 25%; */
-    border: 2px dashed black;
-    /* display: inline-block; */
 }
 
 .fall-edge {
@@ -25,4 +17,16 @@
 .rise-edge {
     content: url("img/rise_edge.png");
     transform: scale(0.7);
+}
+
+h3 {
+    padding: 10px;
+}
+
+.logic-analyzer-select {
+    width: 90px;
+    background-color: #deddc5;
+    border-radius: 2px;
+    padding: 5px;
+    margin: 10px;   
 }

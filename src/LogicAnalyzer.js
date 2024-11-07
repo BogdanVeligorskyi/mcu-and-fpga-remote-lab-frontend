@@ -21,72 +21,170 @@ function LogicAnalyzer() {
     const [ch15, setCh15] = useState(false);
     const [triggerType, setTriggerType] = useState("fall-edge");
 
+    const [list, setList] = useState([]);
+    // const [selectedChannel, setSelectedChannel] = useState("");
+
+    const addNewElemToList = (newListElem) => {
+        let temp = [...list, newListElem];
+        temp.sort();
+        setList(temp);
+    }
+
+    const removeElemFromList = (channelName) => {
+        let arr = [...list];
+        var index = arr.indexOf(channelName);
+        if (index !== -1) {
+            arr.splice(index, 1);
+            setList(arr);
+        }
+    }
+
     const onTriggerTypeChange = e => {
         setTriggerType(e.target.value);
     }
 
     const onChannel0Change = () => {
-        setCh0(!ch0);
+        setCh0(!ch0);  
+        if (!ch0) {
+            addNewElemToList("CH0");       
+        } else {
+            removeElemFromList("CH0");
+        }
     }
 
     const onChannel1Change = () => {
         setCh1(!ch1);
+        if (!ch1) {
+            addNewElemToList("CH1");       
+        } else {
+            removeElemFromList("CH1");
+        }
     }
 
     const onChannel2Change = () => {
         setCh2(!ch2);
+        if (!ch2) {
+            addNewElemToList("CH2");       
+        } else {
+            removeElemFromList("CH2");
+        }
     }
 
     const onChannel3Change = () => {
         setCh3(!ch3);
+        if (!ch3) {
+            addNewElemToList("CH3");       
+        } else {
+            removeElemFromList("CH3");
+        }
     }
 
     const onChannel4Change = () => {
         setCh4(!ch4);
+        if (!ch4) {
+            addNewElemToList("CH4");       
+        } else {
+            removeElemFromList("CH4");
+        }
     }
 
     const onChannel5Change = () => {
         setCh5(!ch5);
+        if (!ch5) {
+            addNewElemToList("CH5");       
+        } else {
+            removeElemFromList("CH5");
+        }
     }
 
     const onChannel6Change = () => {
         setCh6(!ch6);
+        if (!ch6) {
+            addNewElemToList("CH6");       
+        } else {
+            removeElemFromList("CH6");
+        }
     }
 
     const onChannel7Change = () => {
         setCh7(!ch7);
+        if (!ch7) {
+            addNewElemToList("CH7");       
+        } else {
+            removeElemFromList("CH7");
+        }
     }
 
     const onChannel8Change = () => {
         setCh8(!ch8);
+        if (!ch8) {
+            addNewElemToList("CH8");       
+        } else {
+            removeElemFromList("CH8");
+        }
     }
 
     const onChannel9Change = () => {
         setCh9(!ch9);
+        if (!ch9) {
+            addNewElemToList("CH9");       
+        } else {
+            removeElemFromList("CH9");
+        }
     }
 
     const onChannel10Change = () => {
         setCh10(!ch10);
+        if (!ch10) {
+            addNewElemToList("CH10");       
+        } else {
+            removeElemFromList("CH10");
+        }
     }
 
     const onChannel11Change = () => {
         setCh11(!ch11);
+        if (!ch11) {
+            addNewElemToList("CH11");       
+        } else {
+            removeElemFromList("CH11");
+        }
     }
 
     const onChannel12Change = () => {
         setCh12(!ch12);
+        if (!ch12) {
+            addNewElemToList("CH12");       
+        } else {
+            removeElemFromList("CH12");
+        }
     }
 
     const onChannel13Change = () => {
         setCh13(!ch13);
+        if (!ch13) {
+            addNewElemToList("CH13");       
+        } else {
+            removeElemFromList("CH13");
+        }
     }
 
     const onChannel14Change = () => {
         setCh14(!ch14);
+        if (!ch14) {
+            addNewElemToList("CH14");       
+        } else {
+            removeElemFromList("CH14");
+        }
     }
 
     const onChannel15Change = () => {
         setCh15(!ch15);
+        if (!ch15) {
+            addNewElemToList("CH15");       
+        } else {
+            removeElemFromList("CH15");
+        }
     }
 
     return (
@@ -94,7 +192,7 @@ function LogicAnalyzer() {
             <h2>Logic Analyzer</h2>
             <LogicAnalyzerTimingDiagram/>
             <div className="row">
-            <div className="col-9 logic-analyzer-channels">
+            <div className="col-9 logic-analyzer-table">
                 <h3>Channels</h3>
                 <table>
                     <tbody>
@@ -205,7 +303,7 @@ function LogicAnalyzer() {
                     </tbody>
                 </table>
             </div>
-            <div className="col-3 logic-analyzer-trigger">
+            <div className="col-3 logic-analyzer-table">
                 <h3>Trigger</h3>
                 <table>
                     <tbody>
@@ -233,7 +331,16 @@ function LogicAnalyzer() {
                         </tr>
                     </tbody>
                 </table>
-                <select></select>
+                Source <br/>
+                <select className="logic-analyzer-select" name="logicAnalyzerChannels">
+                    {list.map((channel)=> {
+                        return (
+                            <option key={channel}>
+                                {channel}
+                            </option>
+                        )
+                    })}
+                </select>
             </div>
             </div>
         </div>
