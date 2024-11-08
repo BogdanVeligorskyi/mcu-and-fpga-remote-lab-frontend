@@ -15,10 +15,6 @@
   font-size: calc(10px + 2vmin);
 }
 
-.App-link {
-  color: #61dafb;
-}
-
 .collapse-menu-components {
   position: absolute;
   height: auto;
@@ -74,7 +70,7 @@
   border: 0;
 }
 
-.collapse-and-timer {
+.collapse-and-countdown {
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
   border-bottom: 2px solid black;
   padding: 15px;
@@ -93,19 +89,19 @@
   border-radius: 5px;
 }
 
-.timer {
+.countdown {
   height: 30px;
   width: 79%;
   align-content: center;
   display: inline-block;
 }
 
-.timer-space {
+.countdown-space {
   width: 11%;
   display: inline-block;
 }
 
-.timer-completed {
+.countdown-completed {
   position: fixed;
   top: 0px;
   left: 0px;
@@ -115,7 +111,7 @@
   z-index: 9;
 }
 
-.timer-completed-info {
+.countdown-completed-info {
   position: absolute;
   min-width: 300px;
   padding: 10px;
@@ -129,12 +125,12 @@
   display: block;
 }
 
-.timer-value {
+.countdown-value {
   padding-left: 5px;
   display: inline;
 }
 
-.timer-completed-ok {
+.countdown-completed-ok {
   display: block;
   text-align: center;
   margin: auto;

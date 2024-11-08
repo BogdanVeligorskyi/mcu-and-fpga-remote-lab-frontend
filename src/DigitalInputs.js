@@ -1,4 +1,4 @@
-import './DigitalInputs.css'
+import './styles/DigitalInputs.css'
 import DigitalInputsButton from './DigitalInputsButton';
 import DigitalInputsSwitch from './DigitalInputsSwitch';
 import DigitalInputsGen from './DigitalInputsGen';

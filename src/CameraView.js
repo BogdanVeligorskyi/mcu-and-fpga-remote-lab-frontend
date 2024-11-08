@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './CameraView.css';
+import './styles/CameraView.css';
 import { getUrlForRequest } from './utils/get-url-for-request';
 
 function CameraView() {

@@ -1,4 +1,4 @@
-import './AnalogMultiplexer.css'
+import './styles/AnalogMultiplexer.css'
 import { useState } from "react"
 
 function AnalogMultiplexer() {

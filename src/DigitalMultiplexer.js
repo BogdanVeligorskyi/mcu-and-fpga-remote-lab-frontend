@@ -1,4 +1,4 @@
-import './DigitalMultiplexer.css'
+import './styles/DigitalMultiplexer.css'
 import { useState } from "react"
 
 function DigitalMultiplexer() {

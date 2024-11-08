@@ -1,4 +1,5 @@
 import { useState } from "react";
+import './styles/LogicAnalyzer.css';
 import LogicAnalyzerTimingDiagram from "./LogicAnalyzerTimingDiagram";
 
 function LogicAnalyzer() {

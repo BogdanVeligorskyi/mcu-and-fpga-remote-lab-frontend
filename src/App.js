@@ -1,7 +1,7 @@
-import './App.css';
-import Countdown, { zeroPad } from 'react-countdown'
+import './styles/App.css';
 import { useState, useEffect, useRef } from 'react';
 import ScrollToTop from 'react-scroll-to-top';
+import AppCountdown from './AppCountdown';
 import Instructions from './Instructions';
 import ProgramDevice from './ProgramDevice';
 import DigitalInputs from './DigitalInputs';
@@ -10,17 +10,8 @@ import AnalogMultiplexer from './AnalogMultiplexer';
 import DigitalMultiplexer from './DigitalMultiplexer';
 import LogicAnalyzer from './LogicAnalyzer';
 
-const getLocalStorageValue = (s) => localStorage.getItem(s);
-
-// formatting countdown
-const renderer = ({ minutes, seconds }) => {
-    return <span>{zeroPad(minutes)}:{zeroPad(seconds)}</span>;
-};
-
 function App() {
 
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [isCompletedOk, setIsCompletedOk] = useState(false);
   const [isInstructionsEnabled, setIsInstructionsEnabled] = useState(true);  
   const [isProgramFPGAEnabled, setIsProgramFPGAEnabled] = useState(true);
   const [isProgramMCUEnabled, setIsProgramMCUEnabled] = useState(false);
@@ -28,47 +19,8 @@ function App() {
   const [isCameraViewEnabled, setIsCameraViewEnabled] = useState(true);
   const [isDigitalMuxEnabled, setIsDigitalMuxEnabled] = useState(false);
   const [isAnalogMuxEnabled, setIsAnalogMuxEnabled] = useState(false);
-  const [isLogicAnalyzerEnabled, setIsLogicAnalyzerEnabled] = useState(false);
+  const [isLogicAnalyzerEnabled, setIsLogicAnalyzerEnabled] = useState(true);
   const [isSubMenuCollapsed, setIsSubMenuCollapsed] = useState(false);
-  const [data, setData] = useState({ date: Date.now(), delay: 600000 });
-  const wantedDelay = data.delay;
-
-  // ----- Countdown -----
-  useEffect(() => {
-
-    const savedDate = getLocalStorageValue("end_time");
-    console.log(savedDate);
-    if (savedDate != null && !isNaN(savedDate)) {
-      const currentTime = Date.now();
-      const delta = parseInt(savedDate, 10) - currentTime;
-
-      if (wantedDelay < delta) {
-        if (localStorage.getItem("end_time").length > 0)
-          localStorage.removeItem("end_time");
-      } else {
-        setData({ date: currentTime, delay: delta });
-      }
-    }
-  }, []);
-
-  const onCountdownComplete = () => {
-    console.log("onCountdownComplete");
-    if (localStorage.getItem("end_time") != null) {
-      localStorage.removeItem("end_time");
-    }
-    setIsCompleted(true);
-  }
-
-  const onCountdownStart = () => {
-    if (localStorage.getItem("end_time") == null) {
-      localStorage.setItem("end_time", JSON.stringify(data.date + data.delay));
-    }
-  }
-
-  const onTimerCompletedOk = () => {
-    console.log("onTimerCompletedOk");
-    setIsCompletedOk(true);
-  }
 
   // ----- Submenu -----
   const handleClickOutsideSubmenu = () => {
@@ -83,14 +35,12 @@ function App() {
         if (ref.current && !ref.current.contains(e.target)) {
           callback();
         }
-      };
-  
+      }; 
       document.addEventListener('click', handleOutsideClick, true);
-  
       return () => {
         document.removeEventListener('click', handleOutsideClick, true);
       };
-    }, [ref]);
+    }, [ref, callback]);
   
     return ref;
   };
@@ -142,20 +92,6 @@ function App() {
   }
 
   // ----- Render components based on conditions -----
-  const renderOnCountdownComplete = (isCompleted) => {
-    if (isCompleted) {
-      if (!isCompletedOk) {
-      return <div className="timer-completed">
-        <div className="timer-completed-info">Your experiment time is over! 
-        <br/>Please, let other students use this lab.<br/>
-        <button className="btn btn-primary timer-completed-ok" onClick={onTimerCompletedOk}>Ok</button></div>
-      </div>
-      } else {
-        return <div className="timer-completed"></div>
-      }
-    }
-  }
-
   const renderCollapseIcon = (isSubMenuCollapsed) => {
     console.log(isSubMenuCollapsed);
     if (!isSubMenuCollapsed) {
@@ -227,17 +163,25 @@ function App() {
       <header className="App-header">
         <div className="container">
           <div className="row">
-            <div className="collapse-and-timer">
-              <div className={""+(isSubMenuCollapsed ? 'collapse-menu-background' : 'collapse-menu-background-none')}></div>
-              <div ref={useOutsideClick(handleClickOutsideSubmenu)} className={""+(isSubMenuCollapsed ? 'collapse-menu-components' : 'collapse-menu-components-none')}>
+
+            {/* Countdown and Submenu */}
+            <div className="collapse-and-countdown">
+              <div className={(isSubMenuCollapsed ? 'collapse-menu-background' : 'collapse-menu-background-none')}>
+              </div>
+              <div ref={useOutsideClick(handleClickOutsideSubmenu)} 
+              className={(isSubMenuCollapsed ? 'collapse-menu-components' : 'collapse-menu-components-none')}>
                 <div className="collapse-item">
+
+                  {/* Open submenu button */}
                   <button onClick={onCollapseClicked} 
                   className="text-decoration-none collapse-image">
                     {renderCollapseIcon(isSubMenuCollapsed)}
                   </button> 
                 </div>
-                <h2 className={""+(isSubMenuCollapsed ? 'components-list-header' : 'components-list-header-none')}>Components</h2>  
+                <h2 className={(isSubMenuCollapsed ? 'components-list-header' : 'components-list-header-none')}>Components</h2>  
                 <div className={"text-start "+(isSubMenuCollapsed ? 'components-list' : 'components-list-none')} >
+                  
+                  {/* Submenu checkboxes */}              
                   <input type="checkbox" id="instructionsCB" name="instructionsCB" value="Instructions" 
                   checked={isInstructionsEnabled === true} 
                   onChange={onInstructionsCBChange}/>
@@ -280,26 +224,22 @@ function App() {
 
                 </div>           
               </div>
+
+              {/* Close submenu button */}
               <div className="collapse-item">
-                <button onClick={onCollapseClicked} className="text-decoration-none collapse-image">
+                <button onClick={onCollapseClicked} 
+                className="text-decoration-none collapse-image">
                   {renderCollapseIcon(isSubMenuCollapsed)}
                 </button>     
               </div>
-              <div className="timer">
-                <span className="bi bi-stopwatch"></span>
-                <div className="timer-value">
-                  <Countdown 
-                    date={data.date + data.delay}
-                    renderer={renderer}
-                    onStart={onCountdownStart}
-                    onComplete={onCountdownComplete}/>
-                  {renderOnCountdownComplete(isCompleted)}
-                </div>
-              </div>
-              <div className="timer-space">
+              <AppCountdown/>
+              <div className="countdown-space">
               </div>
             </div>
+
+            {/* Components */}
             <div>
+              {/* Instructions and Program Device */}
               <div className="row">
                 <div className="col-xl app-component-box">
                   {renderInstructions(isInstructionsEnabled)}
@@ -308,6 +248,8 @@ function App() {
                   {renderProgramFPGAorMCU(isProgramFPGAEnabled)}
                 </div>
               </div>
+
+              {/* Digital Inputs and Camera View */}
               <div className="row">
                 <div className="col-xl app-component-box">
                   {renderDigitalInputs(isDigitalInputsEnabled)}
@@ -316,6 +258,8 @@ function App() {
                   {renderCameraView(isCameraViewEnabled)}
                 </div>
               </div>
+
+              {/* Analog Multiplexer and Digital Multiplexer */}
               <div className="row">
                 <div className="col-xl app-component-box">
                   {renderAnalogMultiplexer(isAnalogMuxEnabled)}
@@ -324,9 +268,12 @@ function App() {
                   {renderDigitalMultiplexer(isDigitalMuxEnabled)}
                 </div>
               </div>
+
+              {/* Logic Analyzer */}
               <div className="row app-component-box">
                   {renderLogicAnalyzer(isLogicAnalyzerEnabled)}
               </div>
+
             </div>
           </div>
         </div>

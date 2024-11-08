@@ -1,4 +1,4 @@
-import './Instructions.css'
+import './styles/Instructions.css'
 
 function Instructions() {
     return(

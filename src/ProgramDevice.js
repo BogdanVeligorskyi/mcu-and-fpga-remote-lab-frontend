@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { getUrlForRequest } from './utils/get-url-for-request';
-import './ProgramDevice.css'
+import './styles/ProgramDevice.css'
 
 const ProgramDeviceForm = ({isFPGADev}) => {
 

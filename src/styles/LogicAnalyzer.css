@@ -1,16 +1,15 @@
 .logic-analyzer-diagram {
-    height: 300px;
     width: auto;
     background-color: black;
 }
 
 .fall-edge {
-    content: url("img/fall_edge.png");
+    content: url("../img/fall_edge.png");
     transform: scale(0.7);
 }
 
 .rise-edge {
-    content: url("img/rise_edge.png");
+    content: url("../img/rise_edge.png");
     transform: scale(0.7);
 }
 
