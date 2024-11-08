@@ -146,6 +146,12 @@ input[type="checkbox"] {
   transform: scale(1.5);
 }
 
+.scroll-to-top-button {
+  background-color: gray !important; 
+  right: 3px !important;
+  bottom: 60px !important;
+}
+
 .switch {
   position: relative;
   display: inline-block;

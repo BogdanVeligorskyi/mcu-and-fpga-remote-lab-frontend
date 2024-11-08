@@ -1,10 +1,11 @@
 import './App.css';
 import Countdown, { zeroPad } from 'react-countdown'
+import { useState, useEffect, useRef } from 'react';
+import ScrollToTop from 'react-scroll-to-top';
 import Instructions from './Instructions';
 import ProgramDevice from './ProgramDevice';
 import DigitalInputs from './DigitalInputs';
 import CameraView from './CameraView';
-import { useState, useEffect, useRef } from 'react';
 import AnalogMultiplexer from './AnalogMultiplexer';
 import DigitalMultiplexer from './DigitalMultiplexer';
 import LogicAnalyzer from './LogicAnalyzer';
@@ -330,6 +331,7 @@ function App() {
           </div>
         </div>
       </header>
+      <ScrollToTop color="white" className="scroll-to-top-button"/>
     </div>
   );
 }
