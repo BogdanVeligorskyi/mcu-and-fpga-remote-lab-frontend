@@ -9,6 +9,7 @@ import CameraView from './CameraView';
 import AnalogMultiplexer from './AnalogMultiplexer';
 import DigitalMultiplexer from './DigitalMultiplexer';
 import LogicAnalyzer from './LogicAnalyzer';
+import FunctionalGenerator from './FunctionalGenerator';
 
 function App() {
 
@@ -19,7 +20,8 @@ function App() {
   const [isCameraViewEnabled, setIsCameraViewEnabled] = useState(true);
   const [isDigitalMuxEnabled, setIsDigitalMuxEnabled] = useState(false);
   const [isAnalogMuxEnabled, setIsAnalogMuxEnabled] = useState(false);
-  const [isLogicAnalyzerEnabled, setIsLogicAnalyzerEnabled] = useState(true);
+  const [isLogicAnalyzerEnabled, setIsLogicAnalyzerEnabled] = useState(false);
+  const [isFunctionalGeneratorEnabled, setIsFunctionalGeneratorEnabled] = useState(true);
   const [isSubMenuCollapsed, setIsSubMenuCollapsed] = useState(false);
 
   // ----- Submenu -----
@@ -91,6 +93,11 @@ function App() {
     setIsLogicAnalyzerEnabled(!isLogicAnalyzerEnabled);
   }
 
+  const onFunctionalGeneratorCBChange = () => {
+    console.log("onFunctionalGeneratorCBChange");
+    setIsFunctionalGeneratorEnabled(!isFunctionalGeneratorEnabled);
+  }
+
   // ----- Render components based on conditions -----
   const renderCollapseIcon = (isSubMenuCollapsed) => {
     console.log(isSubMenuCollapsed);
@@ -111,7 +118,6 @@ function App() {
 
   const renderProgramFPGAorMCU = (isProgramFPGAEnabled) => {
     if (isProgramFPGAEnabled) {
-      console.log(4);
       return <ProgramDevice isFPGADevice={true}/>
     } else {
       return <ProgramDevice isFPGADevice={false}/>
@@ -155,6 +161,14 @@ function App() {
       return <LogicAnalyzer/>
     } else {
       return <div><h2>Logic Analyzer</h2></div>
+    }
+  }
+
+  const renderFunctionalGenerator = (isFunctionalGeneratorEnabled) => {
+    if (isFunctionalGeneratorEnabled) {
+      return <FunctionalGenerator/>
+    } else {
+      return <div><h2>Functional Generator</h2></div>
     }
   }
 
@@ -222,6 +236,11 @@ function App() {
                   onChange={onLogicAnalyzerCBChange}/>
                   <label htmlFor="logicAnalyzerCB"> Logic Analyzer</label><br/>
 
+                  <input type="checkbox" id="functionalGeneratorCB" name="functionalGeneratorCB" value="FunctionalGenerator"
+                  checked={isFunctionalGeneratorEnabled === true}
+                  onChange={onFunctionalGeneratorCBChange}/>
+                  <label htmlFor="functionalGeneratorCB"> Functional Generator</label><br/>
+
                 </div>           
               </div>
 
@@ -267,6 +286,11 @@ function App() {
                 <div className="col-xl app-component-box">
                   {renderDigitalMultiplexer(isDigitalMuxEnabled)}
                 </div>
+              </div>
+
+              {/* Functional Generator */}
+              <div className="row app-component-box">
+                  {renderFunctionalGenerator(isFunctionalGeneratorEnabled)}
               </div>
 
               {/* Logic Analyzer */}

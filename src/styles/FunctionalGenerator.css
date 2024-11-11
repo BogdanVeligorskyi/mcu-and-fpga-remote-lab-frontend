@@ -1,0 +1,56 @@
+.sine-function {
+    content: url("../img/sine_signal.png");
+    transform: scale(0.7);
+}
+
+.digital-function {
+    content: url("../img/digital_signal.png");
+    transform: scale(0.7);
+}
+
+.saw-function {
+    content: url("../img/saw_signal.png");
+    transform: scale(0.7);
+}
+
+.triangle-function {
+    content: url("../img/triangle_signal.png");
+    transform: scale(0.7);
+}
+
+.functional-generator-table {
+    padding: 15px;
+    vertical-align: middle;
+    display: inline-block;
+    text-align: left;
+}
+
+.functional-generator-sliders {
+    padding: 15px;
+    vertical-align: middle;
+    display: inline-block;
+    text-align: center;
+}
+
+.functional-generator-sliders-label {
+    margin: 5px;
+    padding: 5px;
+    border: 2px solid black;
+    border-radius: 5px;
+    background-color: #b3b29d;
+    min-width: 110px;
+
+}
+
+.functional-generator-channel-name {
+    text-align: left;
+    color: blue;
+}
+
+.border-spec {
+    border: 2px dashed black;
+}
+
+label {
+    padding: 5px;
+}

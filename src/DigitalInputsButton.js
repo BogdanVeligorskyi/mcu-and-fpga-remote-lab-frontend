@@ -4,8 +4,8 @@ import { useState } from 'react';
 function DigitalInputsButton({ pinNum }) {
 
   const [resultMessage, setResultMessage] = useState("")
-const [isRequestCompleted, setIsRequestCompleted] = useState(false)
-const [status, setStatus] = useState(0)
+  const [isRequestCompleted, setIsRequestCompleted] = useState(false)
+  const [status, setStatus] = useState(0)
 
 const renderResultBlock = (isRequestCompleted, status) => {
     console.log(status);
