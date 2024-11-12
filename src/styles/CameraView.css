@@ -1,7 +1,3 @@
-.camera-switch {
-    margin: 5px;
-}
-
  @media (min-width: 576px) {
     .camera-frame {
         height: 270px;
@@ -43,9 +39,3 @@ iframe {
     width: 100%;
     justify-content: center;
 }
-
-.camera-view-onoff {
-    padding: 5px;
-    display: inline-block;
-}
-  

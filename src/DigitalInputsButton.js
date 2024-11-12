@@ -3,12 +3,13 @@ import { useState } from 'react';
 
 function DigitalInputsButton({ pinNum }) {
 
-  const [resultMessage, setResultMessage] = useState("")
-  const [isRequestCompleted, setIsRequestCompleted] = useState(false)
-  const [status, setStatus] = useState(0)
+  const [resultMessage, setResultMessage] = useState("");
+  const [isRequestCompleted, setIsRequestCompleted] = useState(false);
+  const [status, setStatus] = useState(0);
+  const [isPressed, setIsPressed] = useState(false);
 
 const renderResultBlock = (isRequestCompleted, status) => {
-    console.log(status);
+    //console.log(status);
     if (isRequestCompleted && status === 200) {
         return <div className="digital-inputs-button-success">{resultMessage}</div>
     } else if (isRequestCompleted && status !== 200) {
@@ -18,8 +19,38 @@ const renderResultBlock = (isRequestCompleted, status) => {
     }
 }
 
-  const onButtonClick = () => {
+const onButtonRelease = () => {
+  setIsRequestCompleted(false);
+  setIsPressed(false);
+  setStatus(0);
+  console.log(pinNum);
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ pin: pinNum, state: 0 }),
+  };
+  setResultMessage("Trying to set pin " + pinNum);
+  fetch(getUrlForRequest('/api/write-pin'), requestOptions).then(
+    (response) => {
+      if (response.status === 200) {
+        setStatus(200);
+        setResultMessage("Successfuly unset pin " + pinNum + "!");
+      } else {
+        setStatus(500);
+        setResultMessage("Error trying to set pin " + pinNum + "!");
+      }
+      setIsRequestCompleted(true);
+      console.log('response.status =', response.status);
+      console.log('response text: ', response.json());
+    }
+  ).catch(error => {
+    console.log(error)
+});
+};
+
+  const onButtonPress = () => {
     setIsRequestCompleted(false);
+    setIsPressed(true);
     setStatus(0);
     console.log(pinNum);
     const requestOptions = {
@@ -46,7 +77,7 @@ const renderResultBlock = (isRequestCompleted, status) => {
   });
   };
   return (<div>
-    <button className="digital-input-button" onClick={onButtonClick}></button>
+    <button className={(isPressed ? "digital-input-button-pressed" : "digital-input-button-normal")} onMouseDown={onButtonPress} onMouseUp={onButtonRelease}></button>
     {renderResultBlock(isRequestCompleted, status)}
     </div>
   );

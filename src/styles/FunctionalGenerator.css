@@ -20,6 +20,7 @@
 
 .functional-generator-table {
     padding: 15px;
+    margin: 0px;
     vertical-align: middle;
     display: inline-block;
     text-align: left;
@@ -27,6 +28,7 @@
 
 .functional-generator-sliders {
     padding: 15px;
+    margin: 0px;
     vertical-align: middle;
     display: inline-block;
     text-align: center;
@@ -38,8 +40,8 @@
     border: 2px solid black;
     border-radius: 5px;
     background-color: #b3b29d;
-    min-width: 110px;
-
+    display: inline-block;
+    width: 110px;
 }
 
 .functional-generator-channel-name {
@@ -51,6 +53,14 @@
     border: 2px dashed black;
 }
 
-label {
+.functional-generator-channel-radio {
     padding: 5px;
+}
+
+.functional-generator-duty-cycle {
+    text-align: center;
+}
+
+.functional-generator-duty-cycle-no {
+    display: none;
 }

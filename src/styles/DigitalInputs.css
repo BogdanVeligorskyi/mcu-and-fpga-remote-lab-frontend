@@ -50,10 +50,17 @@ input[type="radio"] {
     display: block;
 }
   
-.digital-input-button {
+.digital-input-button-normal {
     height: 20px;
     width: 20px;
     border-radius: 10px;
+}
+
+.digital-input-button-pressed {
+    height: 20px;
+    width: 20px;
+    border-radius: 10px;
+    background-color: black;
 }
   
 input[type="number"] {

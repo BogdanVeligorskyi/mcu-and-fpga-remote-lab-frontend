@@ -1,12 +1,17 @@
+import { useState } from 'react';
+import Switch from 'react-switch'
+
 function DigitalInputsSwitch(pinNum) {
+
+    const [isSwitched, setIsSwitched] = useState(false);
+
+    const onStateChange = () => {
+        setIsSwitched(!isSwitched);
+    }
+
     return(
         <div>
-            <label className="digital-input-label-in-slider">On</label>
-            <label className="switch-vertical">
-                <input type="checkbox"/>
-                <span className="slider-vertical"></span>
-            </label>
-            <label className="digital-input-label-in-slider">Off</label>
+            <Switch checked={isSwitched} onChange={onStateChange} />
         </div>
     ); 
 }
