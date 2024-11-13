@@ -1,10 +1,10 @@
 @media (max-width: 576px) {
     .digital-input-wrapper {
         height: 120px;
-        width: 50px;
+        width: 60px;
         justify-content: center;
         align-items: center;
-        font-size: 14px;
+        font-size: 11px;
         display: block;
     }
 }
@@ -34,6 +34,10 @@ table {
 .digital-input-types {
     display: inline-block;
     text-align: left;
+}
+
+.digital-input-radio-button {
+    vertical-align: middle;
 }
   
 input[type="radio"] {

@@ -25,7 +25,9 @@ function CameraView() {
     <div>
       <h2>Camera View From Lab</h2>
       <div className="camera-frame">{renderVideoOrVoidBlock(cameraOn)}</div>
-        <Switch checked={cameraOn} onChange={onCameraOnOffChange}/>
+      <div className="switch-sizing">
+        <Switch checkedIcon={false} uncheckedIcon={false} checked={cameraOn} onChange={onCameraOnOffChange}/>
+      </div>
     </div>
   );
 }

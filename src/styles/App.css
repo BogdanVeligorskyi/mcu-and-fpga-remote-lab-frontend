@@ -6,6 +6,11 @@
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
 }
 
+.switch-sizing {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
 .App-header {
   background-color: #deddc5;
   min-height: 100vh;
