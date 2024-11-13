@@ -10,6 +10,7 @@ import AnalogMultiplexer from './AnalogMultiplexer';
 import DigitalMultiplexer from './DigitalMultiplexer';
 import LogicAnalyzer from './LogicAnalyzer';
 import FunctionalGenerator from './FunctionalGenerator';
+import Scope from './Scope';
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
   const [isAnalogMuxEnabled, setIsAnalogMuxEnabled] = useState(false);
   const [isLogicAnalyzerEnabled, setIsLogicAnalyzerEnabled] = useState(false);
   const [isFunctionalGeneratorEnabled, setIsFunctionalGeneratorEnabled] = useState(true);
+  const [isScopeEnabled, setIsScopeEnabled] = useState(false);
   const [isSubMenuCollapsed, setIsSubMenuCollapsed] = useState(false);
 
   // ----- Submenu -----
@@ -98,6 +100,11 @@ function App() {
     setIsFunctionalGeneratorEnabled(!isFunctionalGeneratorEnabled);
   }
 
+  const onScopeCBChange = () => {
+    console.log("onScopeCBChange");
+    setIsScopeEnabled(!isScopeEnabled);
+  }
+
   // ----- Render components based on conditions -----
   const renderCollapseIcon = (isSubMenuCollapsed) => {
     console.log(isSubMenuCollapsed);
@@ -172,6 +179,14 @@ function App() {
     }
   }
 
+  const renderScope = (isScopeEnabled) => {
+    if (isScopeEnabled) {
+      return <Scope/>
+    } else {
+      return <div><h2>Scope</h2></div>
+    }
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -241,6 +256,11 @@ function App() {
                   onChange={onFunctionalGeneratorCBChange}/>
                   <label htmlFor="functionalGeneratorCB"> Functional Generator</label><br/>
 
+                  <input type="checkbox" id="scopeCB" name="scopeCB" value="Scope"
+                  checked={isScopeEnabled === true}
+                  onChange={onScopeCBChange}/>
+                  <label htmlFor="scopeCB"> Scope</label><br/>
+
                 </div>           
               </div>
 
@@ -296,6 +316,11 @@ function App() {
               {/* Logic Analyzer */}
               <div className="row app-component-box">
                   {renderLogicAnalyzer(isLogicAnalyzerEnabled)}
+              </div>
+
+              {/* Scope */}
+              <div className="row app-component-box">
+                  {renderScope(isScopeEnabled)}
               </div>
 
             </div>

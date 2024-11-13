@@ -40,7 +40,7 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
     return (
         <div>
             <div className="functional-generator-channel-name">
-                Channel {channelNum}
+                CH{channelNum}
                 <div className="switch-sizing">
                     <Switch checkedIcon={false} uncheckedIcon={false} checked={isEnabled} onChange={onStateChange} />
                 </div>
