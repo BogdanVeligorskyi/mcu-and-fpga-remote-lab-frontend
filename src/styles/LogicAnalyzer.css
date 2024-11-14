@@ -1,9 +1,3 @@
-.logic-analyzer-diagram {
-    height: 350px;
-    width: auto;
-    background-color: black;
-}
-
 .fall-edge {
     content: url("../img/fall_edge.png");
     transform: scale(0.7);

@@ -23,7 +23,7 @@ function App() {
   const [isAnalogMuxEnabled, setIsAnalogMuxEnabled] = useState(false);
   const [isLogicAnalyzerEnabled, setIsLogicAnalyzerEnabled] = useState(false);
   const [isFunctionalGeneratorEnabled, setIsFunctionalGeneratorEnabled] = useState(true);
-  const [isScopeEnabled, setIsScopeEnabled] = useState(false);
+  const [isScopeEnabled, setIsScopeEnabled] = useState(true);
   const [isSubMenuCollapsed, setIsSubMenuCollapsed] = useState(false);
 
   // ----- Submenu -----

@@ -102,8 +102,8 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                         <td><label>Freq</label></td>
                     </tr>
                     <tr>
-                        <td><label className="functional-generator-sliders-label">{amplitudeValue} V</label></td>
-                        <td><label className="functional-generator-sliders-label">{frequencyValue} {frequencyPrefix}</label></td>
+                        <td><label className="round-sliders-label">{amplitudeValue} V</label></td>
+                        <td><label className="round-sliders-label">{frequencyValue} {frequencyPrefix}</label></td>
                     </tr>
                     <tr>
                         <td>
@@ -130,31 +130,31 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
             <table className="functional-generator-table">
                 <tbody>
                     <tr>
-                <td><input className="digital-input-radio-button" type="radio" 
-                    id={("hzPrefix" + channelNum)} 
-                    name={("hzPrefix" + channelNum)} 
-                    value="Hz"
-                    checked={frequencyPrefix === "Hz"}
-                    onChange={onFrequencyPrefixChange}/>
-                    <label className="functional-generator-channel-radio">Hz</label><br/>
-                    </td>
+                        <td><input type="radio" 
+                            id={("hzPrefix" + channelNum)} 
+                            name={("hzPrefix" + channelNum)} 
+                            value="Hz"
+                            checked={frequencyPrefix === "Hz"}
+                            onChange={onFrequencyPrefixChange}/>
+                            <label className="functional-generator-channel-radio">Hz</label><br/>
+                        </td>
                     </tr>
                     <tr>
-                <td><input className="digital-input-radio-button" type="radio" 
-                    id={("khzPrefix" + channelNum)} 
-                    name={("khzPrefix" + channelNum)} 
-                    value="kHz"
-                    checked={frequencyPrefix === "kHz"}
-                    onChange={onFrequencyPrefixChange}/>
-                    <label className="functional-generator-channel-radio">kHz</label><br/>
-                    </td>
+                        <td><input type="radio" 
+                            id={("khzPrefix" + channelNum)} 
+                            name={("khzPrefix" + channelNum)} 
+                            value="kHz"
+                            checked={frequencyPrefix === "kHz"}
+                            onChange={onFrequencyPrefixChange}/>
+                            <label className="functional-generator-channel-radio">kHz</label><br/>
+                        </td>
                     </tr>
-                    </tbody>
+                </tbody>
             </table>
 
-            <div className={(functionType === "sine" ? 'functional-generator-duty-cycle-no' : 'functional-generator-duty-cycle')}>
+            <div className={(functionType === "digital" ? 'functional-generator-duty-cycle' : 'functional-generator-duty-cycle-no')}>
                 <label>Duty Cycle</label><br/>
-                <label className="functional-generator-sliders-label">{dutyCycle} %</label><br/>
+                <label className="round-sliders-label">{dutyCycle} %</label><br/>
                 <input 
                     type="range" 
                     id={("dutyCycleRange" + channelNum)} 

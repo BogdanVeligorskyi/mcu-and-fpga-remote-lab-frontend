@@ -34,16 +34,6 @@
     text-align: center;
 }
 
-.functional-generator-sliders-label {
-    margin: 5px;
-    padding: 5px;
-    border: 2px solid black;
-    border-radius: 5px;
-    background-color: #b3b29d;
-    display: inline-block;
-    width: 110px;
-}
-
 .functional-generator-channel-name {
     text-align: left;
     padding: 5px;

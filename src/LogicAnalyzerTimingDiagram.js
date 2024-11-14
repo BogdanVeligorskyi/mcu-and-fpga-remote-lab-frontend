@@ -1,4 +1,4 @@
-import { Bar } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import './styles/LogicAnalyzer.css';
 import { Chart as ChartJS } from 'chart.js/auto';
 
@@ -18,8 +18,8 @@ const data = {
 function LogicAnalyzerTimingDiagram() {
     return (
         <div>
-            <div className="logic-analyzer-diagram">
-                <Bar data={data}/>
+            <div className="chart"> 
+                <Line data={data}/>
             </div>
         </div>
     )
