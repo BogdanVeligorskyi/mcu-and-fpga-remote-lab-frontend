@@ -55,3 +55,15 @@
 .functional-generator-duty-cycle-no {
     display: none;
 }
+
+.round-slider-amplitude-image {
+    display: table-cell;
+    text-align: center;
+    background: url("../img/roundslider_generator_amplitude_marks.png") no-repeat;
+}
+
+.round-slider-frequency-image {
+    display: table-cell;
+    text-align: center;
+    background: url("../img/roundslider_generator_frequency_marks.png") no-repeat;
+}

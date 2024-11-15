@@ -25,3 +25,26 @@
     padding-left: 10px;
     padding-right: 10px;
 }
+
+.round-slider-wrapper {
+    width: 120px; 
+    height: 112px; 
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.round-slider-vertical-scale-image {
+    width: 122px;
+    height: 112px;
+    display: table-cell;
+    text-align: center;
+    background: url("../img/roundslider_scope_y_marks.png") no-repeat;
+}
+
+.round-slider-horizontal-scale-image {
+    width: 122px;
+    height: 112px;
+    display: table-cell;
+    text-align: center;
+    background: url("../img/roundslider_scope_x_marks.png") no-repeat;
+}

@@ -65,21 +65,26 @@ function Scope() {
                     </div> 
                     <label>Scale</label><br/>
                     <label className="round-sliders-label">{verticalScaleCH1}V/div</label><br/>
-                    <CircularSlider
-                        hideLabelValue  
-                        data={["5m", "10m", "20m", "50m", "0.1", "0.2", "0.5", "1.0"]} 
-                        width={110}
-                        trackColor="#ffffff"
-                        onChange={onVerticalScaleCH1ValueChange}/>
-                        <br/><br/>
+                    <div className="round-slider-wrapper">
+                        <div className="round-slider-vertical-scale-image">
+                        <CircularSlider
+                            hideLabelValue  
+                            data={["5m", "10m", "20m", "50m", "0.1", "0.2", "0.5", "1.0"]} 
+                            width={115}
+                            trackColor="#ffffff"
+                            onChange={onVerticalScaleCH1ValueChange}/>
+                            
+                        </div>
+                    </div>
+                    <br/>
                     <label>Position</label><br/>
                     <label className="round-sliders-label">{verticalPositionCH1}</label><br/>
                     <CircularSlider
                         hideLabelValue  
                         data={[0.0, 1.0, 2.0, 2.5, 3.0, 3.3]} 
-                        width={110}
+                        width={115}
                         trackColor="#ffffff"
-                        onChange={onVerticalPositionCH1ValueChange}/><br/><br/>
+                        onChange={onVerticalPositionCH1ValueChange}/><br/>
                 </div>
                 <div className="col-xl m-1 px-1 border-spec">
                     <div className="scope-header">
@@ -90,19 +95,23 @@ function Scope() {
                     </div> 
                     <label>Scale</label><br/>
                     <label className="round-sliders-label">{verticalScaleCH2}V/div</label><br/>
-                    <CircularSlider
-                        hideLabelValue  
-                        data={["5m", "10m", "20m", "50m", "0.1", "0.2", "0.5", "1.0"]} 
-                        width={110}
-                        trackColor="#ffffff"
-                        onChange={onVerticalScaleCH2ValueChange}/>
-                        <br/><br/>
+                    <div className="round-slider-wrapper">
+                        <div className="round-slider-vertical-scale-image">
+                        <CircularSlider
+                            hideLabelValue  
+                            data={["5m", "10m", "20m", "50m", "0.1", "0.2", "0.5", "1.0"]} 
+                            width={115}
+                            trackColor="#ffffff"
+                            onChange={onVerticalScaleCH2ValueChange}/>
+                        </div>
+                    </div>
+                    <br/>
                     <label>Position</label><br/>
                     <label className="round-sliders-label">{verticalPositionCH2}</label><br/>
                     <CircularSlider
                         hideLabelValue  
                         data={[0.0, 1.0, 2.0, 2.5, 3.0, 3.3]} 
-                        width={110}
+                        width={115}
                         trackColor="#ffffff"
                         onChange={onVerticalPositionCH2ValueChange}/><br/><br/>
                 </div>
@@ -114,21 +123,25 @@ function Scope() {
                     </div>
                     <label>Scale</label><br/>
                     <label className="round-sliders-label">{horizontalScale}/div</label><br/>
-                    <CircularSlider
-                        hideLabelValue  
-                        data={["1us", "10us", "50us", "100us", "1ms", "10ms", "50ms", "100ms"]} 
-                        width={110}
-                        trackColor="#ffffff"
-                        onChange={onHorizontalScaleValueChange}/>
-                        <br/><br/>
+                    <div className="round-slider-wrapper">
+                        <div className="round-slider-horizontal-scale-image">
+                        <CircularSlider
+                            hideLabelValue  
+                            data={["1us", "10us", "50us", "100us", "1ms", "10ms", "50ms", "100ms"]} 
+                            width={115}
+                            trackColor="#ffffff"
+                            onChange={onHorizontalScaleValueChange}/>
+                        </div>
+                    </div>
+                    <br/>
                     <label>Position</label><br/>
                     <label className="round-sliders-label">{horizontalPosition}</label><br/>
                     <CircularSlider
                         hideLabelValue  
                         data={[0.0, 1.0, 2.0, 2.5, 3.0, 3.3]} 
-                        width={110}
+                        width={115}
                         trackColor="#ffffff"
-                        onChange={onHorizontalPositionValueChange}/><br/><br/>
+                        onChange={onHorizontalPositionValueChange}/>
                 </div>
                 <div className="col-xl m-1 px-1 border-spec">
                 <div>
@@ -146,10 +159,7 @@ function Scope() {
                         onChange={onTriggerLevelValueChange}/><br/><br/>
                 </div>
                 <div className="scope-trigger-type">
-                {/* <h5>Trigger</h5> */}
-                
                 <table>
-                <label>Type</label>
                     <tbody>
                         <tr>
                             <td><span className="fall-edge"></span></td>

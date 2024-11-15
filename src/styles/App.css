@@ -161,12 +161,12 @@ input[type="checkbox"] {
 
 .round-sliders-label {
     margin: 5px;
-    padding: 5px;
+    padding: 3px;
     border: 2px solid black;
     border-radius: 5px;
     background-color: #b3b29d;
     display: inline-block;
-    width: 110px;
+    width: 115px;
 }
 
 h2 {

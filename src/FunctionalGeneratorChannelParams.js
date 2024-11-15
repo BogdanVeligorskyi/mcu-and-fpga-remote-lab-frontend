@@ -102,23 +102,28 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                         <td><label>Freq</label></td>
                     </tr>
                     <tr>
-                        <td><label className="round-sliders-label">{amplitudeValue} V</label></td>
+                        <td><label className="round-sliders-label">{amplitudeValue} mV</label></td>
                         <td><label className="round-sliders-label">{frequencyValue} {frequencyPrefix}</label></td>
                     </tr>
                     <tr>
-                        <td>
-                            <CircularSlider 
+                        <td className="round-slider-amplitude-image">
+                            <CircularSlider
+                                className="round-slider" 
                                 hideLabelValue 
-                                data={[0.0, 1.0, 2.0, 2.5, 3.0, 3.3]} 
-                                width={110}
+                                min={-5000}
+                                max={5000} 
+                                width={115}
                                 trackColor="#ffffff"
-                                onChange={onAmplitudeValueChange}/>
+                                onChange={onAmplitudeValueChange}>
+                            </CircularSlider>
                         </td>
-                        <td>
-                            <CircularSlider 
+                        <td className="round-slider-frequency-image">
+                            <CircularSlider
+                                className="round-slider" 
                                 hideLabelValue
-                                data={[1, 10, 50, 100, 200]}  
-                                width={110}
+                                min={1}
+                                max={200}  
+                                width={115}
                                 trackColor="#ffffff"
                                 onChange={onFrequencyValueChange}/>
                         </td>
