@@ -1,3 +1,4 @@
+import { getUrlForRequest } from './utils/get-url-for-request';
 import { useState } from "react";
 import CircularSlider from '@fseehawer/react-circular-slider';
 import Switch from 'react-switch';
@@ -6,13 +7,33 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
 
     const [functionType, setFunctionType] = useState("sine");
     const [frequencyPrefix, setFrequencyPrefix] = useState("Hz");
-    const [amplitudeValue, setAmplitudeValue] = useState(0.0);
-    const [frequencyValue, setFrequencyValue] = useState(0);
+    const [amplitudeValue, setAmplitudeValue] = useState(-5000);
+    const [frequencyValue, setFrequencyValue] = useState(1);
     const [dutyCycle, setDutyCycle] = useState(0);
     const [isEnabled, setIsEnabled] = useState(false);
 
     const onFunctionTypeChange = e => {
         setFunctionType(e.target.value);
+        
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ channel: channelNum-1, function: e.target.value }),
+        };
+        fetch(getUrlForRequest('/api/wavegen/write-function'), requestOptions).then(
+            (response) => {
+              /*if (response.status === 200) {
+                //setResultMessage("Successfuly unset pin " + pinNum + "!");
+              } else {
+                setResultMessage("Error trying to set pin " + pinNum + "!");
+              }*/
+              //setIsRequestCompleted(true);
+              console.log('response.status =', response.status);
+              console.log('response text: ', response.json());
+            }
+          ).catch(error => {
+            console.log(error)
+        });
     }
 
     const onFrequencyPrefixChange = e => {
@@ -22,11 +43,62 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
     }
 
     const onAmplitudeValueChange = value => {
+        if (value == null) {
+            return;
+        }
         setAmplitudeValue(value);
+        let voltValue = value / 1000; // convert from mV to V
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ channel: channelNum-1, amplitude: voltValue }),
+        };
+        fetch(getUrlForRequest('/api/wavegen/write-amplitude'), requestOptions).then(
+            (response) => {
+              /*if (response.status === 200) {
+                //setResultMessage("Successfuly unset pin " + pinNum + "!");
+              } else {
+                setResultMessage("Error trying to set pin " + pinNum + "!");
+              }*/
+              //setIsRequestCompleted(true);
+              console.log('response.status =', response.status);
+              console.log('response text: ', response.json());
+            }
+          ).catch(error => {
+            console.log(error)
+        });
     }
 
     const onFrequencyValueChange = value => {
+        if (value == null) {
+            return;
+        } 
         setFrequencyValue(value);
+        let freq;
+        if (frequencyPrefix === "kHz") {
+            freq = value * 1000.0;
+        } else {
+            freq = value * 1.0;
+        }
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ channel: channelNum-1, frequency: freq }),
+          };
+        fetch(getUrlForRequest('/api/wavegen/write-frequency'), requestOptions).then(
+            (response) => {
+              /*if (response.status === 200) {
+                //setResultMessage("Successfuly unset pin " + pinNum + "!");
+              } else {
+                setResultMessage("Error trying to set pin " + pinNum + "!");
+              }*/
+              //setIsRequestCompleted(true);
+              console.log('response.status =', response.status);
+              console.log('response text: ', response.json());
+            }
+          ).catch(error => {
+            console.log(error)
+        });
     }
 
     const onDutyCycleChange = e => {
@@ -35,6 +107,31 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
 
     const onStateChange = () => {
         setIsEnabled(!isEnabled);
+        let isEnabledInt;
+        if (isEnabled) {
+            isEnabledInt = 0;
+        } else {
+            isEnabledInt = 1;
+        }
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ channel: channelNum-1, isEnabled: isEnabledInt }),
+        };
+        fetch(getUrlForRequest('/api/wavegen/write-channel'), requestOptions).then(
+            (response) => {
+              /*if (response.status === 200) {
+                //setResultMessage("Successfuly unset pin " + pinNum + "!");
+              } else {
+                setResultMessage("Error trying to set pin " + pinNum + "!");
+              }*/
+              //setIsRequestCompleted(true);
+              console.log('response.status =', response.status);
+              console.log('response text: ', response.json());
+            }
+          ).catch(error => {
+            console.log(error)
+        });
     }
 
     return (
@@ -59,13 +156,13 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                         </td>
                     </tr>
                     <tr>
-                        <td><span className="saw-function"></span></td>
+                        <td><span className="rampup-function"></span></td>
                         <td>
                             <input type="radio" 
-                                id={("sawFunction" + channelNum)} 
-                                name={("sawFunction" + channelNum)} 
-                                value="saw"
-                                checked={functionType === "saw"}
+                                id={("rampupFunction" + channelNum)} 
+                                name={("rampupFunction" + channelNum)} 
+                                value="rampup"
+                                checked={functionType === "rampup"}
                                 onChange={onFunctionTypeChange}/>
                         </td>
                     </tr>
@@ -81,13 +178,13 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                         </td>
                     </tr>
                     <tr>
-                        <td><span className="digital-function"></span></td>
+                        <td><span className="pulse-function"></span></td>
                         <td>
                             <input type="radio" 
-                                id={("digitalFunction" + channelNum)} 
-                                name={("digitalFunction" + channelNum)} 
-                                value="digital"
-                                checked={functionType === "digital"}
+                                id={("pulseFunction" + channelNum)} 
+                                name={("pulseFunction" + channelNum)} 
+                                value="pulse"
+                                checked={functionType === "pulse"}
                                 onChange={onFunctionTypeChange}/>
                         </td>
                     </tr>

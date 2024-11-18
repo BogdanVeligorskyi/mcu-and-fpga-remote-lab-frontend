@@ -3,13 +3,13 @@
     transform: scale(0.7);
 }
 
-.digital-function {
-    content: url("../img/digital_signal.png");
+.pulse-function {
+    content: url("../img/pulse_signal.png");
     transform: scale(0.7);
 }
 
-.saw-function {
-    content: url("../img/saw_signal.png");
+.rampup-function {
+    content: url("../img/rampup_signal.png");
     transform: scale(0.7);
 }
 
