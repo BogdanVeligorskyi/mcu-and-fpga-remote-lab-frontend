@@ -6,9 +6,6 @@ import Instructions from './Instructions';
 import ProgramDevice from './ProgramDevice';
 import DigitalInputs from './DigitalInputs';
 import CameraView from './CameraView';
-import AnalogMultiplexer from './AnalogMultiplexer';
-import DigitalMultiplexer from './DigitalMultiplexer';
-import LogicAnalyzer from './LogicAnalyzer';
 import FunctionalGenerator from './FunctionalGenerator';
 import Scope from './Scope';
 
@@ -19,9 +16,6 @@ function App() {
   const [isProgramMCUEnabled, setIsProgramMCUEnabled] = useState(false);
   const [isDigitalInputsEnabled, setIsDigitalInputsEnabled] = useState(true);
   const [isCameraViewEnabled, setIsCameraViewEnabled] = useState(true);
-  const [isDigitalMuxEnabled, setIsDigitalMuxEnabled] = useState(false);
-  const [isAnalogMuxEnabled, setIsAnalogMuxEnabled] = useState(false);
-  const [isLogicAnalyzerEnabled, setIsLogicAnalyzerEnabled] = useState(false);
   const [isFunctionalGeneratorEnabled, setIsFunctionalGeneratorEnabled] = useState(true);
   const [isScopeEnabled, setIsScopeEnabled] = useState(true);
   const [isSubMenuCollapsed, setIsSubMenuCollapsed] = useState(false);
@@ -74,25 +68,10 @@ function App() {
     console.log("onDigitalInputsCBChange");
     setIsDigitalInputsEnabled(!isDigitalInputsEnabled);
   }
-  
-  const onAnalogMuxCBChange = () => {
-    console.log("onAnalogMuxCBChange");
-    setIsAnalogMuxEnabled(!isAnalogMuxEnabled);
-  }
-
-  const onDigitalMuxCBChange = () => {
-    console.log("onDigitalMuxCBChange");
-    setIsDigitalMuxEnabled(!isDigitalMuxEnabled);
-  }
 
   const onCameraViewCBChange = () => {
     console.log("onCameraViewCBChange");
     setIsCameraViewEnabled(!isCameraViewEnabled);
-  }
-  
-  const onLogicAnalyzerCBChange = () => {
-    console.log("onLogicAnalyzerCBChange");
-    setIsLogicAnalyzerEnabled(!isLogicAnalyzerEnabled);
   }
 
   const onFunctionalGeneratorCBChange = () => {
@@ -144,30 +123,6 @@ function App() {
       return <CameraView/>
     } else {
       return <div><h2>Camera View From Lab</h2></div>
-    }
-  }
-
-  const renderAnalogMultiplexer = (isAnalogMuxEnabled) => {
-    if (isAnalogMuxEnabled) {
-      return <AnalogMultiplexer/>
-    } else {
-      return <div><h2>Analog Multiplexer</h2></div>
-    }
-  }
-
-  const renderDigitalMultiplexer = (isDigitalMuxEnabled) => {
-    if (isDigitalMuxEnabled) {
-      return <DigitalMultiplexer/>
-    } else {
-      return <div><h2>Digital Multiplexer</h2></div>
-    }
-  }
-
-  const renderLogicAnalyzer = (isLogicAnalyzerEnabled) => {
-    if (isLogicAnalyzerEnabled) {
-      return <LogicAnalyzer/>
-    } else {
-      return <div><h2>Logic Analyzer</h2></div>
     }
   }
 
@@ -236,25 +191,10 @@ function App() {
                   onChange={onCameraViewCBChange}/>
                   <label htmlFor="cameraViewCB"> Camera View</label><br/>
 
-                  <input type="checkbox" id="analogMuxCB" name="analogMuxCB" value="AnalogMux"
-                  checked={isAnalogMuxEnabled === true}
-                  onChange={onAnalogMuxCBChange}/>
-                  <label htmlFor="analogMuxCB"> Analog MUX</label><br/>
-                            
-                  <input type="checkbox" id="digitalMuxCB" name="digitalMuxCB" value="DigitalMux"
-                  checked={isDigitalMuxEnabled === true}
-                  onChange={onDigitalMuxCBChange}/>
-                  <label htmlFor="digitalMuxCB"> Digital MUX</label><br/>
-
-                  <input type="checkbox" id="logicAnalyzerCB" name="logicAnalyzerCB" value="LogicAnalyzer"
-                  checked={isLogicAnalyzerEnabled === true}
-                  onChange={onLogicAnalyzerCBChange}/>
-                  <label htmlFor="logicAnalyzerCB"> Logic Analyzer</label><br/>
-
-                  <input type="checkbox" id="functionalGeneratorCB" name="functionalGeneratorCB" value="FunctionalGenerator"
+                  {/*<input type="checkbox" id="functionalGeneratorCB" name="functionalGeneratorCB" value="FunctionalGenerator"
                   checked={isFunctionalGeneratorEnabled === true}
                   onChange={onFunctionalGeneratorCBChange}/>
-                  <label htmlFor="functionalGeneratorCB"> Functional Generator</label><br/>
+                  <label htmlFor="functionalGeneratorCB"> Functional Generator</label><br/>*/}
 
                   <input type="checkbox" id="scopeCB" name="scopeCB" value="Scope"
                   checked={isScopeEnabled === true}
@@ -298,25 +238,10 @@ function App() {
                 </div>
               </div>
 
-              {/* Analog Multiplexer and Digital Multiplexer */}
-              <div className="row">
-                <div className="col-xl app-component-box">
-                  {renderAnalogMultiplexer(isAnalogMuxEnabled)}
-                </div>
-                <div className="col-xl app-component-box">
-                  {renderDigitalMultiplexer(isDigitalMuxEnabled)}
-                </div>
-              </div>
-
-              {/* Functional Generator */}
+              {/* Functional Generator
               <div className="row app-component-box">
                   {renderFunctionalGenerator(isFunctionalGeneratorEnabled)}
-              </div>
-
-              {/* Logic Analyzer */}
-              <div className="row app-component-box">
-                  {renderLogicAnalyzer(isLogicAnalyzerEnabled)}
-              </div>
+              </div>*/}
 
               {/* Scope */}
               <div className="row app-component-box">
