@@ -191,10 +191,10 @@ function App() {
                   onChange={onCameraViewCBChange}/>
                   <label htmlFor="cameraViewCB"> Camera View</label><br/>
 
-                  {/*<input type="checkbox" id="functionalGeneratorCB" name="functionalGeneratorCB" value="FunctionalGenerator"
+                  <input type="checkbox" id="functionalGeneratorCB" name="functionalGeneratorCB" value="FunctionalGenerator"
                   checked={isFunctionalGeneratorEnabled === true}
                   onChange={onFunctionalGeneratorCBChange}/>
-                  <label htmlFor="functionalGeneratorCB"> Functional Generator</label><br/>*/}
+                  <label htmlFor="functionalGeneratorCB"> Functional Generator</label><br/>
 
                   <input type="checkbox" id="scopeCB" name="scopeCB" value="Scope"
                   checked={isScopeEnabled === true}
@@ -238,10 +238,10 @@ function App() {
                 </div>
               </div>
 
-              {/* Functional Generator
+              {/* Functional Generator */}
               <div className="row app-component-box">
                   {renderFunctionalGenerator(isFunctionalGeneratorEnabled)}
-              </div>*/}
+              </div>
 
               {/* Scope */}
               <div className="row app-component-box">

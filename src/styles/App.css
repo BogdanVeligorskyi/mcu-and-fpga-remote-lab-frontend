@@ -128,7 +128,7 @@
   padding: 10px;
   top: 50%;
   left: 50%;
-  transform:translate(-50%,-50%);  
+  transform: translate(-50%,-50%);  
   border: 2px solid black;
   color: black;
   background-color: #deddc5;
@@ -166,7 +166,17 @@ input[type="checkbox"] {
     border-radius: 5px;
     background-color: #b3b29d;
     display: inline-block;
-    width: 115px;
+    min-width: 115px;
+    font-size: calc(8px + 2vmin);
+}
+
+.fall-edge {
+  content: url("../img/fall_edge.png");
+  transform: scale(0.7);
+}
+.rise-edge {
+  content: url("../img/rise_edge.png");
+  transform: scale(0.7);
 }
 
 h2 {

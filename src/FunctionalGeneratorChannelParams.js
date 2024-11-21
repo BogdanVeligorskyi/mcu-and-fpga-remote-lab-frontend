@@ -84,7 +84,7 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ channel: channelNum-1, frequency: freq }),
-          };
+        };
         fetch(getUrlForRequest('/api/wavegen/write-frequency'), requestOptions).then(
             (response) => {
               /*if (response.status === 200) {
@@ -141,7 +141,7 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                 <div className="switch-sizing">
                     <Switch checkedIcon={false} uncheckedIcon={false} checked={isEnabled} onChange={onStateChange} />
                 </div>
-            </div>
+                </div>
             <table className="functional-generator-table">
                 <tbody>
                     <tr>
@@ -254,7 +254,7 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                 </tbody>
             </table>
 
-            <div className={(functionType === "digital" ? 'functional-generator-duty-cycle' : 'functional-generator-duty-cycle-no')}>
+            <div className={(functionType === "pulse" ? 'functional-generator-duty-cycle' : 'functional-generator-duty-cycle-no')}>
                 <label>Duty Cycle</label><br/>
                 <label className="round-sliders-label">{dutyCycle} %</label><br/>
                 <input 
