@@ -43,9 +43,9 @@ const ProgramDeviceForm = ({isFPGADev}) => {
 
     function handleFileChange(event) {
         setFile(event.target.files[0])
-      }
+    }
       
-      function handleSubmitProgramDevice(event) {
+    function handleSubmitProgramDevice(event) {
         
         console.log(isFPGADev);
         setIsRequestCompleted(false);
@@ -109,7 +109,7 @@ const ProgramDeviceForm = ({isFPGADev}) => {
                 console.log(error)
             });
         }
-      }
+    }
         return (
         <div className="program-device-component">
         <form onSubmit={handleSubmitProgramDevice}>
