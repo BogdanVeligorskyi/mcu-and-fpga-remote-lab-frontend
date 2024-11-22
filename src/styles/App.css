@@ -29,7 +29,6 @@
 .collapse-menu-components {
   position: absolute;
   height: auto;
-  width: 310px;
   background-color: #deddc5;
   text-align: left;
   -webkit-transition: opacity 0.5s;
@@ -160,14 +159,14 @@ input[type="checkbox"] {
 }
 
 .round-sliders-label {
-    margin: 5px;
-    padding: 3px;
-    border: 2px solid black;
-    border-radius: 5px;
-    background-color: #b3b29d;
-    display: inline-block;
-    min-width: 115px;
-    font-size: calc(8px + 2vmin);
+  margin: 5px;
+  padding: 3px;
+  border: 2px solid black;
+  border-radius: 5px;
+  background-color: #b3b29d;
+  display: inline-block;
+  min-width: 115px;
+  font-size: calc(8px + 2vmin);
 }
 
 .fall-edge {
@@ -183,6 +182,3 @@ h2 {
   padding: 10px;
   text-align: center;
 }
-
-
-

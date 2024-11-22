@@ -7,10 +7,11 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
 
     const [functionType, setFunctionType] = useState("sine");
     const [frequencyPrefix, setFrequencyPrefix] = useState("Hz");
-    const [amplitudeValue, setAmplitudeValue] = useState(-5000);
+    const [amplitudeValue, setAmplitudeValue] = useState(-5.0);
     const [frequencyValue, setFrequencyValue] = useState(1);
     const [dutyCycle, setDutyCycle] = useState(0);
     const [isEnabled, setIsEnabled] = useState(false);
+    const [startStop, setStartStop] = useState("Start");
 
     const onFunctionTypeChange = e => {
         setFunctionType(e.target.value);
@@ -22,12 +23,6 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
         };
         fetch(getUrlForRequest('/api/wavegen/write-function'), requestOptions).then(
             (response) => {
-              /*if (response.status === 200) {
-                //setResultMessage("Successfuly unset pin " + pinNum + "!");
-              } else {
-                setResultMessage("Error trying to set pin " + pinNum + "!");
-              }*/
-              //setIsRequestCompleted(true);
               console.log('response.status =', response.status);
               console.log('response text: ', response.json());
             }
@@ -43,11 +38,12 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
     }
 
     const onAmplitudeValueChange = value => {
+        console.log(value);
         if (value == null) {
             return;
         }
-        setAmplitudeValue(value);
-        let voltValue = value / 1000; // convert from mV to V
+        let voltValue = value / 10; // convert to V
+        setAmplitudeValue(voltValue);
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -55,12 +51,6 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
         };
         fetch(getUrlForRequest('/api/wavegen/write-amplitude'), requestOptions).then(
             (response) => {
-              /*if (response.status === 200) {
-                //setResultMessage("Successfuly unset pin " + pinNum + "!");
-              } else {
-                setResultMessage("Error trying to set pin " + pinNum + "!");
-              }*/
-              //setIsRequestCompleted(true);
               console.log('response.status =', response.status);
               console.log('response text: ', response.json());
             }
@@ -87,18 +77,61 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
         };
         fetch(getUrlForRequest('/api/wavegen/write-frequency'), requestOptions).then(
             (response) => {
-              /*if (response.status === 200) {
-                //setResultMessage("Successfuly unset pin " + pinNum + "!");
-              } else {
-                setResultMessage("Error trying to set pin " + pinNum + "!");
-              }*/
-              //setIsRequestCompleted(true);
               console.log('response.status =', response.status);
               console.log('response text: ', response.json());
             }
           ).catch(error => {
             console.log(error)
         });
+    }
+
+    const onStartStopClick = () => {
+        if (!isEnabled) {
+            return;
+        }
+        if (startStop === "Start") {
+            setStartStop("Stop");
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ channel: channelNum-1, isStart: 1 }),
+            };
+            fetch(getUrlForRequest('/api/wavegen/write-config'), requestOptions).then(
+                (response) => {
+                    console.log('response.status =', response.status);
+                    console.log('response text: ', response.json());
+                    if (response.status === 200) {
+                        alert("Generating waveform for channel " + channelNum);
+                    } else {
+                        alert("An error occured when trying to generate waveform for channel " + channelNum);
+                    }
+                }
+            ).catch(error => {
+                console.log(error)
+            });
+
+        } else {
+            setStartStop("Start")
+
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ channel: channelNum-1, isStart: 0 }),
+            };
+            fetch(getUrlForRequest('/api/wavegen/write-config'), requestOptions).then(
+                (response) => {
+                    console.log('response.status =', response.status);
+                    console.log('response text: ', response.json());
+                    if (response.status === 200) {
+                        alert("Stopped generating waveform for channel " + channelNum);
+                    } else {
+                        alert("An error occured when trying to stop generating waveform for channel " + channelNum);
+                    }
+                }
+            ).catch(error => {
+                console.log(error)
+            });
+        }
     }
 
     const onDutyCycleChange = e => {
@@ -110,6 +143,7 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
         let isEnabledInt;
         if (isEnabled) {
             isEnabledInt = 0;
+            setStartStop("Start");
         } else {
             isEnabledInt = 1;
         }
@@ -120,12 +154,6 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
         };
         fetch(getUrlForRequest('/api/wavegen/write-channel'), requestOptions).then(
             (response) => {
-              /*if (response.status === 200) {
-                //setResultMessage("Successfuly unset pin " + pinNum + "!");
-              } else {
-                setResultMessage("Error trying to set pin " + pinNum + "!");
-              }*/
-              //setIsRequestCompleted(true);
               console.log('response.status =', response.status);
               console.log('response text: ', response.json());
             }
@@ -141,7 +169,7 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                 <div className="switch-sizing">
                     <Switch checkedIcon={false} uncheckedIcon={false} checked={isEnabled} onChange={onStateChange} />
                 </div>
-                </div>
+            </div>
             <table className="functional-generator-table">
                 <tbody>
                     <tr>
@@ -199,7 +227,7 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                         <td><label>Freq</label></td>
                     </tr>
                     <tr>
-                        <td><label className="round-sliders-label">{amplitudeValue} mV</label></td>
+                        <td><label className="round-sliders-label">{amplitudeValue} V</label></td>
                         <td><label className="round-sliders-label">{frequencyValue} {frequencyPrefix}</label></td>
                     </tr>
                     <tr>
@@ -207,8 +235,8 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                             <CircularSlider
                                 className="round-slider" 
                                 hideLabelValue 
-                                min={-5000}
-                                max={5000} 
+                                min={-50}
+                                max={50} 
                                 width={115}
                                 trackColor="#ffffff"
                                 onChange={onAmplitudeValueChange}>
@@ -266,6 +294,10 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                     max={100}
                     value={dutyCycle} 
                     onChange={onDutyCycleChange} />
+            </div>
+
+            <div className="m-4">
+                <div className={(isEnabled ? 'btn btn-primary' : 'btn disabled btn-primary')} onClick={onStartStopClick}>{startStop}</div>
             </div>
             
         </div>
