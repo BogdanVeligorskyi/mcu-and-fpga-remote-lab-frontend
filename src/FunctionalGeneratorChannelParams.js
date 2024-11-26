@@ -49,7 +49,7 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ channel: channelNum-1, amplitude: voltValue }),
         };
-        fetch(getUrlForRequest('/api/wavegen/write-amplitude'), requestOptions).then(
+        fetch('/api/wavegen/write-amplitude', requestOptions).then(
             (response) => {
               console.log('response.status =', response.status);
               console.log('response text: ', response.json());
