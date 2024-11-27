@@ -5,17 +5,17 @@ import { useState } from 'react';
 
 function Scope() {
 
-    const [verticalPositionCH1, setVerticalPositionCH1] = useState();
-    const [verticalPositionCH2, setVerticalPositionCH2] = useState();
-    const [horizontalPosition, setHorizontalPosition] = useState();
+    // const [verticalPositionCH1, setVerticalPositionCH1] = useState();
+    // const [verticalPositionCH2, setVerticalPositionCH2] = useState();
+    // const [horizontalPosition, setHorizontalPosition] = useState();
     const [verticalScaleCH1, setVerticalScaleCH1] = useState();
     const [verticalScaleCH2, setVerticalScaleCH2] = useState();
     const [horizontalScale, setHorizontalScale] = useState();
-    const [triggerLevelValue, setTriggerLevelValue] = useState("0.1");
-    const [scopeTriggerType, setScopeTriggerType] = useState("fall-edge");
-    const [scopeTriggerSource, setScopeTriggerSource] = useState("ch1");
+    // const [triggerLevelValue, setTriggerLevelValue] = useState("0.1");
+    // const [scopeTriggerType, setScopeTriggerType] = useState("fall-edge");
+    // const [scopeTriggerSource, setScopeTriggerSource] = useState("ch1");
 
-    const onTriggerLevelValueChange = value => {
+    /*const onTriggerLevelValueChange = value => {
         setTriggerLevelValue(value);
     }
 
@@ -26,29 +26,29 @@ function Scope() {
     const onScopeTriggerSourceChange = e => {
         setScopeTriggerSource(e.target.value);
     }
-
-    const onVerticalScaleCH1ValueChange = value => {
-        setVerticalScaleCH1(value);
-    }
-
+    
     const onVerticalPositionCH1ValueChange = value => {
         setVerticalPositionCH1(value);
     }
 
-    const onVerticalScaleCH2ValueChange = value => {
-        setVerticalScaleCH2(value);
-    }
-
     const onVerticalPositionCH2ValueChange = value => {
         setVerticalPositionCH2(value);
+    
+
+    const onHorizontalPositionValueChange = value => {
+        setHorizontalPosition(value);
+    }*/
+
+    const onVerticalScaleCH1ValueChange = value => {
+        setVerticalScaleCH1(value);
     }
 
     const onHorizontalScaleValueChange = value => {
         setHorizontalScale(value);
     }
 
-    const onHorizontalPositionValueChange = value => {
-        setHorizontalPosition(value);
+    const onVerticalScaleCH2ValueChange = value => {
+        setVerticalScaleCH2(value);
     }
 
     return (
@@ -77,14 +77,14 @@ function Scope() {
                         </div>
                     </div>
                     <br/>
-                    <label>Position</label><br/>
+                    {/* <label>Position</label><br/>
                     <label className="round-sliders-label">{verticalPositionCH1}</label><br/>
                     <CircularSlider
                         hideLabelValue  
                         data={[0.0, 1.0, 2.0, 2.5, 3.0, 3.3]} 
                         width={115}
                         trackColor="#ffffff"
-                        onChange={onVerticalPositionCH1ValueChange}/><br/>
+                        onChange={onVerticalPositionCH1ValueChange}/><br/> */}
                 </div>
                 <div className="col-xl m-1 px-1 border-spec">
                     <div className="scope-header">
@@ -106,14 +106,14 @@ function Scope() {
                         </div>
                     </div>
                     <br/>
-                    <label>Position</label><br/>
+                    {/* <label>Position</label><br/>
                     <label className="round-sliders-label">{verticalPositionCH2}</label><br/>
                     <CircularSlider
                         hideLabelValue  
                         data={[0.0, 1.0, 2.0, 2.5, 3.0, 3.3]} 
                         width={115}
                         trackColor="#ffffff"
-                        onChange={onVerticalPositionCH2ValueChange}/><br/><br/>
+                        onChange={onVerticalPositionCH2ValueChange}/><br/><br/> */}
                 </div>
                 <div className="col-xl m-1 px-1 border-spec">
                     <div className="scope-header">
@@ -134,16 +134,16 @@ function Scope() {
                         </div>
                     </div>
                     <br/>
-                    <label>Position</label><br/>
+                    {/* <label>Position</label><br/>
                     <label className="round-sliders-label">{horizontalPosition}</label><br/>
                     <CircularSlider
                         hideLabelValue  
                         data={[0.0, 1.0, 2.0, 2.5, 3.0, 3.3]} 
                         width={115}
                         trackColor="#ffffff"
-                        onChange={onHorizontalPositionValueChange}/>
+                        onChange={onHorizontalPositionValueChange}/> */}
                 </div>
-                <div className="col-xl m-1 px-1 border-spec">
+                {/* <div className="col-xl m-1 px-1 border-spec">
                 <div>
                 Trigger
             </div>
@@ -220,7 +220,7 @@ function Scope() {
                     </tr>
                 </tbody>
             </table>
-                </div>
+                </div> */}
             </div>
         </div>
     );
