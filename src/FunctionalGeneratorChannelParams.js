@@ -7,19 +7,42 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
 
     const [functionType, setFunctionType] = useState("sine");
     const [frequencyPrefix, setFrequencyPrefix] = useState("Hz");
-    const [amplitudeValue, setAmplitudeValue] = useState(-5.0);
+    const [amplitudeValue, setAmplitudeValue] = useState(-4.9);
     const [frequencyValue, setFrequencyValue] = useState(1);
-    const [dutyCycle, setDutyCycle] = useState(0);
+    const [dutyCycle, setDutyCycle] = useState(50);
     const [isEnabled, setIsEnabled] = useState(false);
     const [startStop, setStartStop] = useState("Start");
 
+    
     const onFunctionTypeChange = e => {
         setFunctionType(e.target.value);
-        
+        if (e.target.value !== "pulse") {
+            setDutyCycle(50);
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    channel: channelNum-1, 
+                    dutyCycle: 50
+                }),
+            };
+            fetch(getUrlForRequest('/api/wavegen/write-duty-cycle'), requestOptions).then(
+                (response) => {
+                    console.log('response.status =', response.status);
+                    console.log('response text: ', response.json());
+                }
+            ).catch(error => {
+                console.log(error)
+            });
+        }
+
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ channel: channelNum-1, function: e.target.value }),
+            body: JSON.stringify({ 
+                channel: channelNum-1, 
+                function: e.target.value 
+            }),
         };
         fetch(getUrlForRequest('/api/wavegen/write-function'), requestOptions).then(
             (response) => {
@@ -31,11 +54,34 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
         });
     }
 
+
     const onFrequencyPrefixChange = e => {
         setFrequencyPrefix(e.target.value);
-        console.log(frequencyPrefix);
-        setFrequencyValue(0);
+        let freq = 0.0;
+        if (e.target.value === "kHz") {
+            freq = frequencyValue * 1000.0;
+        } else {
+            freq = frequencyValue * 1.0;
+        }
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                channel: channelNum-1, 
+                frequency: freq
+            }),
+        };
+        fetch('/api/wavegen/write-frequency', requestOptions).then(
+            (response) => {
+              console.log('response.status =', response.status);
+              console.log('response text: ', response.json());
+            }
+          ).catch(error => {
+            console.log(error)
+        });
+        console.log(frequencyValue + " " + frequencyPrefix);
     }
+
 
     const onAmplitudeValueChange = value => {
         console.log(value);
@@ -47,7 +93,10 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ channel: channelNum-1, amplitude: voltValue }),
+            body: JSON.stringify({ 
+                channel: channelNum-1, 
+                amplitude: voltValue 
+            }),
         };
         fetch('/api/wavegen/write-amplitude', requestOptions).then(
             (response) => {
@@ -59,12 +108,14 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
         });
     }
 
+
     const onFrequencyValueChange = value => {
+        setFrequencyValue(value);
         if (value == null) {
             return;
         } 
-        setFrequencyValue(value);
         let freq;
+        // send to analog discovery value in Hz
         if (frequencyPrefix === "kHz") {
             freq = value * 1000.0;
         } else {
@@ -73,7 +124,10 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ channel: channelNum-1, frequency: freq }),
+            body: JSON.stringify({ 
+                channel: channelNum-1, 
+                frequency: freq 
+            }),
         };
         fetch(getUrlForRequest('/api/wavegen/write-frequency'), requestOptions).then(
             (response) => {
@@ -85,6 +139,7 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
         });
     }
 
+
     const onStartStopClick = () => {
         if (!isEnabled) {
             return;
@@ -94,7 +149,10 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
             const requestOptions = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ channel: channelNum-1, isStart: 1 }),
+                body: JSON.stringify({ 
+                    channel: channelNum-1, 
+                    isStart: 1 
+                }),
             };
             fetch(getUrlForRequest('/api/wavegen/write-config'), requestOptions).then(
                 (response) => {
@@ -116,7 +174,10 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
             const requestOptions = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ channel: channelNum-1, isStart: 0 }),
+                body: JSON.stringify({ 
+                    channel: channelNum-1, 
+                    isStart: 0 
+                }),
             };
             fetch(getUrlForRequest('/api/wavegen/write-config'), requestOptions).then(
                 (response) => {
@@ -136,9 +197,26 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
 
     const onDutyCycleChange = e => {
         setDutyCycle(e.target.value);
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                channel: channelNum-1, 
+                dutyCycle: Number(e.target.value) 
+            }),
+        };
+        fetch(getUrlForRequest('/api/wavegen/write-duty-cycle'), requestOptions).then(
+            (response) => {
+                console.log('response.status =', response.status);
+                console.log('response text: ', response.json());
+            }
+        ).catch(error => {
+            console.log(error)
+        });
     }
 
     const onStateChange = () => {
+
         setIsEnabled(!isEnabled);
         let isEnabledInt;
         if (isEnabled) {
@@ -146,11 +224,47 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
             setStartStop("Start");
         } else {
             isEnabledInt = 1;
+            const functionApprovalRequestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    channel: channelNum-1, 
+                    function: functionType 
+                }),
+            };
+            fetch(getUrlForRequest('/api/wavegen/write-function'), functionApprovalRequestOptions).then(
+                (response) => {
+                  console.log('response.status =', response.status);
+                  console.log('response text: ', response.json());
+                }
+              ).catch(error => {
+                console.log(error)
+            });
+            const dutyCycleApprovalRequestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    channel: channelNum-1, 
+                    dutyCycle: Number(dutyCycle) 
+                }),
+            };
+            fetch(getUrlForRequest('/api/wavegen/write-duty-cycle'), dutyCycleApprovalRequestOptions).then(
+                (response) => {
+                  console.log('response.status =', response.status);
+                  console.log('response text: ', response.json());
+                }
+              ).catch(error => {
+                console.log(error)
+            });
         }
+
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ channel: channelNum-1, isEnabled: isEnabledInt }),
+            body: JSON.stringify({ 
+                channel: channelNum-1, 
+                isEnabled: isEnabledInt 
+            }),
         };
         fetch(getUrlForRequest('/api/wavegen/write-channel'), requestOptions).then(
             (response) => {
@@ -228,15 +342,17 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                     </tr>
                     <tr>
                         <td><label className="round-sliders-label">{amplitudeValue} V</label></td>
-                        <td><label className="round-sliders-label">{frequencyValue} {frequencyPrefix}</label></td>
+                        <td><label className="round-sliders-label">
+                            {frequencyValue} {frequencyPrefix}
+                            </label></td>
                     </tr>
                     <tr>
                         <td className="round-slider-amplitude-image">
                             <CircularSlider
                                 className="round-slider" 
                                 hideLabelValue 
-                                min={-50}
-                                max={50} 
+                                min={-49}
+                                max={49} 
                                 width={115}
                                 trackColor="#ffffff"
                                 onChange={onAmplitudeValueChange}>

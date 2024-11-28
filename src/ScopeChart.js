@@ -43,9 +43,12 @@ function ScopeChart() {
   const [buttonName, setButtonName] = useState("Run");
   const [isRun, setIsRun] = useState(false);
   const [isFirstCapture, setIsFirstCapture] = useState(true);
-  const [intervalID, setIntervalID] = useState(400);
+  const [intervalID, setIntervalID] = useState();
   const [chartOptions, setChartOptions] = useState(
     {
+      animation: {
+        duration: 100
+      },
       maintainAspectRatio: false,
       plugins: {
         legend: {
