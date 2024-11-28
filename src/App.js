@@ -7,7 +7,7 @@ import ProgramDevice from './ProgramDevice';
 import DigitalInputs from './DigitalInputs';
 import CameraView from './CameraView';
 import FunctionalGenerator from './FunctionalGenerator';
-import Scope from './Scope';
+import ScopeChart from './ScopeChart';
 
 function App() {
 
@@ -136,7 +136,7 @@ function App() {
 
   const renderScope = (isScopeEnabled) => {
     if (isScopeEnabled) {
-      return <Scope/>
+      return <ScopeChart/>
     } else {
       return <div><h2>Scope</h2></div>
     }
