@@ -86,7 +86,7 @@ function App() {
 
   // ----- Render components based on conditions -----
   const renderCollapseIcon = (isSubMenuCollapsed) => {
-    console.log(isSubMenuCollapsed);
+    // console.log(isSubMenuCollapsed);
     if (!isSubMenuCollapsed) {
       return <i className="bi bi-list"></i>
     } else {

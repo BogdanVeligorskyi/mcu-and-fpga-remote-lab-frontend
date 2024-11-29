@@ -19,7 +19,7 @@ function AppCountdown() {
     useEffect(() => {
 
         const savedDate = getLocalStorageValue("end_time");
-        console.log(savedDate);
+        // console.log(savedDate);
         if (savedDate != null && !isNaN(savedDate)) {
             const currentTime = Date.now();
             const delta = parseInt(savedDate, 10) - currentTime;
@@ -48,7 +48,7 @@ function AppCountdown() {
     }
 
     const onCountdownCompletedOk = () => {
-        console.log("onCountdownCompletedOk");
+        // console.log("onCountdownCompletedOk");
         setIsCompletedOk(true);
     }
 

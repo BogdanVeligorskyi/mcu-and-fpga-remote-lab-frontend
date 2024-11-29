@@ -3,7 +3,7 @@ import CircularSlider from "@fseehawer/react-circular-slider";
 import { Line } from 'react-chartjs-2';
 import { useState } from 'react';
 import './styles/Scope.css';
-import { Chart as ChartJS } from 'chart.js/auto';
+import { Chart } from 'chart.js/auto';
 
 let times = [];
 let voltagesCH1 = [];
@@ -34,6 +34,8 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
     if (times.length === 0) {
       times = data["times"];
     }
+  } else {
+    voltagesCH1 = [];
   }
 
   // fetch data for channel 2
@@ -57,6 +59,8 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
     if (times.length === 0) {
       times = data["times"];
     }
+  } else {
+    voltagesCH2 = [];
   }
   
   //console.log(voltages);
@@ -82,10 +86,10 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
 
 function ScopeChart() {
 
-  const [verticalScale, setVerticalScale] = useState("5m");
-  const [horizontalScale, setHorizontalScale] = useState("1u");
+  const [verticalScale, setVerticalScale] = useState("1.0");
+  const [horizontalScale, setHorizontalScale] = useState("1us");
   const [xScaleOptions, setXScaleOptions] = useState(
-    { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 1, color: "white" }, type: 'linear', beginAtZero: false, min: 293, max: 307 }
+    { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 1, color: "white" }, type: 'linear',  min: 293, max: 307 }
   );
   const [yScaleOptions, setYScaleOptions] = useState(
     { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 0.005, color: "white" }, min: -0.025, max: 0.025 }
@@ -103,8 +107,8 @@ function ScopeChart() {
       maintainAspectRatio: false,
       plugins: { legend: { labels: { color: "white" } } },
       scales: { 
-        xScaleOptions,
-        yScaleOptions
+        x: xScaleOptions,
+        y: yScaleOptions
       },
     }
   );
@@ -160,7 +164,6 @@ function ScopeChart() {
 
   const onVerticalScaleValueChange = value => {
     setVerticalScale(value);
-    console.log(value);
     switch (value) {
       case "5m":
         setYScaleOptions(
@@ -173,13 +176,13 @@ function ScopeChart() {
             maintainAspectRatio: false,
             plugins: { legend: { labels: { color: "white" } } },
             scales: { 
-              xScaleOptions,
+              x: xScaleOptions,
               y: { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 0.005, color: "white" }, min: -0.025, max: 0.025 }
             },
           }
         );
         break;
-       case "10m":
+      case "10m":
         setYScaleOptions(
           { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 0.01, color: "white" }, min: -0.05, max: 0.05 }
         );
@@ -190,13 +193,13 @@ function ScopeChart() {
             maintainAspectRatio: false,
             plugins: { legend: { labels: { color: "white" } } },
             scales: { 
-              xScaleOptions,
+              x: xScaleOptions,
               y: { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 0.01, color: "white" }, min: -0.05, max: 0.05 }
             },
           }
         );
         break;
-        case "20m":
+      case "20m":
         setYScaleOptions(
           { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 0.02, color: "white" }, min: -0.1, max: 0.1 }
         );
@@ -207,13 +210,13 @@ function ScopeChart() {
             maintainAspectRatio: false,
             plugins: { legend: { labels: { color: "white" } } },
             scales: { 
-              xScaleOptions,
+              x: xScaleOptions,
               y: { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 0.02, color: "white" }, min: -0.1, max: 0.1 }
             },
           }
         );
         break;  
-        case "50m":
+      case "50m":
         setYScaleOptions(
           { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 0.05, color: "white" }, min: -0.25, max: 0.25 }
         );
@@ -224,13 +227,13 @@ function ScopeChart() {
             maintainAspectRatio: false,
             plugins: { legend: { labels: { color: "white" } } },
             scales: { 
-              xScaleOptions,
+              x: xScaleOptions,
               y: { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 0.05, color: "white" }, min: -0.25, max: 0.25 }
             },
           }
         );
         break;
-        case "0.1":
+      case "0.1":
         setYScaleOptions(
           { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 0.1, color: "white" }, min: -0.5, max: 0.5 }
         );
@@ -241,13 +244,13 @@ function ScopeChart() {
             maintainAspectRatio: false,
             plugins: { legend: { labels: { color: "white" } } },
             scales: { 
-              xScaleOptions,
+              x: xScaleOptions,
               y: { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 0.1, color: "white" }, min: -0.5, max: 0.5 }
             },
           }
         );
         break;
-        case "0.2":
+      case "0.2":
         setYScaleOptions(
           { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 0.2, color: "white" }, min: -1.0, max: 1.0 }
         );
@@ -258,13 +261,13 @@ function ScopeChart() {
             maintainAspectRatio: false,
             plugins: { legend: { labels: { color: "white" } } },
             scales: { 
-              xScaleOptions,
+              x: xScaleOptions,
               y: { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 0.2, color: "white" }, min: -1.0, max: 1.0 }
             },
           }
         );
         break;
-        case "0.5":
+      case "0.5":
         setYScaleOptions(
           { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 0.5, color: "white" }, min: -2.5, max: 2.5 }
         );
@@ -275,13 +278,13 @@ function ScopeChart() {
             maintainAspectRatio: false,
             plugins: { legend: { labels: { color: "white" } } },
             scales: { 
-              xScaleOptions,
+              x: xScaleOptions,
               y: { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 0.5, color: "white" }, min: -2.5, max: 2.5 }
             },
           }
         );
         break;
-        case "1.0":
+      case "1.0":
         setYScaleOptions(
           { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 1.0, color: "white" }, min: -5.0, max: 5.0 }
         );
@@ -292,12 +295,15 @@ function ScopeChart() {
             maintainAspectRatio: false,
             plugins: { legend: { labels: { color: "white" } } },
             scales: { 
-              xScaleOptions,
+              x: xScaleOptions,
               y: { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 1.0, color: "white" }, min: -5.0, max: 5.0 }
             },
           }
         );
         break;
+      default:
+        setYScaleOptions(yScaleOptions);
+        setChartOptions(chartOptions);
     }
   };
 
@@ -305,7 +311,7 @@ function ScopeChart() {
     setHorizontalScale(value);
     console.log(value);
     switch (value) {
-      case "1u":
+      case "1us":
         setXScaleOptions(
           { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 1, color: "white" }, type: 'linear', beginAtZero: false, min: 293, max: 307 }
         );
@@ -316,13 +322,13 @@ function ScopeChart() {
             maintainAspectRatio: false,
             plugins: { legend: { labels: { color: "white" } } },
             scales: { 
-              yScaleOptions,
-              x: { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 1, color: "white" }, type: 'linear', beginAtZero: false, min: 293, max: 307 }
+              x: { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 1, color: "white" }, type: 'linear', beginAtZero: false, min: 293, max: 307 },
+              y: yScaleOptions
             },
           }
         );
         break;
-        case "10u":
+      case "10us":
         setXScaleOptions(
           { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 10, color: "white" }, type: 'linear', beginAtZero: false, min: 230, max: 370 }
         );
@@ -333,13 +339,13 @@ function ScopeChart() {
             maintainAspectRatio: false,
             plugins: { legend: { labels: { color: "white" } } },
             scales: { 
-              yScaleOptions,
-              x: { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 10, color: "white" }, type: 'linear', beginAtZero: false, min: 230, max: 370 }
+              x: { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 10, color: "white" }, type: 'linear', beginAtZero: false, min: 230, max: 370 },
+              y: yScaleOptions
             },
           }
         );
         break;
-        case "50u":
+      case "50us":
         setXScaleOptions(
           { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 50, color: "white" }, type: 'linear', beginAtZero: true, min: 0, max: 600 }
         );
@@ -350,13 +356,13 @@ function ScopeChart() {
             maintainAspectRatio: false,
             plugins: { legend: { labels: { color: "white" } } },
             scales: { 
-              yScaleOptions,
-              x: { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 50, color: "white" }, type: 'linear', beginAtZero: false, min: 0, max: 600 }
+              x: { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 50, color: "white" }, type: 'linear', beginAtZero: false, min: 0, max: 600 },
+              y: yScaleOptions
             },
           }
         );
         break;
-        case "20u":
+      case "20us":
         setXScaleOptions(
           { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 20, color: "white" }, type: 'linear', beginAtZero: false, min: 150, max: 430 }
         );
@@ -367,14 +373,17 @@ function ScopeChart() {
             maintainAspectRatio: false,
             plugins: { legend: { labels: { color: "white" } } },
             scales: { 
-              yScaleOptions,
-              x: { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 20, color: "white" }, type: 'linear', beginAtZero: false, min: 150, max: 430 }
+              x: { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 20, color: "white" }, type: 'linear', beginAtZero: false, min: 150, max: 430 },
+              y: yScaleOptions
             },
           }
         );
         break;
+      default:
+        setXScaleOptions(xScaleOptions);
+        setChartOptions(chartOptions);
     }
-  }
+  };
 
   return (
       <div>
@@ -409,7 +418,8 @@ function ScopeChart() {
                 <div className="round-slider-vertical-scale-image">
                   <CircularSlider
                     hideLabelValue  
-                    data={["5m", "10m", "20m", "50m", "0.1", "0.2", "0.5", "1.0"]} 
+                    data={["5m", "10m", "20m", "50m", "0.1", "0.2", "0.5", "1.0"]}
+                    dataIndex={7} 
                     width={115}
                     trackColor="#ffffff"
                     onChange={onVerticalScaleValueChange}/>
@@ -430,7 +440,7 @@ function ScopeChart() {
                 <div className="round-slider-horizontal-scale-image">
                   <CircularSlider
                     hideLabelValue  
-                    data={["1u", "10u", "20u", "50u"]} 
+                    data={["1us", "10us", "20us", "50us"]} 
                     width={115}
                     trackColor="#ffffff"
                     onChange={onHorizontalScaleValueChange}/>
