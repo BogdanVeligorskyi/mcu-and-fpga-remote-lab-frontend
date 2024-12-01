@@ -1,7 +1,7 @@
 import { getUrlForRequest } from './utils/get-url-for-request';
 import CircularSlider from "@fseehawer/react-circular-slider";
 import { Line } from 'react-chartjs-2';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import './styles/Scope.css';
 import { Chart } from 'chart.js/auto';
 
@@ -84,8 +84,24 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
   }
 }
 
+Chart.register({
+  id: 'someBackground',
+  beforeDraw: (chartRef, args, opts) => {
+    const context = chartRef.canvas.getContext('2d');
+    if (!context) {
+      return;
+    }
+    context.save();
+    context.globalCompositeOperation = 'destination-over';
+    context.fillStyle = 'black';
+    context.fillRect(0, 0, chartRef.width, chartRef.height);
+    context.restore();
+  },
+});
+
 function ScopeChart() {
 
+  const chartRef = useRef(null);
   const [verticalScale, setVerticalScale] = useState("1.0");
   const [horizontalScale, setHorizontalScale] = useState("1us");
   const [xScaleOptions, setXScaleOptions] = useState(
@@ -153,6 +169,17 @@ function ScopeChart() {
       console.error("Error fetching chart data:", error);
     }
   };
+
+  // handler for 'Save Waveform' button
+  const saveWaveform = () => {
+    if (chartRef === null) {
+      return;
+    }
+    let a = document.createElement('a');
+    a.href = chartRef.current.toBase64Image();
+    a.download = 'waveform.png';
+    a.click();
+};
 
   const onCH1CBChange = () => {
     setIsCH1Enabled(!isCH1Enabled);
@@ -313,7 +340,7 @@ function ScopeChart() {
     switch (value) {
       case "1us":
         setXScaleOptions(
-          { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 1, color: "white" }, type: 'linear', beginAtZero: false, min: 293, max: 307 }
+          { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 1, color: "white" }, type: 'linear', beginAtZero: false, min: 294, max: 306 }
         );
         setChartOptions(
           {
@@ -322,7 +349,7 @@ function ScopeChart() {
             maintainAspectRatio: false,
             plugins: { legend: { labels: { color: "white" } } },
             scales: { 
-              x: { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 1, color: "white" }, type: 'linear', beginAtZero: false, min: 293, max: 307 },
+              x: { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 1, color: "white" }, type: 'linear', beginAtZero: false, min: 294, max: 306 },
               y: yScaleOptions
             },
           }
@@ -330,7 +357,7 @@ function ScopeChart() {
         break;
       case "10us":
         setXScaleOptions(
-          { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 10, color: "white" }, type: 'linear', beginAtZero: false, min: 230, max: 370 }
+          { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 10, color: "white" }, type: 'linear', beginAtZero: false, min: 240, max: 360 }
         );
         setChartOptions(
           {
@@ -339,7 +366,7 @@ function ScopeChart() {
             maintainAspectRatio: false,
             plugins: { legend: { labels: { color: "white" } } },
             scales: { 
-              x: { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 10, color: "white" }, type: 'linear', beginAtZero: false, min: 230, max: 370 },
+              x: { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 10, color: "white" }, type: 'linear', beginAtZero: false, min: 240, max: 360 },
               y: yScaleOptions
             },
           }
@@ -364,7 +391,7 @@ function ScopeChart() {
         break;
       case "20us":
         setXScaleOptions(
-          { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 20, color: "white" }, type: 'linear', beginAtZero: false, min: 150, max: 430 }
+          { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 20, color: "white" }, type: 'linear', beginAtZero: false, min: 170, max: 410 }
         );
         setChartOptions(
           {
@@ -373,7 +400,7 @@ function ScopeChart() {
             maintainAspectRatio: false,
             plugins: { legend: { labels: { color: "white" } } },
             scales: { 
-              x: { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 20, color: "white" }, type: 'linear', beginAtZero: false, min: 150, max: 430 },
+              x: { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 20, color: "white" }, type: 'linear', beginAtZero: false, min: 170, max: 410 },
               y: yScaleOptions
             },
           }
@@ -400,11 +427,19 @@ function ScopeChart() {
         checked={isCH2Enabled === true}
         onChange={onCH2CBChange}/>
         <label htmlFor="ch2CB">CH2</label>
-        
-        <div className="chart">                    
-          <Line type="line" data={chartData} options={chartOptions}/>
+        <div className="row">
+          <div className="chart">                    
+            <Line type="line" data={chartData} options={chartOptions} ref={chartRef}/>
+          </div>
         </div>
-        <div className="btn btn-primary m-2" onClick={changeButton}>{buttonName}</div>
+        <div className="row m-1">
+          <div className="col-6">
+            <button className="btn btn-md btn-primary m-2" onClick={changeButton}>{buttonName + " Scope "}</button>
+          </div>
+          <div className="col-6">
+            <button className="btn btn-md btn-primary m-2" onClick={saveWaveform}>Save Chart</button>
+          </div>
+        </div>
         <div className="row m-1">
           <div className="col-xl m-1 px-1 border-spec">
             <div className="scope-header">
@@ -422,8 +457,7 @@ function ScopeChart() {
                     dataIndex={7} 
                     width={115}
                     trackColor="#ffffff"
-                    onChange={onVerticalScaleValueChange}/>
-                            
+                    onChange={onVerticalScaleValueChange}/>           
                 </div>
               </div>
               <br/>

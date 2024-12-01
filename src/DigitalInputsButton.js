@@ -34,10 +34,10 @@ const onButtonRelease = () => {
     (response) => {
       if (response.status === 200) {
         setStatus(200);
-        setResultMessage("Successfuly unset pin " + pinNum + "!");
+        setResultMessage("DI value: 0");
       } else {
-        setStatus(500);
-        setResultMessage("Error trying to set pin " + pinNum + "!");
+        setStatus(404);
+        setResultMessage("DI value: undefined");
       }
       setIsRequestCompleted(true);
       console.log('response.status =', response.status);
@@ -63,10 +63,10 @@ const onButtonRelease = () => {
       (response) => {
         if (response.status === 200) {
           setStatus(200);
-          setResultMessage("Successfuly set pin " + pinNum + "!");
+          setResultMessage("DI value: 1");
         } else {
           setStatus(500);
-          setResultMessage("Error trying to set pin " + pinNum + "!");
+          setResultMessage("DI value: undefined");
         }
         setIsRequestCompleted(true);
         console.log('response.status =', response.status);
