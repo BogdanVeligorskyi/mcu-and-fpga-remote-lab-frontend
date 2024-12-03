@@ -1,5 +1,6 @@
 import './styles/Instructions.css'
 
+// set of instructions (recommendations)
 function Instructions() {
     return(
         <div>

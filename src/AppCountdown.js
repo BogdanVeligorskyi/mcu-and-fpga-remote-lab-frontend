@@ -33,6 +33,7 @@ function AppCountdown() {
         }
     }, [wantedDelay]);
 
+    // invoked when countdown is completed (00:00)
     const onCountdownComplete = () => {
         console.log("onCountdownComplete");
         if (localStorage.getItem("end_time") != null) {
@@ -41,14 +42,15 @@ function AppCountdown() {
         setIsCompleted(true);
     }
 
+    // invoked when countdown is started
     const onCountdownStart = () => {
         if (localStorage.getItem("end_time") == null) {
-            localStorage.setItem("end_time", JSON.stringify(data.date + data.delay));
+            localStorage.setItem("end_time", 
+            JSON.stringify(data.date + data.delay));
         }
     }
 
     const onCountdownCompletedOk = () => {
-        // console.log("onCountdownCompletedOk");
         setIsCompletedOk(true);
     }
 
@@ -58,7 +60,8 @@ function AppCountdown() {
           return <div className="countdown-completed">
             <div className="countdown-completed-info">Your experiment time is over! 
             <br/>Please, let other students use this lab.<br/>
-            <button className="btn btn-primary countdown-completed-ok" onClick={onCountdownCompletedOk}>Ok</button></div>
+            <button className="btn btn-primary countdown-completed-ok" 
+            onClick={onCountdownCompletedOk}>Ok</button></div>
           </div>
           } else {
             return <div className="countdown-completed"></div>

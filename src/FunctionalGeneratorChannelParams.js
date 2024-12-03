@@ -13,7 +13,7 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
     const [isEnabled, setIsEnabled] = useState(false);
     const [startStop, setStartStop] = useState("Start");
 
-    
+    // ivoked when function type is changed
     const onFunctionTypeChange = e => {
         setFunctionType(e.target.value);
         if (e.target.value !== "pulse") {
@@ -26,7 +26,8 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                     dutyCycle: 50
                 }),
             };
-            fetch(getUrlForRequest('/api/wavegen/write-duty-cycle'), requestOptions).then(
+            fetch(getUrlForRequest('/api/wavegen/write-duty-cycle'), 
+            requestOptions).then(
                 (response) => {
                     console.log('response.status =', response.status);
                     console.log('response text: ', response.json());
@@ -44,7 +45,8 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                 function: e.target.value 
             }),
         };
-        fetch(getUrlForRequest('/api/wavegen/write-function'), requestOptions).then(
+        fetch(getUrlForRequest('/api/wavegen/write-function'), 
+        requestOptions).then(
             (response) => {
               console.log('response.status =', response.status);
               console.log('response text: ', response.json());
@@ -54,7 +56,7 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
         });
     }
 
-
+    // ivoked when frequency prefix is changed
     const onFrequencyPrefixChange = e => {
         setFrequencyPrefix(e.target.value);
         let freq = 0.0;
@@ -82,7 +84,7 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
         console.log(frequencyValue + " " + frequencyPrefix);
     }
 
-
+    // ivoked when amplitude is changed
     const onAmplitudeValueChange = value => {
         console.log(value);
         if (value == null) {
@@ -108,7 +110,7 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
         });
     }
 
-
+    // ivoked when frequency is changed
     const onFrequencyValueChange = value => {
         setFrequencyValue(value);
         if (value == null) {
@@ -129,7 +131,8 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                 frequency: freq 
             }),
         };
-        fetch(getUrlForRequest('/api/wavegen/write-frequency'), requestOptions).then(
+        fetch(getUrlForRequest('/api/wavegen/write-frequency'), 
+        requestOptions).then(
             (response) => {
               console.log('response.status =', response.status);
               console.log('response text: ', response.json());
@@ -139,7 +142,7 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
         });
     }
 
-
+    // handler for start/stop button
     const onStartStopClick = () => {
         if (!isEnabled) {
             return;
@@ -154,7 +157,8 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                     isStart: 1 
                 }),
             };
-            fetch(getUrlForRequest('/api/wavegen/write-config'), requestOptions).then(
+            fetch(getUrlForRequest('/api/wavegen/write-config'), 
+            requestOptions).then(
                 (response) => {
                     console.log('response.status =', response.status);
                     console.log('response text: ', response.json());
@@ -195,6 +199,7 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
         }
     }
 
+    // ivoked when duty cycle is changed
     const onDutyCycleChange = e => {
         setDutyCycle(e.target.value);
         const requestOptions = {
@@ -205,7 +210,8 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                 dutyCycle: Number(e.target.value) 
             }),
         };
-        fetch(getUrlForRequest('/api/wavegen/write-duty-cycle'), requestOptions).then(
+        fetch(getUrlForRequest('/api/wavegen/write-duty-cycle'), 
+        requestOptions).then(
             (response) => {
                 console.log('response.status =', response.status);
                 console.log('response text: ', response.json());
@@ -215,6 +221,7 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
         });
     }
 
+    // ivoked when channel state is changed
     const onStateChange = () => {
 
         setIsEnabled(!isEnabled);
@@ -232,7 +239,8 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                     function: functionType 
                 }),
             };
-            fetch(getUrlForRequest('/api/wavegen/write-function'), functionApprovalRequestOptions).then(
+            fetch(getUrlForRequest('/api/wavegen/write-function'), 
+            functionApprovalRequestOptions).then(
                 (response) => {
                   console.log('response.status =', response.status);
                   console.log('response text: ', response.json());
@@ -248,7 +256,8 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                     dutyCycle: Number(dutyCycle) 
                 }),
             };
-            fetch(getUrlForRequest('/api/wavegen/write-duty-cycle'), dutyCycleApprovalRequestOptions).then(
+            fetch(getUrlForRequest('/api/wavegen/write-duty-cycle'), 
+            dutyCycleApprovalRequestOptions).then(
                 (response) => {
                   console.log('response.status =', response.status);
                   console.log('response text: ', response.json());
@@ -266,7 +275,8 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                 isEnabled: isEnabledInt 
             }),
         };
-        fetch(getUrlForRequest('/api/wavegen/write-channel'), requestOptions).then(
+        fetch(getUrlForRequest('/api/wavegen/write-channel'), 
+        requestOptions).then(
             (response) => {
               console.log('response.status =', response.status);
               console.log('response text: ', response.json());
@@ -281,7 +291,8 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
             <div className="functional-generator-channel-name">
                 CH{channelNum}
                 <div className="switch-sizing">
-                    <Switch checkedIcon={false} uncheckedIcon={false} checked={isEnabled} onChange={onStateChange} />
+                    <Switch checkedIcon={false} uncheckedIcon={false} 
+                    checked={isEnabled} onChange={onStateChange} />
                 </div>
             </div>
             <table className="functional-generator-table">
@@ -341,7 +352,8 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                         <td><label>Freq</label></td>
                     </tr>
                     <tr>
-                        <td><label className="round-sliders-label">{amplitudeValue} V</label></td>
+                        <td><label className="round-sliders-label">
+                            {amplitudeValue} V</label></td>
                         <td><label className="round-sliders-label">
                             {frequencyValue} {frequencyPrefix}
                             </label></td>
@@ -382,7 +394,10 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                             value="Hz"
                             checked={frequencyPrefix === "Hz"}
                             onChange={onFrequencyPrefixChange}/>
-                            <label className="functional-generator-channel-radio">Hz</label><br/>
+                            <label 
+                            className="functional-generator-channel-radio">
+                                Hz
+                            </label><br/>
                         </td>
                     </tr>
                     <tr>
@@ -392,13 +407,17 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                             value="kHz"
                             checked={frequencyPrefix === "kHz"}
                             onChange={onFrequencyPrefixChange}/>
-                            <label className="functional-generator-channel-radio">kHz</label><br/>
+                            <label className="functional-generator-channel-radio">
+                                kHz
+                            </label><br/>
                         </td>
                     </tr>
                 </tbody>
             </table>
 
-            <div className={(functionType === "pulse" ? 'functional-generator-duty-cycle' : 'functional-generator-duty-cycle-no')}>
+            <div className={(functionType === "pulse" ? 
+            'functional-generator-duty-cycle' : 
+            'functional-generator-duty-cycle-no')}>
                 <label>Duty Cycle</label><br/>
                 <label className="round-sliders-label">{dutyCycle} %</label><br/>
                 <input 
@@ -413,7 +432,9 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
             </div>
 
             <div className="m-4">
-                <div className={(isEnabled ? 'btn btn-primary' : 'btn disabled btn-primary')} onClick={onStartStopClick}>{startStop}</div>
+                <div className={(isEnabled ? 'btn btn-primary' :
+                 'btn disabled btn-primary')} 
+                 onClick={onStartStopClick}>{startStop}</div>
             </div>
             
         </div>

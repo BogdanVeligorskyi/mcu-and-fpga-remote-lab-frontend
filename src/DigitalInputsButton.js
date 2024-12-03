@@ -8,46 +8,51 @@ function DigitalInputsButton({ pinNum }) {
   const [status, setStatus] = useState(0);
   const [isPressed, setIsPressed] = useState(false);
 
-const renderResultBlock = (isRequestCompleted, status) => {
+  const renderResultBlock = (isRequestCompleted, status) => {
     //console.log(status);
     if (isRequestCompleted && status === 200) {
-        return <div className="digital-inputs-button-success">{resultMessage}</div>
+        return <div className="digital-inputs-button-success">
+          {resultMessage}</div>
     } else if (isRequestCompleted && status !== 200) {
-        return <div className="digital-inputs-button-failure">{resultMessage}</div>
+        return <div className="digital-inputs-button-failure">
+          {resultMessage}</div>
     } else if (!isRequestCompleted && status === 0) {
-      return <div className="digital-inputs-button-process">{resultMessage}</div>
+      return <div className="digital-inputs-button-process">
+        {resultMessage}</div>
     }
 }
 
-const onButtonRelease = () => {
-  setIsRequestCompleted(false);
-  setIsPressed(false);
-  setStatus(0);
-  console.log(pinNum);
-  const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ pin: pinNum, state: 0 }),
-  };
-  setResultMessage("Trying to set pin " + pinNum);
-  fetch(getUrlForRequest('/api/write-pin'), requestOptions).then(
-    (response) => {
-      if (response.status === 200) {
-        setStatus(200);
-        setResultMessage("DI value: 0");
-      } else {
-        setStatus(404);
-        setResultMessage("DI value: undefined");
+  // invoked when button is released
+  const onButtonRelease = () => {
+    setIsRequestCompleted(false);
+    setIsPressed(false);
+    setStatus(0);
+    console.log(pinNum);
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pin: pinNum, state: 0 }),
+    };
+    setResultMessage("Trying to set pin " + pinNum);
+    fetch(getUrlForRequest('/api/write-pin'), requestOptions).then(
+      (response) => {
+        if (response.status === 200) {
+          setStatus(200);
+          setResultMessage("DI value: 0");
+        } else {
+          setStatus(404);
+          setResultMessage("DI value: undefined");
+        }
+        setIsRequestCompleted(true);
+        console.log('response.status =', response.status);
+        console.log('response text: ', response.json());
       }
-      setIsRequestCompleted(true);
-      console.log('response.status =', response.status);
-      console.log('response text: ', response.json());
-    }
-  ).catch(error => {
-    console.log(error)
-});
-};
+    ).catch(error => {
+      console.log(error)
+    });
+  };
 
+  // invoked when button is pressed
   const onButtonPress = () => {
     setIsRequestCompleted(false);
     setIsPressed(true);
@@ -77,7 +82,11 @@ const onButtonRelease = () => {
   });
   };
   return (<div>
-    <button className={(isPressed ? "digital-input-button-pressed" : "digital-input-button-normal")} onMouseDown={onButtonPress} onMouseUp={onButtonRelease}></button>
+    <button className={(isPressed ? "digital-input-button-pressed" : 
+    "digital-input-button-normal")} 
+    onMouseDown={onButtonPress} 
+    onMouseUp={onButtonRelease}>
+    </button>
     {renderResultBlock(isRequestCompleted, status)}
     </div>
   );

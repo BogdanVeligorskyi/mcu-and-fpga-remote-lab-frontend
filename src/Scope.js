@@ -28,7 +28,8 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
         body: JSON.stringify({ channel: 0, isFirstCapture: 0})
       }
     }
-    let response = await fetch(getUrlForRequest('/api/scope/get-scope-data'), requestOptions);
+    let response = await fetch(getUrlForRequest('/api/scope/get-scope-data'), 
+    requestOptions);
     let data = await response.json();
     voltagesCH1 = data["voltages"];
     if (times.length === 0) {
@@ -53,7 +54,8 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
         body: JSON.stringify({ channel: 1, isFirstCapture: 0})
       }
     }
-    let response = await fetch(getUrlForRequest('/api/scope/get-scope-data'), requestOptions);
+    let response = await fetch(getUrlForRequest('/api/scope/get-scope-data'), 
+    requestOptions);
     let data = await response.json();
     voltagesCH2 = data["voltages"];
     if (times.length === 0) {
@@ -160,6 +162,7 @@ function ScopeChart() {
     }
   };
 
+  // refresh chart points according to values from oscilloscope
   const refreshChartData = async () => {
     try {
       const data = await fetchChartData(isCH1Enabled, isCH2Enabled);
@@ -189,6 +192,7 @@ function ScopeChart() {
     setIsCH2Enabled(!isCH2Enabled);
   };
 
+  // handler for Y-scale change
   const onVerticalScaleValueChange = value => {
     setVerticalScale(value);
     switch (value) {
@@ -334,6 +338,7 @@ function ScopeChart() {
     }
   };
 
+  // handler for X-scale change
   const onHorizontalScaleValueChange = value => {
     setHorizontalScale(value);
     console.log(value);
@@ -429,15 +434,20 @@ function ScopeChart() {
         <label htmlFor="ch2CB">CH2</label>
         <div className="row">
           <div className="chart">                    
-            <Line type="line" data={chartData} options={chartOptions} ref={chartRef}/>
+            <Line type="line" 
+            data={chartData} 
+            options={chartOptions} 
+            ref={chartRef}/>
           </div>
         </div>
         <div className="row m-1">
           <div className="col-6">
-            <button className="btn btn-md btn-primary m-2" onClick={changeButton}>{buttonName + " Scope "}</button>
+            <button className="btn btn-md btn-primary m-2" 
+            onClick={changeButton}>{buttonName + " Scope "}</button>
           </div>
           <div className="col-6">
-            <button className="btn btn-md btn-primary m-2" onClick={saveWaveform}>Save Chart</button>
+            <button className="btn btn-md btn-primary m-2" 
+            onClick={saveWaveform}>Save Chart</button>
           </div>
         </div>
         <div className="row m-1">
@@ -448,7 +458,8 @@ function ScopeChart() {
             <div className="scope-vertical-channel-name">
             </div>
             <label>Scale</label><br/>
-            <label className="round-sliders-label">{verticalScale}V/div</label><br/>
+            <label className="round-sliders-label">
+              {verticalScale}V/div</label><br/>
               <div className="round-slider-wrapper">
                 <div className="round-slider-vertical-scale-image">
                   <CircularSlider
@@ -469,7 +480,8 @@ function ScopeChart() {
             <div className="scope-vertical-channel-name">
             </div>
             <label>Scale</label><br/>
-            <label className="round-sliders-label">{horizontalScale}/div</label><br/>
+            <label className="round-sliders-label">
+              {horizontalScale}/div</label><br/>
               <div className="round-slider-wrapper">
                 <div className="round-slider-horizontal-scale-image">
                   <CircularSlider

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { getUrlForRequest } from './utils/get-url-for-request';
 import './styles/ProgramDevice.css'
 
+
+// Program MCU and FPGA component
 const ProgramDeviceForm = ({isFPGADev}) => {
 
     const [file, setFile] = useState()
@@ -23,11 +25,14 @@ const ProgramDeviceForm = ({isFPGADev}) => {
             }
         } else {
             if (isRequestCompleted && statusMCU === 200) {
-                return <div className="program-device-success">{resultMCUMessage}</div>
+                return <div className="program-device-success">
+                    {resultMCUMessage}</div>
             } else if (isRequestCompleted && statusMCU !== 200) {
-                return <div className="program-device-failure">{resultMCUMessage}</div>
+                return <div className="program-device-failure">
+                    {resultMCUMessage}</div>
             } else if (!isRequestCompleted) {
-                return <div className="program-device-progress">{resultMCUMessage}</div>
+                return <div className="program-device-progress">
+                    {resultMCUMessage}</div>
             }
         }
         
@@ -35,9 +40,11 @@ const ProgramDeviceForm = ({isFPGADev}) => {
 
     const renderProgramButton = (isFPGADev) => {
         if (isFPGADev) {
-            return <button type="submit" className="btn btn-primary my-2">Program FPGA</button>
+            return <button type="submit" 
+            className="btn btn-primary my-2">Program FPGA</button>
         } else {
-            return <button type="submit" className="btn btn-primary my-2">Program MCU</button>
+            return <button type="submit" 
+            className="btn btn-primary my-2">Program MCU</button>
         }
     } 
 
@@ -66,7 +73,8 @@ const ProgramDeviceForm = ({isFPGADev}) => {
         if (isFPGADev) {
             setResultFPGAMessage("Trying to program FPGA device...");
             setResultMCUMessage("");
-            fetch(getUrlForRequest("/api/firmware/fpga"), requestOptions).then(
+            fetch(getUrlForRequest("/api/firmware/fpga"), 
+            requestOptions).then(
                 (response) => {
                   console.log('response.status =', response.status);
                   if (response.status === 200) {

@@ -4,11 +4,14 @@ import { getUrlForRequest } from './utils/get-url-for-request';
 import Switch from 'react-switch';
 
 function CameraView() {
+  
   const [cameraOn, setCameraOn] = useState(false);
 
+  // change on/off mode
   const onCameraOnOffChange = () => {
     setCameraOn(!cameraOn);
   };
+
   const renderVideoOrVoidBlock = (cameraOn) => {
     if (cameraOn) {
       return (
@@ -26,7 +29,8 @@ function CameraView() {
       <h2>Camera View From Lab</h2>
       <div className="camera-frame">{renderVideoOrVoidBlock(cameraOn)}</div>
       <div className="switch-sizing">
-        <Switch checkedIcon={false} uncheckedIcon={false} checked={cameraOn} onChange={onCameraOnOffChange}/>
+        <Switch checkedIcon={false} uncheckedIcon={false} 
+        checked={cameraOn} onChange={onCameraOnOffChange}/>
       </div>
     </div>
   );

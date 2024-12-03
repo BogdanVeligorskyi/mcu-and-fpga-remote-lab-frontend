@@ -1,6 +1,7 @@
 import './styles/FunctionalGenerator.css';
 import FunctionalGeneratorChannelParams from "./FunctionalGeneratorChannelParams";
 
+// basic component of functional generator
 function FunctionalGenerator() {
     return (
         <div>
