@@ -1,5 +1,6 @@
 import './styles/App.css';
 import { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import ScrollToTop from 'react-scroll-to-top';
 import AppCountdown from './AppCountdown';
 import Instructions from './Instructions';
@@ -9,8 +10,12 @@ import CameraView from './CameraView';
 import FunctionalGenerator from './FunctionalGenerator';
 import Scope from './Scope';
 
-function App() {
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
+function App() {
+ 
   const [isInstructionsEnabled, setIsInstructionsEnabled] = useState(true);  
   const [isProgramFPGAEnabled, setIsProgramFPGAEnabled] = useState(true);
   const [isProgramMCUEnabled, setIsProgramMCUEnabled] = useState(false);
@@ -19,6 +24,9 @@ function App() {
   const [isFunctionalGeneratorEnabled, setIsFunctionalGeneratorEnabled] = useState(true);
   const [isScopeEnabled, setIsScopeEnabled] = useState(true);
   const [isSubMenuCollapsed, setIsSubMenuCollapsed] = useState(false);
+
+  let query = useQuery();
+  let tokenId = query.get("tokenId");
 
   // ----- Submenu -----
   const handleClickOutsideSubmenu = () => {
@@ -45,6 +53,8 @@ function App() {
 
   const onCollapseClicked = () => {
     setIsSubMenuCollapsed(!isSubMenuCollapsed);
+    console.log("Full url: " + window.location.href);
+    console.log("tokenId: " + tokenId);
   }
   
   const onInstructionsCBChange = () => {
@@ -220,20 +230,20 @@ function App() {
             <div>
               {/* Instructions and Program Device */}
               <div className="row">
-                <div className="col-xl app-component-box">
+                <div className="col-lg app-component-box">
                   {renderInstructions(isInstructionsEnabled)}
                 </div>
-                <div className="col-xl app-component-box">
+                <div className="col-lg app-component-box">
                   {renderProgramFPGAorMCU(isProgramFPGAEnabled)}
                 </div>
               </div>
 
               {/* Digital Inputs and Camera View */}
               <div className="row">
-                <div className="col-xl app-component-box">
+                <div className="col-lg app-component-box">
                   {renderDigitalInputs(isDigitalInputsEnabled)}
                 </div>
-                <div className="col-xl app-component-box">
+                <div className="col-lg app-component-box">
                   {renderCameraView(isCameraViewEnabled)}
                 </div>
               </div>
@@ -254,6 +264,7 @@ function App() {
       </header>
       <ScrollToTop color="white" className="scroll-to-top-button"/>
     </div>
+    
   );
 }
 
