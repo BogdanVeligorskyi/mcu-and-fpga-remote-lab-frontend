@@ -7,7 +7,7 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
 
     const [functionType, setFunctionType] = useState("sine");
     const [frequencyPrefix, setFrequencyPrefix] = useState("Hz");
-    const [amplitudeValue, setAmplitudeValue] = useState(-4.9);
+    const [amplitudeValue, setAmplitudeValue] = useState(-0.1);
     const [frequencyValue, setFrequencyValue] = useState(1);
     const [dutyCycle, setDutyCycle] = useState(50);
     const [isEnabled, setIsEnabled] = useState(false);
@@ -363,8 +363,8 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
                             <CircularSlider
                                 className="round-slider" 
                                 hideLabelValue 
-                                min={-49}
-                                max={49} 
+                                min={1}
+                                max={29} 
                                 width={115}
                                 trackColor="#ffffff"
                                 onChange={onAmplitudeValueChange}>
