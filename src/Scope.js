@@ -10,15 +10,15 @@ let times = [];
 let voltagesCH1 = [];
 let voltagesCH2 = [];
 
+let tokenId;
+let query;
+
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
 // fetch voltage values from backend
 const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
-
-  let query = useQuery();
-  let tokenId = query.get("token");
 
   let requestOptions;
 
@@ -115,6 +115,9 @@ Chart.register({
 });
 
 function ScopeChart() {
+
+  query = useQuery();
+  tokenId = query.get("token");
 
   const chartRef = useRef(null);
   const [verticalScale, setVerticalScale] = useState("1.0");
