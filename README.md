@@ -4,7 +4,19 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
-In the project directory, you can run:
+Before running the application either by `npm start` or `npm run build` command you need to ensure that all NPM packages, required by this project, are installed on your machine. All installed packages are placed inside the `node_modules` folder. However, the installation need to be performed in root folder (on the same level as the package.json file). 
+The list of required packages can be found in package.json file.  
+
+In the project directory, you need to install following packages:
+- "@fseehawer/react-circular-slider" (v 2.7.0, install command: `npm install @fseehawer/react-circular-slider`),
+- "bootstrap" (v 5.3.3, install command: `npm install bootstrap`),
+- "bootstrap-icons" (v 1.11.3, install command: `npm install bootstrap-icons`),
+- "react" (v 18.3.1, provided with `Create React App` template),
+- "react-chartjs-2" (v 5.2.0, install command: `npm install react-chartjs-2`),
+- "react-countdown" (v 2.3.6, install command: `npm install react-countdown`),
+- "react-router-dom" (v 7.1.5, install command: `npm install react-router-dom`),
+- "react-scroll-to-top" (v 3.0.0, install command: `npm install react-scroll-to-top`),
+- "react-switch": (v 7.0.0, install command: `npm install react-switch`).
 
 ### `npm start`
 

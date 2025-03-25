@@ -1,5 +1,10 @@
 import { getUrlForRequest } from './utils/get-url-for-request';
+import { useLocation } from 'react-router-dom';
 import { useState } from "react";
+
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
 
 function DigitalInputsGen({ pinNum }) {
 
@@ -12,6 +17,9 @@ function DigitalInputsGen({ pinNum }) {
     const [intervalID, setIntervalID] = useState();
     const [secondIntervalID, setSecondIntervalID] = useState();
 
+    let query = useQuery();
+    let tokenId = query.get("token");
+
     // send pin value to server
     const sendRequest = (value) => {
         setIsRequestCompleted(false);
@@ -19,8 +27,9 @@ function DigitalInputsGen({ pinNum }) {
         setDIValue("DI value:");
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
             body: JSON.stringify({ pin: pinNum, state: value }),
+            credentials: 'include'
           };
           fetch(getUrlForRequest('/api/write-pin'), 
           requestOptions).then(
@@ -40,7 +49,6 @@ function DigitalInputsGen({ pinNum }) {
             console.log(error)
         });
     }
-
 
     const onButtonClick = () => {
         setIsOn(!isOn);

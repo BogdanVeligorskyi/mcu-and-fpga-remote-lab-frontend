@@ -1,10 +1,17 @@
 import { useState } from 'react';
 import { getUrlForRequest } from './utils/get-url-for-request';
+import { useLocation } from 'react-router-dom';
 import './styles/ProgramDevice.css'
 
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
 
 // Program MCU and FPGA component
 const ProgramDeviceForm = ({isFPGADev}) => {
+
+    let query = useQuery();
+    let tokenId = query.get("token");
 
     const [file, setFile] = useState()
     const [resultFPGAMessage, setResultFPGAMessage] = useState("")
@@ -65,8 +72,9 @@ const ProgramDeviceForm = ({isFPGADev}) => {
         
         const requestOptions = {
             method: 'POST',
-            // headers: {'content-type': 'multipart/form-data'}, 
-            body: formData       
+            headers: {'Authorization': tokenId}, 
+            body: formData,
+            credentials: 'include'
         }
         
         // if the device is a FPGA

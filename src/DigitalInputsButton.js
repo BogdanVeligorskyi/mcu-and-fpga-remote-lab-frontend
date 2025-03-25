@@ -1,7 +1,15 @@
 import { getUrlForRequest } from './utils/get-url-for-request';
+import { useLocation } from 'react-router-dom';
 import { useState } from 'react';
 
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
 function DigitalInputsButton({ pinNum }) {
+
+  let query = useQuery();
+  let tokenId = query.get("token");
 
   const [resultMessage, setResultMessage] = useState("");
   const [isRequestCompleted, setIsRequestCompleted] = useState(false);
@@ -20,7 +28,7 @@ function DigitalInputsButton({ pinNum }) {
       return <div className="digital-inputs-button-process">
         {resultMessage}</div>
     }
-}
+  }
 
   // invoked when button is released
   const onButtonRelease = () => {
@@ -30,8 +38,9 @@ function DigitalInputsButton({ pinNum }) {
     console.log(pinNum);
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
       body: JSON.stringify({ pin: pinNum, state: 0 }),
+      credentials: 'include'
     };
     setResultMessage("Trying to set pin " + pinNum);
     fetch(getUrlForRequest('/api/write-pin'), requestOptions).then(
@@ -60,8 +69,9 @@ function DigitalInputsButton({ pinNum }) {
     console.log(pinNum);
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
       body: JSON.stringify({ pin: pinNum, state: 1 }),
+      credentials: 'include'
     };
     setResultMessage("Trying to set pin " + pinNum);
     fetch(getUrlForRequest('/api/write-pin'), requestOptions).then(

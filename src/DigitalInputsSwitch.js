@@ -1,6 +1,11 @@
 import { getUrlForRequest } from './utils/get-url-for-request';
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import Switch from 'react-switch'
+
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
 function DigitalInputsSwitch({ pinNum }) {
 
@@ -9,6 +14,9 @@ function DigitalInputsSwitch({ pinNum }) {
   const [status, setStatus] = useState(0);
   const [diValue, setDIValue] = useState("");
 
+  let query = useQuery();
+  let tokenId = query.get("token");
+
   // send pin value to server
   const sendRequest = (value) => {
     setIsRequestCompleted(false);
@@ -16,8 +24,9 @@ function DigitalInputsSwitch({ pinNum }) {
       setDIValue("DI value:");
       const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ pin: pinNum, state: value }),
+        headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
+        body: JSON.stringify({ pin: pinNum, state: value }),
+        credentials: 'include'
       };
       fetch(getUrlForRequest('/api/write-pin'), 
       requestOptions).then(

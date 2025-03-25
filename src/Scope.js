@@ -1,4 +1,5 @@
 import { getUrlForRequest } from './utils/get-url-for-request';
+import { useLocation } from 'react-router-dom';
 import CircularSlider from "@fseehawer/react-circular-slider";
 import { Line } from 'react-chartjs-2';
 import { useRef, useState } from 'react';
@@ -9,8 +10,16 @@ let times = [];
 let voltagesCH1 = [];
 let voltagesCH2 = [];
 
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
 // fetch voltage values from backend
 const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
+
+  let query = useQuery();
+  let tokenId = query.get("token");
+
   let requestOptions;
 
   // fetch data for channel 1
@@ -18,14 +27,16 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
     if (times.length === 0) {
       requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ channel: 0, isFirstCapture: 1})
+        headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
+        body: JSON.stringify({ channel: 0, isFirstCapture: 1}),
+        credentials: 'include'
       }
     } else {
       requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ channel: 0, isFirstCapture: 0})
+        headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
+        body: JSON.stringify({ channel: 0, isFirstCapture: 0}),
+        credentials: 'include'
       }
     }
     let response = await fetch(getUrlForRequest('/api/scope/get-scope-data'), 
@@ -44,14 +55,16 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
     if (times.length === 0) {
       requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ channel: 1, isFirstCapture: 1})
+        headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
+        body: JSON.stringify({ channel: 1, isFirstCapture: 1}),
+        credentials: 'include'
       }
     } else {
       requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ channel: 1, isFirstCapture: 0})
+        headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
+        body: JSON.stringify({ channel: 1, isFirstCapture: 0}),
+        credentials: 'include'
       }
     }
     let response = await fetch(getUrlForRequest('/api/scope/get-scope-data'), 
@@ -317,7 +330,7 @@ function ScopeChart() {
         break;
       case "1.0":
         setYScaleOptions(
-          { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 1.0, color: "white" }, min: -5.0, max: 5.0 }
+          { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 1.0, color: "white" }, min: -4.0, max: 4.0 }
         );
         setChartOptions(
           {
@@ -327,7 +340,7 @@ function ScopeChart() {
             plugins: { legend: { labels: { color: "white" } } },
             scales: { 
               x: xScaleOptions,
-              y: { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 1.0, color: "white" }, min: -5.0, max: 5.0 }
+              y: { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 1.0, color: "white" }, min: -4.0, max: 4.0 }
             },
           }
         );

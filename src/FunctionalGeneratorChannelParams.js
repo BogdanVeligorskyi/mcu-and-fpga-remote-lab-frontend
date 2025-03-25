@@ -1,7 +1,12 @@
 import { getUrlForRequest } from './utils/get-url-for-request';
 import { useState } from "react";
+import { useLocation } from 'react-router-dom';
 import CircularSlider from '@fseehawer/react-circular-slider';
 import Switch from 'react-switch';
+
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
 
 function FunctionalGeneratorChannelParams( {channelNum} ) {
 
@@ -13,18 +18,24 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
     const [isEnabled, setIsEnabled] = useState(false);
     const [startStop, setStartStop] = useState("Start");
 
+    let query = useQuery();
+    let tokenId = query.get("token");
+
     // ivoked when function type is changed
     const onFunctionTypeChange = e => {
+        console.log("tokenID:" + tokenId);
+        console.log(window.location.href);
         setFunctionType(e.target.value);
         if (e.target.value !== "pulse") {
             setDutyCycle(50);
             const requestOptions = {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
                 body: JSON.stringify({ 
                     channel: channelNum-1, 
                     dutyCycle: 50
                 }),
+                credentials: 'include'
             };
             fetch(getUrlForRequest('/api/wavegen/write-duty-cycle'), 
             requestOptions).then(
@@ -39,11 +50,12 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
 
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json' , 'Authorization': tokenId },
             body: JSON.stringify({ 
                 channel: channelNum-1, 
                 function: e.target.value 
             }),
+            credentials: 'include'
         };
         fetch(getUrlForRequest('/api/wavegen/write-function'), 
         requestOptions).then(
@@ -67,11 +79,12 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
         }
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
             body: JSON.stringify({ 
                 channel: channelNum-1, 
                 frequency: freq
             }),
+            credentials: 'include'
         };
         fetch('/api/wavegen/write-frequency', requestOptions).then(
             (response) => {
@@ -94,11 +107,12 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
         setAmplitudeValue(voltValue);
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
             body: JSON.stringify({ 
                 channel: channelNum-1, 
                 amplitude: voltValue 
             }),
+            credentials: 'include'
         };
         fetch('/api/wavegen/write-amplitude', requestOptions).then(
             (response) => {
@@ -125,11 +139,12 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
         }
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
             body: JSON.stringify({ 
                 channel: channelNum-1, 
                 frequency: freq 
             }),
+            credentials: 'include'
         };
         fetch(getUrlForRequest('/api/wavegen/write-frequency'), 
         requestOptions).then(
@@ -151,11 +166,12 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
             setStartStop("Stop");
             const requestOptions = {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
                 body: JSON.stringify({ 
                     channel: channelNum-1, 
                     isStart: 1 
                 }),
+                credentials: 'include'
             };
             fetch(getUrlForRequest('/api/wavegen/write-config'), 
             requestOptions).then(
@@ -177,11 +193,12 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
 
             const requestOptions = {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
                 body: JSON.stringify({ 
                     channel: channelNum-1, 
                     isStart: 0 
                 }),
+                credentials: 'include'
             };
             fetch(getUrlForRequest('/api/wavegen/write-config'), requestOptions).then(
                 (response) => {
@@ -204,11 +221,12 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
         setDutyCycle(e.target.value);
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
             body: JSON.stringify({ 
                 channel: channelNum-1, 
                 dutyCycle: Number(e.target.value) 
             }),
+            credentials: 'include'
         };
         fetch(getUrlForRequest('/api/wavegen/write-duty-cycle'), 
         requestOptions).then(
@@ -233,11 +251,12 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
             isEnabledInt = 1;
             const functionApprovalRequestOptions = {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
                 body: JSON.stringify({ 
                     channel: channelNum-1, 
                     function: functionType 
                 }),
+                credentials: 'include'
             };
             fetch(getUrlForRequest('/api/wavegen/write-function'), 
             functionApprovalRequestOptions).then(
@@ -250,11 +269,12 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
             });
             const dutyCycleApprovalRequestOptions = {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
                 body: JSON.stringify({ 
                     channel: channelNum-1, 
                     dutyCycle: Number(dutyCycle) 
                 }),
+                credentials: 'include'
             };
             fetch(getUrlForRequest('/api/wavegen/write-duty-cycle'), 
             dutyCycleApprovalRequestOptions).then(
@@ -269,11 +289,12 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
 
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
             body: JSON.stringify({ 
                 channel: channelNum-1, 
                 isEnabled: isEnabledInt 
             }),
+            credentials: 'include'
         };
         fetch(getUrlForRequest('/api/wavegen/write-channel'), 
         requestOptions).then(
