@@ -189,7 +189,7 @@ function App() {
       headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
       credentials: 'include'
     };
-    fetch(getUrlForRequest('/api/session'), 
+    fetch(getUrlForRequest('/api/my-session'), 
     requestOptions).then(
       (response) => {
         console.log('response.status =', response.status);
