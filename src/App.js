@@ -1,6 +1,7 @@
 import './styles/App.css';
 import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
+import { getUrlForRequest } from './utils/get-url-for-request';
 import ScrollToTop from 'react-scroll-to-top';
 import AppCountdown from './AppCountdown';
 import Instructions from './Instructions';
@@ -24,9 +25,12 @@ function App() {
   const [isFunctionalGeneratorEnabled, setIsFunctionalGeneratorEnabled] = useState(true);
   const [isScopeEnabled, setIsScopeEnabled] = useState(true);
   const [isSubMenuCollapsed, setIsSubMenuCollapsed] = useState(false);
+  //const [isToken, setIsToken] = useState(false);
+  const [connStatus, setConnStatus] = useState(0);
+
 
   let query = useQuery();
-  let tokenId = query.get("tokenId");
+  let tokenId = query.get("token");
 
   // ----- Submenu -----
   const handleClickOutsideSubmenu = () => {
@@ -50,6 +54,14 @@ function App() {
   
     return ref;
   };
+
+  /*const onTokenChange = () => {
+    if (tokenId.length === 0) {
+      setIsToken(false);
+    } else {
+      setIsToken(true);
+    }
+  }*/
 
   const onCollapseClicked = () => {
     setIsSubMenuCollapsed(!isSubMenuCollapsed);
@@ -152,6 +164,45 @@ function App() {
     }
   }
 
+  const checkConnection = (connStatus) => {
+    if (connStatus === 401) {
+      return <div className="countdown-completed">
+      <div className="countdown-completed-info">Token is incorrect! 
+        <br/>Work with lab is not available.<br/>
+        Please connect via SREE Server / JupyterHub <br/>
+      </div>
+  </div>
+    }
+  }
+
+  const renderOnTokenIncorrect = (tokenId) => {
+    if (!tokenId || tokenId.length === 0) {
+      return <div className="countdown-completed">
+            <div className="countdown-completed-info">No entry token! 
+              <br/>Work with lab is not available.<br/>
+              Please connect via SREE Server or JupyterHub <br/> 
+            </div>
+        </div> 
+    }
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
+      credentials: 'include'
+    };
+    fetch(getUrlForRequest('/api/session'), 
+    requestOptions).then(
+      (response) => {
+        console.log('response.status =', response.status);
+        console.log('response text: ', response.json());
+        if (response.status === 401) {
+          setConnStatus(401); 
+        }
+      }
+    ).catch(error => {
+      console.log(error)
+  });
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -221,6 +272,8 @@ function App() {
                   {renderCollapseIcon(isSubMenuCollapsed)}
                 </button>     
               </div>
+              {renderOnTokenIncorrect(tokenId)}
+              {checkConnection(connStatus)}
               <AppCountdown/>
               <div className="countdown-space">
               </div>
