@@ -168,8 +168,10 @@ function App() {
       console.log("timeDelta: " + timeDelta);
       return <AppCountdown timeLeft={timeDelta} isStart={true}/>
     } else {
-      let timeDelta = 99999999999;
-      return <AppCountdown timeLeft={timeDelta} isStart={false}/>
+      return <div className="countdown">
+                <span className="bi bi-stopwatch"></span>
+                <div className="countdown-value">00:00</div>
+              </div>
     }
   }
 

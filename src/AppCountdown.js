@@ -1,5 +1,5 @@
 import Countdown, { zeroPad } from 'react-countdown';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 //const getLocalStorageValue = (s) => localStorage.getItem(s);
 
@@ -13,7 +13,6 @@ function AppCountdown({timeLeft, isStart}) {
     const [isCompleted, setIsCompleted] = useState(false);
     const [isCompletedOk, setIsCompletedOk] = useState(false);
     const [data, setData] = useState({ date: Date.now(), delay: timeLeft });
-    const wantedDelay = data.delay;
 
     // ----- Countdown -----
     /*useEffect(() => {
