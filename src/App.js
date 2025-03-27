@@ -25,9 +25,8 @@ function App() {
   const [isFunctionalGeneratorEnabled, setIsFunctionalGeneratorEnabled] = useState(true);
   const [isScopeEnabled, setIsScopeEnabled] = useState(true);
   const [isSubMenuCollapsed, setIsSubMenuCollapsed] = useState(false);
-  //const [isToken, setIsToken] = useState(false);
   const [connStatus, setConnStatus] = useState(0);
-
+  const [endTime, setEndTime] = useState("");
 
   let query = useQuery();
   let tokenId = query.get("token");
@@ -54,14 +53,6 @@ function App() {
   
     return ref;
   };
-
-  /*const onTokenChange = () => {
-    if (tokenId.length === 0) {
-      setIsToken(false);
-    } else {
-      setIsToken(true);
-    }
-  }*/
 
   const onCollapseClicked = () => {
     setIsSubMenuCollapsed(!isSubMenuCollapsed);
@@ -164,12 +155,30 @@ function App() {
     }
   }
 
+  const checkCountdown = (connStatus, endTime) => {
+    if (connStatus === 200) {
+      let date = new Date();
+      let dateLocal = date.toISOString();
+      console.log("currentTime: " + dateLocal);
+      console.log("currentTime timestamp: " + Date.parse(dateLocal));
+      console.log("endTime: " + endTime);
+      console.log("endTime timestamp: " + Date.parse(endTime));
+
+      let timeDelta = Date.parse(endTime) - Date.parse(dateLocal);
+      console.log("timeDelta: " + timeDelta);
+      return <AppCountdown timeLeft={timeDelta} isStart={true}/>
+    } else {
+      let timeDelta = 1000;
+      return <AppCountdown timeLeft={timeDelta} isStart={false}/>
+    }
+  }
+
   const checkConnection = (connStatus) => {
     if (connStatus === 401) {
       return <div className="countdown-completed">
       <div className="countdown-completed-info">Token is incorrect! 
         <br/>Work with lab is not available.<br/>
-        Please connect via SREE Server / JupyterHub <br/>
+        Please connect via SREE Server or JupyterHub <br/>
       </div>
   </div>
     }
@@ -194,12 +203,17 @@ function App() {
       (response) => {
         console.log('response.status =', response.status);
         console.log('response text: ', response.json());
+        
         if (response.status === 401) {
-          setConnStatus(401); 
+          setConnStatus(401);
+        } else {
+          setConnStatus(200);
+          let dataJSON = response.json();
+          setEndTime(dataJSON['sessionEndTime']);
         }
       }
     ).catch(error => {
-      console.log(error)
+      console.log(error);
   });
   }
 
@@ -274,7 +288,7 @@ function App() {
               </div>
               {renderOnTokenIncorrect(tokenId)}
               {checkConnection(connStatus)}
-              <AppCountdown/>
+              {checkCountdown(connStatus, endTime)}
               <div className="countdown-space">
               </div>
             </div>

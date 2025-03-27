@@ -1,22 +1,22 @@
 import Countdown, { zeroPad } from 'react-countdown';
 import { useState, useEffect } from 'react';
 
-const getLocalStorageValue = (s) => localStorage.getItem(s);
+//const getLocalStorageValue = (s) => localStorage.getItem(s);
 
 // formatting countdown
 const renderer = ({ minutes, seconds }) => {
     return <span>{zeroPad(minutes)}:{zeroPad(seconds)}</span>;
 };
 
-function AppCountdown() {
+function AppCountdown({timeLeft, isStart}) {
 
     const [isCompleted, setIsCompleted] = useState(false);
     const [isCompletedOk, setIsCompletedOk] = useState(false);
-    const [data, setData] = useState({ date: Date.now(), delay: 600000 });
+    const [data, setData] = useState({ date: Date.now(), delay: timeLeft });
     const wantedDelay = data.delay;
 
     // ----- Countdown -----
-    useEffect(() => {
+    /*useEffect(() => {
 
         const savedDate = getLocalStorageValue("end_time");
         // console.log(savedDate);
@@ -31,7 +31,7 @@ function AppCountdown() {
                 setData({ date: currentTime, delay: delta });
             }
         }
-    }, [wantedDelay]);
+    }, [wantedDelay]);*/
 
     // invoked when countdown is completed (00:00)
     const onCountdownComplete = () => {
@@ -75,6 +75,7 @@ function AppCountdown() {
                 <div className="countdown-value">
                   <Countdown 
                     date={data.date + data.delay}
+                    autoStart={isStart}
                     renderer={renderer}
                     onStart={onCountdownStart}
                     onComplete={onCountdownComplete}/>
