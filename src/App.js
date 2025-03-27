@@ -168,7 +168,7 @@ function App() {
       console.log("timeDelta: " + timeDelta);
       return <AppCountdown timeLeft={timeDelta} isStart={true}/>
     } else {
-      let timeDelta = 1000;
+      let timeDelta = 99999999999;
       return <AppCountdown timeLeft={timeDelta} isStart={false}/>
     }
   }
@@ -184,6 +184,24 @@ function App() {
     }
   }
 
+  // fetch session info
+  const fetchSession = async () => {
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
+      credentials: 'include'
+    };
+    const response = await fetch(getUrlForRequest('/api/my-session'), 
+    requestOptions);
+    let data = await response.json();
+    if (response.status === 401) {
+      setConnStatus(401);
+    } else {
+      setConnStatus(200);
+      setEndTime(data['sessionEndTime']);
+    }
+  }
+
   const renderOnTokenIncorrect = (tokenId) => {
     if (!tokenId || tokenId.length === 0) {
       return <div className="countdown-completed">
@@ -193,28 +211,7 @@ function App() {
             </div>
         </div> 
     }
-    const requestOptions = {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
-      credentials: 'include'
-    };
-    fetch(getUrlForRequest('/api/my-session'), 
-    requestOptions).then(
-      (response) => {
-        console.log('response.status =', response.status);
-        console.log('response text: ', response.json());
-        
-        if (response.status === 401) {
-          setConnStatus(401);
-        } else {
-          setConnStatus(200);
-          let dataJSON = response.json();
-          setEndTime(dataJSON['sessionEndTime']);
-        }
-      }
-    ).catch(error => {
-      console.log(error);
-  });
+    fetchSession();
   }
 
   return (
