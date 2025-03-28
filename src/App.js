@@ -25,11 +25,12 @@ function App() {
   const [isFunctionalGeneratorEnabled, setIsFunctionalGeneratorEnabled] = useState(true);
   const [isScopeEnabled, setIsScopeEnabled] = useState(true);
   const [isSubMenuCollapsed, setIsSubMenuCollapsed] = useState(false);
+  const [isSocketClosed, setIsSocketClosed] = useState(false);
   const [connStatus, setConnStatus] = useState(0);
   const [endTime, setEndTime] = useState("");
 
   let query = useQuery();
-  let tokenId = query.get("token");
+  let tokenId = query.get("token");  
 
   // ----- Submenu -----
   const handleClickOutsideSubmenu = () => {
@@ -53,6 +54,8 @@ function App() {
   
     return ref;
   };
+
+ 
 
   const onCollapseClicked = () => {
     setIsSubMenuCollapsed(!isSubMenuCollapsed);
@@ -175,14 +178,23 @@ function App() {
     }
   }
 
-  const checkConnection = (connStatus) => {
+  const checkConnection = (connStatus, isSocketClosed) => {
+    console.log(isSocketClosed);
+    if (isSocketClosed) {
+      return <div className="countdown-completed">
+      <div className="countdown-completed-info">Server does not respond 
+        <br/>Work with lab is not available.<br/>
+        Please reconnect via SREE Server or JupyterHub <br/>
+      </div>
+    </div>
+    }
     if (connStatus === 401) {
       return <div className="countdown-completed">
       <div className="countdown-completed-info">Token is incorrect! 
         <br/>Work with lab is not available.<br/>
         Please connect via SREE Server or JupyterHub <br/>
       </div>
-  </div>
+    </div>
     }
   }
 
@@ -201,8 +213,33 @@ function App() {
     } else {
       setConnStatus(200);
       setEndTime(data['sessionEndTime']);
+      //connectToWebSocket(ws);
     }
   }
+
+  
+  useEffect(() => {
+    const ws = new WebSocket('ws://195.69.76.135:8082/ws?token=' + tokenId);
+    console.log("connectToWebSocket");
+    
+    
+  // Connection opened
+  ws.addEventListener("open", event => {
+    ws.send("Connection established");
+    console.log("Socket connection established");
+  });
+
+  // Listen for messages
+  ws.addEventListener("message", event => {
+    console.log("Message from server ", event.data);
+  });
+
+  ws.addEventListener("close", event => {
+    console.log("Socket closed");
+    setIsSocketClosed(true);
+  });
+    
+  }, []);
 
   const renderOnTokenIncorrect = (tokenId) => {
     if (!tokenId || tokenId.length === 0) {
@@ -214,6 +251,7 @@ function App() {
         </div> 
     }
     fetchSession();
+
   }
 
   return (
@@ -286,7 +324,7 @@ function App() {
                 </button>     
               </div>
               {renderOnTokenIncorrect(tokenId)}
-              {checkConnection(connStatus)}
+              {checkConnection(connStatus, isSocketClosed)}
               {checkCountdown(connStatus, endTime)}
               <div className="countdown-space">
               </div>
