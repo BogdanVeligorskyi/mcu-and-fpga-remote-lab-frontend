@@ -112,7 +112,7 @@
   display: inline-block;
 }
 
-.countdown-completed {
+.error-message {
   position: fixed;
   top: 0px;
   left: 0px;
@@ -122,7 +122,7 @@
   z-index: 9;
 }
 
-.countdown-completed-info {
+.error-message-info {
   position: absolute;
   min-width: 300px;
   padding: 10px;

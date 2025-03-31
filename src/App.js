@@ -53,9 +53,7 @@ function App() {
     }, [ref, callback]);
   
     return ref;
-  };
-
- 
+  }; 
 
   const onCollapseClicked = () => {
     setIsSubMenuCollapsed(!isSubMenuCollapsed);
@@ -169,37 +167,20 @@ function App() {
 
       let timeDelta = Date.parse(endTime) - Date.parse(dateLocal);
       console.log("timeDelta: " + timeDelta);
-      return <AppCountdown timeLeft={timeDelta} isStart={true}/>
+      return <AppCountdown timeLeft={timeDelta}/>
     } else {
       return <div className="countdown">
                 <span className="bi bi-stopwatch"></span>
                 <div className="countdown-value">00:00</div>
-              </div>
-    }
-  }
-
-  const checkConnection = (connStatus, isSocketClosed) => {
-    console.log(isSocketClosed);
-    if (isSocketClosed) {
-      return <div className="countdown-completed">
-      <div className="countdown-completed-info">Server does not respond 
-        <br/>Work with lab is not available.<br/>
-        Please reconnect via SREE Server or JupyterHub <br/>
-      </div>
-    </div>
-    }
-    if (connStatus === 401) {
-      return <div className="countdown-completed">
-      <div className="countdown-completed-info">Token is incorrect! 
-        <br/>Work with lab is not available.<br/>
-        Please connect via SREE Server or JupyterHub <br/>
-      </div>
-    </div>
+             </div>
     }
   }
 
   // fetch session info
   const fetchSession = async () => {
+    if (isSocketClosed) {
+      return;
+    }
     const requestOptions = {
       method: 'GET',
       headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
@@ -213,44 +194,69 @@ function App() {
     } else {
       setConnStatus(200);
       setEndTime(data['sessionEndTime']);
-      //connectToWebSocket(ws);
     }
   }
 
-  
+  // socket connection
   useEffect(() => {
+    if (!tokenId) {
+      return;
+    }
     const ws = new WebSocket('ws://195.69.76.135:8082/ws?token=' + tokenId);
-    console.log("connectToWebSocket");
     
-    
-  // Connection opened
-  ws.addEventListener("open", event => {
-    ws.send("Connection established");
-    console.log("Socket connection established");
-  });
+    // Connection opened
+    ws.addEventListener("open", event => {
+      ws.send("Connection established");
+      console.log("Socket connection established");
+    });
 
-  // Listen for messages
-  ws.addEventListener("message", event => {
-    console.log("Message from server ", event.data);
-  });
+    ws.addEventListener("message", event => {
+      console.log("Message from server ", event.data);
+    });
 
-  ws.addEventListener("close", event => {
-    console.log("Socket closed");
-    setIsSocketClosed(true);
-  });
+    // Connection closed
+    ws.addEventListener("close", event => {
+      console.log("Socket closed");
+      setIsSocketClosed(true);
+    });
     
   }, []);
 
-  const renderOnTokenIncorrect = (tokenId) => {
+  // show error message if something is wrong
+  const renderErrorMessage = (tokenId, connStatus, isSocketClosed) => {
+
+    // if no token is provided
     if (!tokenId || tokenId.length === 0) {
-      return <div className="countdown-completed">
-            <div className="countdown-completed-info">No entry token! 
+      return <div className="error-message">
+            <div className="error-message-info">No entry token! 
               <br/>Work with lab is not available.<br/>
               Please connect via SREE Server or JupyterHub <br/> 
             </div>
         </div> 
     }
+
     fetchSession();
+    console.log("isSocketClosed: " + isSocketClosed);
+    
+    // if token is incorrect
+    if (connStatus === 401) {
+      return <div className="error-message">
+      <div className="error-message-info">Token is incorrect! 
+        <br/>Work with lab is not available.<br/>
+        Please connect via SREE Server or JupyterHub <br/>
+      </div>
+    </div>
+    }
+
+    // if socket connection was closed
+    if (isSocketClosed) {
+      return <div className="error-message">
+      <div className="error-message-info">Connection was closed. 
+        <br/>Work with lab is not available.<br/>
+        Please reconnect via SREE Server or JupyterHub <br/>
+      </div>
+    </div>
+    }
 
   }
 
@@ -266,9 +272,9 @@ function App() {
               </div>
               <div ref={useOutsideClick(handleClickOutsideSubmenu)} 
               className={(isSubMenuCollapsed ? 'collapse-menu-components' : 'collapse-menu-components-none')}>
+                
+                {/* Open submenu button */}
                 <div className="collapse-item">
-
-                  {/* Open submenu button */}
                   <button onClick={onCollapseClicked} 
                   className="text-decoration-none collapse-image">
                     {renderCollapseIcon(isSubMenuCollapsed)}
@@ -323,8 +329,7 @@ function App() {
                   {renderCollapseIcon(isSubMenuCollapsed)}
                 </button>     
               </div>
-              {renderOnTokenIncorrect(tokenId)}
-              {checkConnection(connStatus, isSocketClosed)}
+              {renderErrorMessage(tokenId, connStatus, isSocketClosed)}
               {checkCountdown(connStatus, endTime)}
               <div className="countdown-space">
               </div>
