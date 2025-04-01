@@ -1,14 +1,9 @@
 import { getUrlForRequest } from './utils/get-url-for-request';
 import { useState } from "react";
-import { useLocation } from 'react-router-dom';
 import CircularSlider from '@fseehawer/react-circular-slider';
 import Switch from 'react-switch';
 
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
-
-function FunctionalGeneratorChannelParams( {channelNum} ) {
+function FunctionalGeneratorChannelParams( {channelNum, tokenId} ) {
 
   const [functionType, setFunctionType] = useState("sine");
   const [frequencyPrefix, setFrequencyPrefix] = useState("Hz");
@@ -17,9 +12,6 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
   const [dutyCycle, setDutyCycle] = useState(50);
   const [isEnabled, setIsEnabled] = useState(false);
   const [startStop, setStartStop] = useState("Start");
-
-  let query = useQuery();
-  let tokenId = query.get("token");
 
   const sendDutyCycleValue = async (value) => {
     const requestOptions = {
@@ -54,6 +46,7 @@ function FunctionalGeneratorChannelParams( {channelNum} ) {
   }
 
   const sendFrequencyValue = async (value) => {
+    console.log("tokenId: " + tokenId);
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' , 'Authorization': tokenId },

@@ -95,14 +95,14 @@ input[type="number"] {
     transform: scale(1.5);
 }
 
-.digital-inputs-button-success {
+.digital-inputs-success {
     color: green;
 }
 
-.digital-inputs-button-failure {
+.digital-inputs-failure {
     color: red;
 }
 
-.digital-input-button-process {
+.digital-inputs-process {
     color: black;
 }

@@ -1,18 +1,10 @@
 import { useState } from 'react';
 import './styles/CameraView.css';
 import { getUrlForRequest } from './utils/get-url-for-request';
-import { useLocation } from 'react-router-dom';
 import Switch from 'react-switch';
 
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
-
-function CameraView() {
+function CameraView({tokenId}) {
   
-  let query = useQuery();
-  let tokenId = query.get("token");
-
   const [cameraOn, setCameraOn] = useState(false);
 
   // change on/off mode

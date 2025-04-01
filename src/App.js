@@ -29,8 +29,8 @@ function App() {
   const [connStatus, setConnStatus] = useState(0);
   const [endTime, setEndTime] = useState("");
 
-  let query = useQuery();
-  let tokenId = query.get("token");  
+  const query = useQuery();
+  const token = query.get("token");  
 
   // ----- Submenu -----
   const handleClickOutsideSubmenu = () => {
@@ -57,44 +57,35 @@ function App() {
 
   const onCollapseClicked = () => {
     setIsSubMenuCollapsed(!isSubMenuCollapsed);
-    console.log("Full url: " + window.location.href);
-    console.log("tokenId: " + tokenId);
   }
   
   const onInstructionsCBChange = () => {
-    console.log("onInstructionsCBchange");
     setIsInstructionsEnabled(!isInstructionsEnabled);
   }
 
   const onProgramFPGACBChange = () => {
-    console.log("onProgramFPGACBChange");
     setIsProgramFPGAEnabled(!isProgramFPGAEnabled);
     setIsProgramMCUEnabled(!isProgramMCUEnabled);
   }  
 
   const onProgramMCUCBChange = () => {
-    console.log("onProgramMCUCBChange");
     setIsProgramFPGAEnabled(!isProgramFPGAEnabled);
     setIsProgramMCUEnabled(!isProgramMCUEnabled);
   }  
 
   const onDigitalInputsCBChange = () => {
-    console.log("onDigitalInputsCBChange");
     setIsDigitalInputsEnabled(!isDigitalInputsEnabled);
   }
 
   const onCameraViewCBChange = () => {
-    console.log("onCameraViewCBChange");
     setIsCameraViewEnabled(!isCameraViewEnabled);
   }
 
   const onFunctionalGeneratorCBChange = () => {
-    console.log("onFunctionalGeneratorCBChange");
     setIsFunctionalGeneratorEnabled(!isFunctionalGeneratorEnabled);
   }
 
   const onScopeCBChange = () => {
-    console.log("onScopeCBChange");
     setIsScopeEnabled(!isScopeEnabled);
   }
 
@@ -118,15 +109,15 @@ function App() {
 
   const renderProgramFPGAorMCU = (isProgramFPGAEnabled) => {
     if (isProgramFPGAEnabled) {
-      return <ProgramDevice isFPGADevice={true}/>
+      return <ProgramDevice isFPGADevice={true} tokenId={token}/>
     } else {
-      return <ProgramDevice isFPGADevice={false}/>
+      return <ProgramDevice isFPGADevice={false} tokenId={token}/>
     }
   }
 
   const renderDigitalInputs = (isDigitalInputsEnabled) => {
     if (isDigitalInputsEnabled) {
-      return <DigitalInputs/>
+      return <DigitalInputs tokenId={token}/>
     } else {
       return <div><h2>Digital Inputs</h2></div>
     }
@@ -134,7 +125,7 @@ function App() {
 
   const renderCameraView = (isCameraViewEnabled) => {
     if (isCameraViewEnabled) {
-      return <CameraView/>
+      return <CameraView tokenId={token}/>
     } else {
       return <div><h2>Camera View From Lab</h2></div>
     }
@@ -142,7 +133,7 @@ function App() {
 
   const renderFunctionalGenerator = (isFunctionalGeneratorEnabled) => {
     if (isFunctionalGeneratorEnabled) {
-      return <FunctionalGenerator/>
+      return <FunctionalGenerator tokenId={token}/>
     } else {
       return <div><h2>Functional Generator</h2></div>
     }
@@ -150,7 +141,7 @@ function App() {
 
   const renderScope = (isScopeEnabled) => {
     if (isScopeEnabled) {
-      return <Scope/>
+      return <Scope tokenId={token}/>
     } else {
       return <div><h2>Scope</h2></div>
     }
@@ -183,7 +174,7 @@ function App() {
     }
     const requestOptions = {
       method: 'GET',
-      headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
+      headers: { 'Content-Type': 'application/json', 'Authorization': token },
       credentials: 'include'
     };
     const response = await fetch(getUrlForRequest('/api/my-session'), 
@@ -199,10 +190,10 @@ function App() {
 
   // socket connection
   useEffect(() => {
-    if (!tokenId) {
+    if (!token) {
       return;
     }
-    const ws = new WebSocket('ws://195.69.76.135:8082/ws?token=' + tokenId);
+    const ws = new WebSocket('ws://195.69.76.135:8082/ws?token=' + token);
     
     // Connection opened
     ws.addEventListener("open", event => {
@@ -219,14 +210,20 @@ function App() {
       console.log("Socket closed");
       setIsSocketClosed(true);
     });
+    const pingInterval = setInterval(() => {
+      if (ws.readyState === WebSocket.OPEN) {
+        console.log("Socket send ping message");
+        ws.send(JSON.stringify({ type: 'ping' }));
+      }
+    }, 30000);
     
-  }, []);
+  }, [token]);
 
   // show error message if something is wrong
-  const renderErrorMessage = (tokenId, connStatus, isSocketClosed) => {
+  const renderErrorMessage = (token, connStatus, isSocketClosed) => {
 
     // if no token is provided
-    if (!tokenId || tokenId.length === 0) {
+    if (!token || token.length === 0) {
       return <div className="error-message">
             <div className="error-message-info">No entry token! 
               <br/>Work with lab is not available.<br/>
@@ -329,7 +326,7 @@ function App() {
                   {renderCollapseIcon(isSubMenuCollapsed)}
                 </button>     
               </div>
-              {renderErrorMessage(tokenId, connStatus, isSocketClosed)}
+              {renderErrorMessage(token, connStatus, isSocketClosed)}
               {checkCountdown(connStatus, endTime)}
               <div className="countdown-space">
               </div>

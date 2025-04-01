@@ -1,23 +1,32 @@
 import { getUrlForRequest } from './utils/get-url-for-request';
-import { useLocation } from 'react-router-dom';
 import CircularSlider from "@fseehawer/react-circular-slider";
 import { Line } from 'react-chartjs-2';
 import { useRef, useState } from 'react';
 import './styles/Scope.css';
 import { Chart } from 'chart.js/auto';
 
-let times = [];
-let voltagesCH1 = [];
-let voltagesCH2 = [];
+Chart.register({
+  id: 'someBackground',
+  beforeDraw: (chartRef, args, opts) => {
+    const context = chartRef.canvas.getContext('2d');
+    if (!context) {
+      return;
+    }
+    context.save();
+    context.globalCompositeOperation = 'destination-over';
+    context.fillStyle = 'black';
+    context.fillRect(0, 0, chartRef.width, chartRef.height);
+    context.restore();
+  },
+});
 
-let tokenId;
-let query;
+function ScopeChart({tokenId}) {
 
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
+  let times = [];
+  let voltagesCH1 = [];
+  let voltagesCH2 = [];
 
-// fetch voltage values from backend
+  // fetch voltage values from backend
 const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
 
   let requestOptions;
@@ -98,26 +107,6 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
     ]
   }
 }
-
-Chart.register({
-  id: 'someBackground',
-  beforeDraw: (chartRef, args, opts) => {
-    const context = chartRef.canvas.getContext('2d');
-    if (!context) {
-      return;
-    }
-    context.save();
-    context.globalCompositeOperation = 'destination-over';
-    context.fillStyle = 'black';
-    context.fillRect(0, 0, chartRef.width, chartRef.height);
-    context.restore();
-  },
-});
-
-function ScopeChart() {
-
-  query = useQuery();
-  tokenId = query.get("token");
 
   const chartRef = useRef(null);
   const [verticalScale, setVerticalScale] = useState("1.0");
@@ -467,13 +456,8 @@ function ScopeChart() {
           </div>
         </div>
         <div className="row m-1">
-          <div className="col-xl m-1 px-1 border-spec">
-            <div className="scope-header">
-              Vertical
-            </div>
-            <div className="scope-vertical-channel-name">
-            </div>
-            <label>Scale</label><br/>
+          <div className="col m-1 px-1 border-spec">
+            <label>Y-Scale</label><br/>
             <label className="round-sliders-label">
               {verticalScale}V/div</label><br/>
               <div className="round-slider-wrapper">
@@ -489,13 +473,8 @@ function ScopeChart() {
               </div>
               <br/>
           </div>
-          <div className="col-xl m-1 px-1 border-spec">
-            <div className="scope-header">
-              Horizontal
-            </div>
-            <div className="scope-vertical-channel-name">
-            </div>
-            <label>Scale</label><br/>
+          <div className="col m-1 px-1 border-spec">
+            <label>X-Scale</label><br/>
             <label className="round-sliders-label">
               {horizontalScale}/div</label><br/>
               <div className="round-slider-wrapper">

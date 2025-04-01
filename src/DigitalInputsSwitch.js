@@ -1,69 +1,49 @@
 import { getUrlForRequest } from './utils/get-url-for-request';
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import Switch from 'react-switch'
 
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
-
-function DigitalInputsSwitch({ pinNum }) {
+function DigitalInputsSwitch({ pinNum, renderResult, tokenId }) {
 
   const [isSwitched, setIsSwitched] = useState(false);
   const [isRequestCompleted, setIsRequestCompleted] = useState(false);
   const [status, setStatus] = useState(0);
   const [diValue, setDIValue] = useState("");
 
-  let query = useQuery();
-  let tokenId = query.get("token");
+  const sendSwitchValue = async (value) => {
+    setDIValue("DI value:");
+    setIsRequestCompleted(false);
+    setStatus(0);
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
+      body: JSON.stringify({ pin: pinNum, state: value }),
+      credentials: 'include'
+    };
+    const response = await fetch(getUrlForRequest('/api/write-pin'), requestOptions);
+    const responseText = await response.json();
+    console.log('response.status =', response.status);
+    console.log('response text: ' + responseText['message']);
+    if (response.status === 200) {
+      setStatus(200);
+      setDIValue("DI value: " + value);
+    } else {
+      setStatus(404);
+      setDIValue("DI value: undefined");
+    }
+    setIsRequestCompleted(true);
+  }
 
   // send pin value to server
-  const sendRequest = (value) => {
-    setIsRequestCompleted(false);
-      setStatus(0);
-      setDIValue("DI value:");
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
-        body: JSON.stringify({ pin: pinNum, state: value }),
-        credentials: 'include'
-      };
-      fetch(getUrlForRequest('/api/write-pin'), 
-      requestOptions).then(
-        (response) => {
-          console.log('response.status =', response.status);
-          console.log('response text: ', response.json());
-          if (response.status === 200) {
-            setStatus(200);
-            setDIValue("DI value: " + value);
-          } else {
-            setStatus(404);
-            setDIValue("DI value: undefined");
-          }
-          setIsRequestCompleted(true);
-        }
-      ).catch(error => {
-        console.log(error)
-      });
+  const setSwitchValue = (value) => {
+    sendSwitchValue(value);
   }
 
   const onStateChange = () => {
     setIsSwitched(!isSwitched);
-      if (isSwitched) {
-          sendRequest(0);
-      } else {
-          sendRequest(1);
-      }
-  }
-
-  const renderResultBlock = (isRequestCompleted, status) => {
-    //console.log(status);
-    if (isRequestCompleted && status === 200) {
-      return <div className="digital-inputs-button-success">{diValue}</div>
-    } else if (isRequestCompleted && status !== 200) {
-      return <div className="digital-inputs-button-failure">{diValue}</div>
-    } else if (!isRequestCompleted && status === 0) {
-      return <div className="digital-inputs-button-process">{diValue}</div>
+    if (isSwitched) {
+      setSwitchValue(0);
+    } else {
+      setSwitchValue(1);
     }
   }
 
@@ -71,7 +51,7 @@ function DigitalInputsSwitch({ pinNum }) {
     <div>
       <Switch checkedIcon={false} uncheckedIcon={false} 
       checked={isSwitched} onChange={onStateChange} />
-      {renderResultBlock(isRequestCompleted, status)}
+      {renderResult(isRequestCompleted, status, diValue)}
     </div>
   ); 
 }

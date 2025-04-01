@@ -1,103 +1,57 @@
 import { getUrlForRequest } from './utils/get-url-for-request';
-import { useLocation } from 'react-router-dom';
 import { useState } from 'react';
 
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
+function DigitalInputsButton({ pinNum, renderResult, tokenId }) {
 
-function DigitalInputsButton({ pinNum }) {
-
-  let query = useQuery();
-  let tokenId = query.get("token");
-
-  const [resultMessage, setResultMessage] = useState("");
+  const [diValue, setDIValue] = useState("");
   const [isRequestCompleted, setIsRequestCompleted] = useState(false);
   const [status, setStatus] = useState(0);
   const [isPressed, setIsPressed] = useState(false);
 
-  const renderResultBlock = (isRequestCompleted, status) => {
-    //console.log(status);
-    if (isRequestCompleted && status === 200) {
-        return <div className="digital-inputs-button-success">
-          {resultMessage}</div>
-    } else if (isRequestCompleted && status !== 200) {
-        return <div className="digital-inputs-button-failure">
-          {resultMessage}</div>
-    } else if (!isRequestCompleted && status === 0) {
-      return <div className="digital-inputs-button-process">
-        {resultMessage}</div>
+  const sendButtonValue = async (value) => {
+    setIsRequestCompleted(false);
+    setStatus(0);
+    console.log(pinNum);
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
+      body: JSON.stringify({ pin: pinNum, state: value }),
+      credentials: 'include'
+    };
+    setDIValue("Trying to set pin " + pinNum);
+    const response = await fetch(getUrlForRequest('/api/write-pin'), requestOptions);
+    const responseText = await response.json();
+    console.log('response.status =', response.status);
+    console.log('response text: ' + responseText['message']);
+    if (response.status === 200) {
+      setStatus(200);
+      setDIValue("DI value: " + value);
+    } else {
+      setStatus(404);
+      setDIValue("DI value: undefined");
     }
+    setIsRequestCompleted(true);
   }
 
   // invoked when button is released
   const onButtonRelease = () => {
-    setIsRequestCompleted(false);
     setIsPressed(false);
-    setStatus(0);
-    console.log(pinNum);
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
-      body: JSON.stringify({ pin: pinNum, state: 0 }),
-      credentials: 'include'
-    };
-    setResultMessage("Trying to set pin " + pinNum);
-    fetch(getUrlForRequest('/api/write-pin'), requestOptions).then(
-      (response) => {
-        if (response.status === 200) {
-          setStatus(200);
-          setResultMessage("DI value: 0");
-        } else {
-          setStatus(404);
-          setResultMessage("DI value: undefined");
-        }
-        setIsRequestCompleted(true);
-        console.log('response.status =', response.status);
-        console.log('response text: ', response.json());
-      }
-    ).catch(error => {
-      console.log(error)
-    });
+    sendButtonValue(0);
   };
 
   // invoked when button is pressed
   const onButtonPress = () => {
-    setIsRequestCompleted(false);
     setIsPressed(true);
-    setStatus(0);
-    console.log(pinNum);
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
-      body: JSON.stringify({ pin: pinNum, state: 1 }),
-      credentials: 'include'
-    };
-    setResultMessage("Trying to set pin " + pinNum);
-    fetch(getUrlForRequest('/api/write-pin'), requestOptions).then(
-      (response) => {
-        if (response.status === 200) {
-          setStatus(200);
-          setResultMessage("DI value: 1");
-        } else {
-          setStatus(500);
-          setResultMessage("DI value: undefined");
-        }
-        setIsRequestCompleted(true);
-        console.log('response.status =', response.status);
-        console.log('response text: ', response.json());
-      }
-    ).catch(error => {
-      console.log(error)
-  });
+    sendButtonValue(1);
   };
+
   return (<div>
     <button className={(isPressed ? "digital-input-button-pressed" : 
     "digital-input-button-normal")} 
     onMouseDown={onButtonPress} 
     onMouseUp={onButtonRelease}>
     </button>
-    {renderResultBlock(isRequestCompleted, status)}
+    {renderResult(isRequestCompleted, status, diValue)}
     </div>
   );
 }

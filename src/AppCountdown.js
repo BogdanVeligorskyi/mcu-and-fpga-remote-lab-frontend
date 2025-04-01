@@ -10,7 +10,7 @@ function AppCountdown({timeLeft}) {
 
   const [isCompleted, setIsCompleted] = useState(false);
   const [isCompletedOk, setIsCompletedOk] = useState(false);
-  const [data, setData] = useState({ date: Date.now(), delay: timeLeft });
+  const data = { date: Date.now(), delay: timeLeft };
 
   // invoked when countdown is completed (00:00)
   const onCountdownComplete = () => {
