@@ -18,8 +18,7 @@ function useQuery() {
 function App() {
  
   const [isInstructionsEnabled, setIsInstructionsEnabled] = useState(true);  
-  const [isProgramFPGAEnabled, setIsProgramFPGAEnabled] = useState(true);
-  const [isProgramMCUEnabled, setIsProgramMCUEnabled] = useState(false);
+  const [isProgramDeviceEnabled, setIsProgramDeviceEnabled] = useState(true);
   const [isDigitalInputsEnabled, setIsDigitalInputsEnabled] = useState(true);
   const [isCameraViewEnabled, setIsCameraViewEnabled] = useState(true);
   const [isFunctionalGeneratorEnabled, setIsFunctionalGeneratorEnabled] = useState(true);
@@ -28,6 +27,7 @@ function App() {
   const [isSocketClosed, setIsSocketClosed] = useState(false);
   const [connStatus, setConnStatus] = useState(0);
   const [endTime, setEndTime] = useState("");
+  const [deviceType, setDeviceType] = useState("");
 
   const query = useQuery();
   const token = query.get("token");  
@@ -63,14 +63,8 @@ function App() {
     setIsInstructionsEnabled(!isInstructionsEnabled);
   }
 
-  const onProgramFPGACBChange = () => {
-    setIsProgramFPGAEnabled(!isProgramFPGAEnabled);
-    setIsProgramMCUEnabled(!isProgramMCUEnabled);
-  }  
-
-  const onProgramMCUCBChange = () => {
-    setIsProgramFPGAEnabled(!isProgramFPGAEnabled);
-    setIsProgramMCUEnabled(!isProgramMCUEnabled);
+  const onProgramDeviceCBChange = () => {
+    setIsProgramDeviceEnabled(!isProgramDeviceEnabled);
   }  
 
   const onDigitalInputsCBChange = () => {
@@ -107,12 +101,24 @@ function App() {
     }
   }
 
-  const renderProgramFPGAorMCU = (isProgramFPGAEnabled) => {
-    if (isProgramFPGAEnabled) {
+  const renderProgramFPGAorMCU = (isProgramDeviceEnabled, deviceType) => {
+   
+    if (deviceType === "") {
+      return <div><h2>Program Device</h2></div>
+    } 
+   
+    if (isProgramDeviceEnabled && deviceType === "fpga") {
       return <ProgramDevice isFPGADevice={true} tokenId={token}/>
-    } else {
-      return <ProgramDevice isFPGADevice={false} tokenId={token}/>
+    } else if (!isProgramDeviceEnabled && deviceType === "fpga") {
+      return <div><h2>Program FPGA</h2></div> 
     }
+
+    if (isProgramDeviceEnabled && deviceType === "mcu") {
+      return <ProgramDevice isFPGADevice={false} tokenId={token}/>
+    } else if (!isProgramDeviceEnabled && deviceType === "mcu") {
+      return <div><h2>Program MCU</h2></div>
+    }
+        
   }
 
   const renderDigitalInputs = (isDigitalInputsEnabled) => {
@@ -185,6 +191,7 @@ function App() {
     } else {
       setConnStatus(200);
       setEndTime(data['sessionEndTime']);
+      setDeviceType(data['deviceType']);
     }
   }
 
@@ -286,15 +293,10 @@ function App() {
                   onChange={onInstructionsCBChange}/>
                   <label htmlFor="instructionsCB"> Instructions</label><br/>
                             
-                  <input type="checkbox" id="programFPGACB" name="programFPGACB" value="ProgramFPGA"
-                  checked={isProgramFPGAEnabled === true}
-                  onChange={onProgramFPGACBChange}/>
-                  <label htmlFor="programFPGACB"> Program FPGA</label><br/>
-
-                  <input type="checkbox" id="programMCUCB" name="programMCUCB" value="ProgramMCU"
-                  checked={isProgramMCUEnabled === true}
-                  onChange={onProgramMCUCBChange}/>
-                  <label htmlFor="programMCUCB"> Program MCU</label><br/>
+                  <input type="checkbox" id="programDeviceCB" name="programDeviceCB" value="ProgramDevice"
+                  checked={isProgramDeviceEnabled === true}
+                  onChange={onProgramDeviceCBChange}/>
+                  <label htmlFor="programDeviceCB"> Program Device</label><br/>
                             
                   <input type="checkbox" id="digitalInputsCB" name="digitalInputsCB" value="DigitalInputs"
                   checked={isDigitalInputsEnabled === true}
@@ -340,7 +342,7 @@ function App() {
                   {renderInstructions(isInstructionsEnabled)}
                 </div>
                 <div className="col-lg app-component-box">
-                  {renderProgramFPGAorMCU(isProgramFPGAEnabled)}
+                  {renderProgramFPGAorMCU(isProgramDeviceEnabled, deviceType)}
                 </div>
               </div>
 
