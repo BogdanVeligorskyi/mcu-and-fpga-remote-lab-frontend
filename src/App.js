@@ -200,7 +200,7 @@ function App() {
     if (!token) {
       return;
     }
-    const ws = new WebSocket('ws://195.69.76.135:8082/ws?token=' + token);
+    const ws = new WebSocket('wss://digitrans.stu.cn.ua:8082/ws?token=' + token);
     
     // Connection opened
     ws.addEventListener("open", event => {
