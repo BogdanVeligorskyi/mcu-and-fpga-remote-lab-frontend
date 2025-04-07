@@ -10,6 +10,8 @@ import DigitalInputs from './DigitalInputs';
 import CameraView from './CameraView';
 import FunctionalGenerator from './FunctionalGenerator';
 import Scope from './Scope';
+import Potentiometr from './Potentiometr';
+import Terminal from './Terminal';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -22,6 +24,8 @@ function App() {
   const [isDigitalInputsEnabled, setIsDigitalInputsEnabled] = useState(true);
   const [isCameraViewEnabled, setIsCameraViewEnabled] = useState(true);
   const [isFunctionalGeneratorEnabled, setIsFunctionalGeneratorEnabled] = useState(true);
+  const [isPotentiometrEnabled, setIsPotentiometrEnabled] = useState(true);
+  const [isTerminalEnabled, setIsTerminalEnabled] = useState(true);
   const [isScopeEnabled, setIsScopeEnabled] = useState(true);
   const [isSubMenuCollapsed, setIsSubMenuCollapsed] = useState(false);
   const [isSocketClosed, setIsSocketClosed] = useState(false);
@@ -69,6 +73,14 @@ function App() {
 
   const onDigitalInputsCBChange = () => {
     setIsDigitalInputsEnabled(!isDigitalInputsEnabled);
+  }
+
+  const onPotentiometrCBChange = () => {
+    setIsPotentiometrEnabled(!isPotentiometrEnabled);
+  }
+
+  const onTerminalCBChange = () => {
+    setIsTerminalEnabled(!isTerminalEnabled);
   }
 
   const onCameraViewCBChange = () => {
@@ -119,6 +131,22 @@ function App() {
       return <div><h2>Program MCU</h2></div>
     }
         
+  }
+
+  const renderPotentiometr = (isPotentiometrEnabled) => {
+    if (isPotentiometrEnabled) {
+      return <Potentiometr/>
+    } else {
+      return <div><h2>Potentiometr</h2></div>
+    }
+  }
+
+  const renderTerminal = (isTerminalEnabled) => {
+    if (isTerminalEnabled) {
+      return <Terminal/>
+    } else {
+      return <div><h2>Terminal</h2></div>
+    }
   }
 
   const renderDigitalInputs = (isDigitalInputsEnabled) => {
@@ -308,6 +336,16 @@ function App() {
                   onChange={onCameraViewCBChange}/>
                   <label htmlFor="cameraViewCB"> Camera View</label><br/>
 
+                  <input type="checkbox" id="potentiometrCB" name="potentiometrCB" value="Potentiometr"
+                  checked={isPotentiometrEnabled === true}
+                  onChange={onPotentiometrCBChange}/>
+                  <label htmlFor="potentiometrCB">Potentiometr</label><br/>
+
+                  <input type="checkbox" id="terminalCB" name="terminalCB" value="Terminal"
+                  checked={isTerminalEnabled === true}
+                  onChange={onTerminalCBChange}/>
+                  <label htmlFor="terminalCB"> Terminal</label><br/>
+
                   <input type="checkbox" id="functionalGeneratorCB" name="functionalGeneratorCB" value="FunctionalGenerator"
                   checked={isFunctionalGeneratorEnabled === true}
                   onChange={onFunctionalGeneratorCBChange}/>
@@ -328,8 +366,8 @@ function App() {
                   {renderCollapseIcon(isSubMenuCollapsed)}
                 </button>     
               </div>
-              {renderErrorMessage(token, connStatus, isSocketClosed)}
-              {checkCountdown(connStatus, endTime)}
+              {/* {renderErrorMessage(token, connStatus, isSocketClosed)} */}
+              {checkCountdown(200, 400000)}
               <div className="countdown-space">
               </div>
             </div>
@@ -353,6 +391,16 @@ function App() {
                 </div>
                 <div className="col-lg app-component-box">
                   {renderCameraView(isCameraViewEnabled)}
+                </div>
+              </div>
+
+              {/* Potentiometr and Terminal */}
+              <div className="row">
+                <div className="col-lg app-component-box">
+                  {renderPotentiometr(isPotentiometrEnabled)}
+                </div>
+                <div className="col-lg app-component-box">
+                  {renderTerminal(isTerminalEnabled)}
                 </div>
               </div>
 
