@@ -6,7 +6,7 @@ const renderer = ({ minutes, seconds }) => {
   return <span>{zeroPad(minutes)}:{zeroPad(seconds)}</span>;
 };
 
-function AppCountdown({timeLeft}) {
+function AppCountdown({timeLeft, deviceType}) {
 
   const [isCompleted, setIsCompleted] = useState(false);
   const [isCompletedOk, setIsCompletedOk] = useState(false);
@@ -37,7 +37,7 @@ function AppCountdown({timeLeft}) {
     if (isCompleted) {
       if (!isCompletedOk) {
         return <div className="error-message">
-                 <div className="error-message-info">Your experiment time is over! 
+                 <div className={"error-message-info " + (deviceType === "mcu" ? 'mcu-lab-background' : 'fpga-lab-background')}>Your experiment time is over! 
                   <br/>Please, let other students use this lab.<br/>
                   <button className="btn btn-primary countdown-completed-ok" 
                           onClick={onCountdownCompletedOk}>Ok</button></div>

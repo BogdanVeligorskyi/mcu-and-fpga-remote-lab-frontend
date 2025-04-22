@@ -167,7 +167,7 @@ function App() {
 
   const renderFunctionalGenerator = (isFunctionalGeneratorEnabled) => {
     if (isFunctionalGeneratorEnabled) {
-      return <FunctionalGenerator tokenId={token}/>
+      return <FunctionalGenerator tokenId={token} deviceType={deviceType}/>
     } else {
       return <div><h2>Functional Generator</h2></div>
     }
@@ -175,7 +175,7 @@ function App() {
 
   const renderScope = (isScopeEnabled) => {
     if (isScopeEnabled) {
-      return <Scope tokenId={token}/>
+      return <Scope tokenId={token} deviceType={deviceType}/>
     } else {
       return <div><h2>Scope</h2></div>
     }
@@ -192,7 +192,7 @@ function App() {
 
       let timeDelta = Date.parse(endTime) - Date.parse(dateLocal);
       console.log("timeDelta: " + timeDelta);
-      return <AppCountdown timeLeft={timeDelta}/>
+      return <AppCountdown timeLeft={timeDelta} deviceType={deviceType}/>
     } else {
       return <div className="countdown">
                 <span className="bi bi-stopwatch"></span>
@@ -228,8 +228,9 @@ function App() {
     if (!token) {
       return;
     }
-    const ws = new WebSocket('wss://' + window.location.host +'/ws?token=' + token);
+
     console.log(window.location.host);
+    const ws = new WebSocket('wss://' + window.location.host +'/ws?token=' + token);
     
     // Connection opened
     ws.addEventListener("open", event => {
@@ -261,7 +262,7 @@ function App() {
     // if no token is provided
     if (!token || token.length === 0) {
       return <div className="error-message">
-            <div className="error-message-info">No entry token! 
+            <div className={"error-message-info " + (deviceType === "mcu" ? 'mcu-lab-background' : 'fpga-lab-background')}>No entry token! 
               <br/>Work with lab is not available.<br/>
               Please connect via SREE Server or JupyterHub <br/> 
             </div>
@@ -274,7 +275,7 @@ function App() {
     // if token is incorrect
     if (connStatus === 401) {
       return <div className="error-message">
-      <div className="error-message-info">Token is incorrect! 
+      <div className={"error-message-info " + (deviceType === "mcu" ? 'mcu-lab-background' : 'fpga-lab-background')}>Token is incorrect! 
         <br/>Work with lab is not available.<br/>
         Please connect via SREE Server or JupyterHub <br/>
       </div>
@@ -284,7 +285,7 @@ function App() {
     // if socket connection was closed
     if (isSocketClosed) {
       return <div className="error-message">
-      <div className="error-message-info">Connection was closed. 
+      <div className={"error-message-info " + (deviceType === "mcu" ? 'mcu-lab-background' : 'fpga-lab-background')}>Connection was closed. 
         <br/>Work with lab is not available.<br/>
         Please reconnect via SREE Server or JupyterHub <br/>
       </div>
@@ -295,7 +296,7 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
+      <header className={"App-header " + (deviceType === "mcu" ? 'mcu-lab-background' : 'fpga-lab-background')}>
         <div className="container">
           <div className="row">
 
@@ -304,12 +305,12 @@ function App() {
               <div className={(isSubMenuCollapsed ? 'collapse-menu-background' : 'collapse-menu-background-none')}>
               </div>
               <div ref={useOutsideClick(handleClickOutsideSubmenu)} 
-              className={(isSubMenuCollapsed ? 'collapse-menu-components' : 'collapse-menu-components-none')}>
+              className={(isSubMenuCollapsed ? (deviceType === "mcu" ? 'collapse-menu-components mcu-lab-background' : 'collapse-menu-components fpga-lab-background') : 'collapse-menu-components-none')}>
                 
                 {/* Open submenu button */}
                 <div className="collapse-item">
                   <button onClick={onCollapseClicked} 
-                  className="text-decoration-none collapse-image">
+                  className={"text-decoration-none collapse-image " + (deviceType === "mcu" ? 'mcu-lab-background' : 'fpga-lab-background')}>
                     {renderCollapseIcon(isSubMenuCollapsed)}
                   </button> 
                 </div>
@@ -363,7 +364,7 @@ function App() {
               {/* Close submenu button */}
               <div className="collapse-item">
                 <button onClick={onCollapseClicked} 
-                className="text-decoration-none collapse-image">
+                className={"text-decoration-none collapse-image " + (deviceType === "mcu" ? 'mcu-lab-background' : 'fpga-lab-background')}>
                   {renderCollapseIcon(isSubMenuCollapsed)}
                 </button>     
               </div>

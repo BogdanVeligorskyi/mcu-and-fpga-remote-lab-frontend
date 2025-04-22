@@ -12,12 +12,19 @@
 }
 
 .App-header {
-  background-color: #deddc5;
   min-height: 100vh;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  font-size: calc(7px + 2vmin);
+}
+
+.fpga-lab-background {
+  background-color: #d0def5;
+}
+
+.mcu-lab-background {
+  background-color: #deddc5;
 }
 
 .chart {
@@ -30,7 +37,7 @@
 .collapse-menu-components {
   position: absolute;
   height: auto;
-  background-color: #deddc5;
+  /*background-color: #deddc5;*/
   text-align: left;
   -webkit-transition: opacity 0.5s;
   transition: opacity 0.5s;
@@ -77,7 +84,7 @@
 
 .collapse-image {
   color: black;
-  background-color: #deddc5;
+  /*background-color: #deddc5;*/
   border: 0;
 }
 
@@ -131,7 +138,6 @@
   transform: translate(-50%,-50%);  
   border: 2px solid black;
   color: black;
-  background-color: #deddc5;
   z-index: 10;
   display: block;
 }
@@ -164,10 +170,17 @@ input[type="checkbox"] {
   padding: 3px;
   border: 2px solid black;
   border-radius: 5px;
-  background-color: #b3b29d;
   display: inline-block;
   min-width: 115px;
   font-size: calc(8px + 2vmin);
+}
+
+.mcu-lab-background-special {
+  background-color: #b3b29d;
+}
+
+.fpga-lab-background-special {
+  background-color: #a8c3f0;
 }
 
 .fall-edge {

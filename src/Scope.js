@@ -20,7 +20,7 @@ Chart.register({
   },
 });
 
-function ScopeChart({tokenId}) {
+function ScopeChart({tokenId, deviceType}) {
 
   let times = [];
   let voltagesCH1 = [];
@@ -458,7 +458,7 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
         <div className="row m-1">
           <div className="col m-1 px-1 border-spec">
             <label>Y-Scale</label><br/>
-            <label className="round-sliders-label">
+            <label className={"round-sliders-label " + (deviceType === "mcu" ? 'mcu-lab-background-special' : 'fpga-lab-background-special')}>
               {verticalScale}V/div</label><br/>
               <div className="round-slider-wrapper">
                 <div className="round-slider-vertical-scale-image">
@@ -475,7 +475,7 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
           </div>
           <div className="col m-1 px-1 border-spec">
             <label>X-Scale</label><br/>
-            <label className="round-sliders-label">
+            <label className={"round-sliders-label " + (deviceType === "mcu" ? 'mcu-lab-background-special' : 'fpga-lab-background-special')}>
               {horizontalScale}/div</label><br/>
               <div className="round-slider-wrapper">
                 <div className="round-slider-horizontal-scale-image">
