@@ -24,8 +24,8 @@ function App() {
   const [isDigitalInputsEnabled, setIsDigitalInputsEnabled] = useState(true);
   const [isCameraViewEnabled, setIsCameraViewEnabled] = useState(true);
   const [isFunctionalGeneratorEnabled, setIsFunctionalGeneratorEnabled] = useState(true);
-  const [isPotentiometrEnabled, setIsPotentiometrEnabled] = useState(true);
-  const [isTerminalEnabled, setIsTerminalEnabled] = useState(true);
+  const [isPotentiometrEnabled, setIsPotentiometrEnabled] = useState(false);
+  const [isTerminalEnabled, setIsTerminalEnabled] = useState(false);
   const [isScopeEnabled, setIsScopeEnabled] = useState(true);
   const [isSubMenuCollapsed, setIsSubMenuCollapsed] = useState(false);
   const [isSocketClosed, setIsSocketClosed] = useState(false);
@@ -228,7 +228,8 @@ function App() {
     if (!token) {
       return;
     }
-    const ws = new WebSocket('wss://digitrans.stu.cn.ua:8082/ws?token=' + token);
+    const ws = new WebSocket('wss://' + window.location.host +'/ws?token=' + token);
+    console.log(window.location.host);
     
     // Connection opened
     ws.addEventListener("open", event => {
@@ -245,7 +246,7 @@ function App() {
       console.log("Socket closed");
       setIsSocketClosed(true);
     });
-    const pingInterval = setInterval(() => {
+    setInterval(() => {
       if (ws.readyState === WebSocket.OPEN) {
         console.log("Socket send ping message");
         ws.send(JSON.stringify({ type: 'ping' }));
@@ -366,8 +367,8 @@ function App() {
                   {renderCollapseIcon(isSubMenuCollapsed)}
                 </button>     
               </div>
-              {/* {renderErrorMessage(token, connStatus, isSocketClosed)} */}
-              {checkCountdown(200, 400000)}
+              {renderErrorMessage(token, connStatus, isSocketClosed)}
+              {checkCountdown(connStatus, endTime)}
               <div className="countdown-space">
               </div>
             </div>
