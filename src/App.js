@@ -182,6 +182,12 @@ function App() {
   }
 
   const checkCountdown = (connStatus, endTime) => {
+    if (process.env.REACT_APP_IS_FRONTEND_DEV_MODE.toUpperCase === "TRUE") {
+      return <div className="countdown">
+                <span className="bi bi-stopwatch"></span>
+                <div className="countdown-value">00:00</div>
+             </div>
+    } 
     if (connStatus === 200) {
       let date = new Date();
       let dateLocal = date.toISOString();
@@ -258,6 +264,11 @@ function App() {
 
   // show error message if something is wrong
   const renderErrorMessage = (token, connStatus, isSocketClosed) => {
+
+    console.log(process.env.REACT_APP_IS_FRONTEND_DEV_MODE.toUpperCase());
+    if (process.env.REACT_APP_IS_FRONTEND_DEV_MODE.toUpperCase() === "TRUE") {
+      return;
+    } 
 
     // if no token is provided
     if (!token || token.length === 0) {
