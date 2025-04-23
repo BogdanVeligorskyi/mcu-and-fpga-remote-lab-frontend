@@ -12,6 +12,7 @@ import FunctionalGenerator from './FunctionalGenerator';
 import Scope from './Scope';
 import Potentiometr from './Potentiometr';
 import Terminal from './Terminal';
+import PageTitle from './PageTitle';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -308,6 +309,7 @@ function App() {
   return (
     <div className="App">
       <header className={"App-header " + (deviceType === "mcu" ? 'mcu-lab-background' : 'fpga-lab-background')}>
+        <PageTitle title={(deviceType === "" ? '' : (deviceType === "mcu" ? 'MCU' : 'FPGA')) + " Remote Lab"}/>
         <div className="container">
           <div className="row">
 
