@@ -134,6 +134,31 @@ function App() {
         
   }
 
+  const renderMCUSpecificComponents = (deviceType) => {
+    if (deviceType === "mcu") {
+      return (<div>
+      <input type="checkbox" id="potentiometrCB" name="potentiometrCB" value="Potentiometr"
+                  checked={isPotentiometrEnabled === true}
+                  onChange={onPotentiometrCBChange}/>
+                  <label htmlFor="potentiometrCB">Potentiometr</label><br/>
+
+                  <input type="checkbox" id="terminalCB" name="terminalCB" value="Terminal"
+                  checked={isTerminalEnabled === true}
+                  onChange={onTerminalCBChange}/>
+                  <label htmlFor="terminalCB"> Terminal</label><br/>
+
+                  <input type="checkbox" id="functionalGeneratorCB" name="functionalGeneratorCB" value="FunctionalGenerator"
+                  checked={isFunctionalGeneratorEnabled === true}
+                  onChange={onFunctionalGeneratorCBChange}/>
+                  <label htmlFor="functionalGeneratorCB"> Functional Generator</label><br/>
+
+                  <input type="checkbox" id="scopeCB" name="scopeCB" value="Scope"
+                  checked={isScopeEnabled === true}
+                  onChange={onScopeCBChange}/>
+                  <label htmlFor="scopeCB"> Scope</label><br/></div>);
+    }
+  }
+
   const renderPotentiometr = (isPotentiometrEnabled) => {
     if (isPotentiometrEnabled) {
       return <Potentiometr/>
@@ -351,25 +376,7 @@ function App() {
                   onChange={onCameraViewCBChange}/>
                   <label htmlFor="cameraViewCB"> Camera View</label><br/>
 
-                  <input type="checkbox" id="potentiometrCB" name="potentiometrCB" value="Potentiometr"
-                  checked={isPotentiometrEnabled === true}
-                  onChange={onPotentiometrCBChange}/>
-                  <label htmlFor="potentiometrCB">Potentiometr</label><br/>
-
-                  <input type="checkbox" id="terminalCB" name="terminalCB" value="Terminal"
-                  checked={isTerminalEnabled === true}
-                  onChange={onTerminalCBChange}/>
-                  <label htmlFor="terminalCB"> Terminal</label><br/>
-
-                  <input type="checkbox" id="functionalGeneratorCB" name="functionalGeneratorCB" value="FunctionalGenerator"
-                  checked={isFunctionalGeneratorEnabled === true}
-                  onChange={onFunctionalGeneratorCBChange}/>
-                  <label htmlFor="functionalGeneratorCB"> Functional Generator</label><br/>
-
-                  <input type="checkbox" id="scopeCB" name="scopeCB" value="Scope"
-                  checked={isScopeEnabled === true}
-                  onChange={onScopeCBChange}/>
-                  <label htmlFor="scopeCB"> Scope</label><br/>
+                  {renderMCUSpecificComponents(deviceType)}
 
                 </div>           
               </div>
@@ -410,7 +417,7 @@ function App() {
               </div>
 
               {/* Potentiometr and Terminal */}
-              <div className="row">
+              <div className={deviceType === "mcu" ? 'row' : 'components-list-none'}>
                 <div className="col-lg app-component-box">
                   {renderPotentiometr(isPotentiometrEnabled)}
                 </div>
@@ -420,12 +427,12 @@ function App() {
               </div>
 
               {/* Functional Generator */}
-              <div className="row app-component-box">
+              <div className={deviceType === "mcu" ? 'row app-component-box' : 'components-list-none'}>
                   {renderFunctionalGenerator(isFunctionalGeneratorEnabled)}
               </div>
 
               {/* Scope */}
-              <div className="row app-component-box">
+              <div className={deviceType === "mcu" ? 'row app-component-box' : 'components-list-none'}>
                   {renderScope(isScopeEnabled)}
               </div>
 
