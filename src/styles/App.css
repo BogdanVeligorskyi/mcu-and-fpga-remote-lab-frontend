@@ -170,7 +170,6 @@ input[type="checkbox"] {
   padding: 3px;
   border: 2px solid black;
   border-radius: 5px;
-  display: inline-block;
   min-width: 115px;
   font-size: calc(8px + 2vmin);
 }

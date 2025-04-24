@@ -31,6 +31,16 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
 
   let requestOptions;
 
+  console.log("fetchChartData");
+  if (process.env.REACT_APP_IS_FRONTEND_DEV_MODE.toUpperCase() === "TRUE") {
+    console.log("in here");
+    for (let i = 0; i < 600; i++) {
+      voltagesCH1[i] = Math.floor(Math.random() * 4.0);
+      voltagesCH2[i] = 0;
+      times[i] = i+1;
+    }
+  } else {
+
   // fetch data for channel 1
   if (isCH1Enabled) {
     if (times.length === 0) {
@@ -86,6 +96,7 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
   } else {
     voltagesCH2 = [];
   }
+}
   
   //console.log(voltages);
   //console.log(times);  
@@ -111,11 +122,19 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
   const chartRef = useRef(null);
   const [verticalScale, setVerticalScale] = useState("1.0");
   const [horizontalScale, setHorizontalScale] = useState("1us");
+  const [xCenterValue, setXCenterValue] = useState(300);
+  const [yCenterValue, setYCenterValue] = useState(0.0);
+  const [xInputMin, setXInputMin] = useState();
+  const [yInputMin, setYInputMin] = useState();
+  const [xInputMax, setXInputMax] = useState();
+  const [yInputMax, setYInputMax] = useState();
+  const [xStepSize, setXStepSize] = useState(1);
+  const [yStepSize, setYStepSize] = useState(0.005);
   const [xScaleOptions, setXScaleOptions] = useState(
-    { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 1, color: "white" }, type: 'linear',  min: 293, max: 307 }
+    { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: xStepSize, color: "white" }, type: 'linear', min: 0, max: 600 }
   );
   const [yScaleOptions, setYScaleOptions] = useState(
-    { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 0.005, color: "white" }, min: -0.025, max: 0.025 }
+    { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: yStepSize, color: "white" }, min: -4.0, max: 4.0 }
   );
   const [buttonName, setButtonName] = useState("Run");
   const [isCH1Enabled, setIsCH1Enabled] = useState(true);
@@ -189,6 +208,43 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
     a.click();
 };
 
+  const renderScaleScroll = (scaleName) => {
+    if (scaleName.toUpperCase() === "X") {
+      if (xStepSize === 50) {
+        return <div className="scope-scroll-slider-none"></div>;
+      } else {
+        return (
+          <input className="scope-scroll-slider"
+            type="range" 
+            id={("xScaleRange")} 
+            name={("xScaleRange")} 
+            title='Use this slider to move through X-Scale (LEFT/RIGHT)'
+            min={xInputMin} 
+            step={xStepSize} 
+            max={xInputMax}
+            value={xCenterValue} 
+            onChange={onXScaleInputChange} />);
+      }
+    }
+    if (scaleName.toUpperCase() === "Y") {
+      if (yStepSize === 1.0) {
+        return <div className="scope-scroll-slider-none"></div>;
+      } else {
+        return (
+          <input className="scope-scroll-slider"
+            type="range" 
+            id={("yScaleRange")} 
+            name={("yScaleRange")} 
+            title='Use this slider to move through Y-Scale (UP/DOWN)'
+            min={yInputMin} 
+            step={yStepSize} 
+            max={yInputMax}
+            value={yCenterValue} 
+            onChange={onYScaleInputChange} />);
+      }
+    }
+  }
+
   const onCH1CBChange = () => {
     setIsCH1Enabled(!isCH1Enabled);
   };
@@ -197,11 +253,54 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
     setIsCH2Enabled(!isCH2Enabled);
   };
 
+  const onXScaleInputChange = e => {
+    setXCenterValue(e.target.value);
+    setXScaleOptions(
+      { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: xStepSize, color: "white" }, type: 'linear', beginAtZero: false, min: (Number(e.target.value) - 6 * xStepSize), max: (Number(e.target.value) + 6 * xStepSize) }
+    );
+    setChartOptions(
+      {
+        elements: { point: { radius: 0, } },
+        animation: { duration: 100 },
+        maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: "white" } } },
+        scales: { 
+          x: { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: xStepSize, color: "white" }, type: 'linear', beginAtZero: false, min: (Number(e.target.value) - 6 * xStepSize), max: (Number(e.target.value) + 6 * xStepSize) },
+          y: yScaleOptions
+        },
+      }
+    );
+  }
+
+  const onYScaleInputChange = e => {
+    console.log(e.target.value - 5 * yStepSize);
+    console.log(e.target.value + 5 * yStepSize);
+    setYCenterValue(e.target.value);
+    setYScaleOptions(
+      { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: yStepSize, color: "white" }, min: (Number(e.target.value) - 5 * yStepSize), max: (Number(e.target.value) + 5 * yStepSize ) }
+    );
+    setChartOptions(
+      {
+        elements: { point: { radius: 0, } },
+        animation: { duration: 100 },
+        maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: "white" } } },
+        scales: { 
+          x: xScaleOptions,
+          y: { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: yStepSize, color: "white" }, min: (Number(e.target.value) - 5 * yStepSize), max: (Number(e.target.value) + 5 * yStepSize ) }
+        },
+      });
+  }
+
   // handler for Y-scale change
   const onVerticalScaleValueChange = value => {
     setVerticalScale(value);
     switch (value) {
       case "5m":
+        setYStepSize(0.005);
+        setYCenterValue(0);
+        setYInputMin(-3.975);
+        setYInputMax(3.975);
         setYScaleOptions(
           { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 0.005, color: "white" }, min: -0.025, max: 0.025 }
         );
@@ -219,6 +318,10 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
         );
         break;
       case "10m":
+        setYStepSize(0.01);
+        setYCenterValue(0);
+        setYInputMin(-3.95);
+        setYInputMax(3.95);
         setYScaleOptions(
           { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 0.01, color: "white" }, min: -0.05, max: 0.05 }
         );
@@ -236,6 +339,10 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
         );
         break;
       case "20m":
+        setYStepSize(0.02);
+        setYCenterValue(0);
+        setYInputMin(-3.9);
+        setYInputMax(3.9);
         setYScaleOptions(
           { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 0.02, color: "white" }, min: -0.1, max: 0.1 }
         );
@@ -253,6 +360,10 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
         );
         break;  
       case "50m":
+        setYStepSize(0.05);
+        setYCenterValue(0);
+        setYInputMin(-3.75);
+        setYInputMax(3.75);
         setYScaleOptions(
           { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 0.05, color: "white" }, min: -0.25, max: 0.25 }
         );
@@ -270,6 +381,10 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
         );
         break;
       case "0.1":
+        setYStepSize(0.1);
+        setYCenterValue(0);
+        setYInputMin(-3.5);
+        setYInputMax(3.5);
         setYScaleOptions(
           { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 0.1, color: "white" }, min: -0.5, max: 0.5 }
         );
@@ -287,6 +402,10 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
         );
         break;
       case "0.2":
+        setYStepSize(0.2);
+        setYCenterValue(0);
+        setYInputMin(-3.0);
+        setYInputMax(3.0);
         setYScaleOptions(
           { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 0.2, color: "white" }, min: -1.0, max: 1.0 }
         );
@@ -304,6 +423,10 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
         );
         break;
       case "0.5":
+        setYStepSize(0.5);
+        setYCenterValue(0);
+        setYInputMin(-1.5);
+        setYInputMax(1.5);
         setYScaleOptions(
           { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 0.5, color: "white" }, min: -2.5, max: 2.5 }
         );
@@ -321,6 +444,7 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
         );
         break;
       case "1.0":
+        setYStepSize(1.0);
         setYScaleOptions(
           { title: { display: true, text: "Voltage, V" }, grid: { color: "#919492", }, ticks: { stepSize: 1.0, color: "white" }, min: -4.0, max: 4.0 }
         );
@@ -338,6 +462,7 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
         );
         break;
       default:
+        setYStepSize(yStepSize);
         setYScaleOptions(yScaleOptions);
         setChartOptions(chartOptions);
     }
@@ -349,6 +474,10 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
     console.log(value);
     switch (value) {
       case "1us":
+        setXStepSize(1);
+        setXCenterValue(300);
+        setXInputMin(6);
+        setXInputMax(594);
         setXScaleOptions(
           { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 1, color: "white" }, type: 'linear', beginAtZero: false, min: 294, max: 306 }
         );
@@ -366,6 +495,10 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
         );
         break;
       case "10us":
+        setXStepSize(10);
+        setXCenterValue(300);
+        setXInputMin(60);
+        setXInputMax(540);
         setXScaleOptions(
           { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 10, color: "white" }, type: 'linear', beginAtZero: false, min: 240, max: 360 }
         );
@@ -383,6 +516,7 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
         );
         break;
       case "50us":
+        setXStepSize(50);
         setXScaleOptions(
           { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 50, color: "white" }, type: 'linear', beginAtZero: true, min: 0, max: 600 }
         );
@@ -400,6 +534,10 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
         );
         break;
       case "20us":
+        setXStepSize(20);
+        setXCenterValue(300);
+        setXInputMin(120);
+        setXInputMax(480);
         setXScaleOptions(
           { title: { display: true, text: "Time, us" }, grid: { color: "#919492", }, ticks: { stepSize: 20, color: "white" }, type: 'linear', beginAtZero: false, min: 170, max: 410 }
         );
@@ -417,6 +555,7 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
         );
         break;
       default:
+        setXStepSize(xStepSize);
         setXScaleOptions(xScaleOptions);
         setChartOptions(chartOptions);
     }
@@ -459,7 +598,7 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
           <div className="col m-1 px-1 border-spec">
             <label>Y-Scale</label><br/>
             <label className={"round-sliders-label " + (deviceType === "mcu" ? 'mcu-lab-background-special' : 'fpga-lab-background-special')}>
-              {verticalScale}V/div</label><br/>
+              {verticalScale}V/div</label>
               <div className="round-slider-wrapper">
                 <div className="round-slider-vertical-scale-image">
                   <CircularSlider
@@ -471,12 +610,12 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
                     onChange={onVerticalScaleValueChange}/>           
                 </div>
               </div>
-              <br/>
+              {renderScaleScroll("Y")}
           </div>
           <div className="col m-1 px-1 border-spec">
             <label>X-Scale</label><br/>
             <label className={"round-sliders-label " + (deviceType === "mcu" ? 'mcu-lab-background-special' : 'fpga-lab-background-special')}>
-              {horizontalScale}/div</label><br/>
+              {horizontalScale}/div</label>
               <div className="round-slider-wrapper">
                 <div className="round-slider-horizontal-scale-image">
                   <CircularSlider
@@ -487,7 +626,7 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
                     onChange={onHorizontalScaleValueChange}/>
                 </div>
               </div>
-              <br/>
+              {renderScaleScroll("X")}
             </div>
         </div>
       </div>

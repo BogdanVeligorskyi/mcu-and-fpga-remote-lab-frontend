@@ -33,6 +33,17 @@
     margin-right: auto;
 }
 
+.scope-scroll-slider {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.scope-scroll-slider-none {
+    height: 16px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
 .round-slider-vertical-scale-image {
     width: 122px;
     height: 112px;
