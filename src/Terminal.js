@@ -5,10 +5,17 @@ function Terminal() {
       <div>
         <h2>Terminal</h2>
         <div className="terminal">
-          <div className="camera-frame">
-            home&raspberry-pi$
-          </div>
+          
+            <textarea readOnly={true}>
+              
+            </textarea>
+            
         </div>
+        <div className="terminal-input">
+        <input type="text" placeholder="Enter command:"/>
+        <button className="send-button">Send</button>
+        </div>
+        
       </div>
     );
   }

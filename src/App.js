@@ -193,7 +193,7 @@ function App() {
 
   const renderFunctionalGenerator = (isFunctionalGeneratorEnabled) => {
     if (isFunctionalGeneratorEnabled) {
-      return <FunctionalGenerator tokenId={token} deviceType={deviceType}/>
+      return <FunctionalGenerator tokenId={token}/>
     } else {
       return <div><h2>Functional Generator</h2></div>
     }
@@ -201,7 +201,7 @@ function App() {
 
   const renderScope = (isScopeEnabled) => {
     if (isScopeEnabled) {
-      return <Scope tokenId={token} deviceType={deviceType}/>
+      return <Scope tokenId={token}/>
     } else {
       return <div><h2>Scope</h2></div>
     }

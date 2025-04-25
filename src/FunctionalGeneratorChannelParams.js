@@ -3,7 +3,7 @@ import { useState } from "react";
 import CircularSlider from '@fseehawer/react-circular-slider';
 import Switch from 'react-switch';
 
-function FunctionalGeneratorChannelParams( {channelNum, tokenId, deviceType} ) {
+function FunctionalGeneratorChannelParams( {channelNum, tokenId} ) {
 
   const [functionType, setFunctionType] = useState("sine");
   const [frequencyPrefix, setFrequencyPrefix] = useState("Hz");
@@ -270,8 +270,8 @@ function FunctionalGeneratorChannelParams( {channelNum, tokenId, deviceType} ) {
             <td><label>Freq</label></td>
           </tr>
           <tr>
-            <td><label className={"round-sliders-label " + (deviceType === "mcu" ? 'mcu-lab-background-special' : 'fpga-lab-background-special')}>{amplitudeValue} V</label></td>
-            <td><label className={"round-sliders-label " + (deviceType === "mcu" ? 'mcu-lab-background-special' : 'fpga-lab-background-special')}>{frequencyValue} {frequencyPrefix}</label></td>
+            <td><label className="round-sliders-label mcu-lab-background-special">{amplitudeValue} V</label></td>
+            <td><label className="round-sliders-label mcu-lab-background-special">{frequencyValue} {frequencyPrefix}</label></td>
           </tr>
           <tr>
             <td className="round-slider-amplitude-image">
@@ -330,7 +330,7 @@ function FunctionalGeneratorChannelParams( {channelNum, tokenId, deviceType} ) {
         'functional-generator-duty-cycle' : 
         'functional-generator-duty-cycle-no')}>
         <label>Duty Cycle</label><br/>
-        <label className={"round-sliders-label " + (deviceType === "mcu" ? 'mcu-lab-background-special' : 'fpga-lab-background-special')}>{dutyCycle} %</label><br/>
+        <label className="round-sliders-label mcu-lab-background-special">{dutyCycle} %</label><br/>
         <input 
           type="range" 
           id={("dutyCycleRange" + channelNum)} 

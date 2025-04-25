@@ -1,5 +1,88 @@
 .terminal {
-    margin: 20px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
     color: aliceblue;
     text-align: left;
+    display: inline-block;
 }
+
+.terminal textarea {
+    /* width: 100%; */
+    resize: none;
+}
+
+.terminal-input {
+    margin-top: -10px;
+    margin-bottom: 20px;
+}
+
+@media (min-width: 576px) {
+    .terminal textarea {
+        height: 270px;
+        width: 360px;
+        background-color: black;
+        align-items: center;
+        border: 5px solid gray;
+        border-radius: 2px;
+        margin: auto;
+    }
+    .terminal-input {
+        width: 360px;
+        background-color: black;
+        border: 5px solid gray;
+        border-radius: 2px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+  } 
+
+  @media (min-width: 1200px) {
+    .terminal textarea {
+        height: 400px;
+        width: 540px;
+        background-color: black;
+        align-items: center;
+        border: 5px solid gray;
+        border-radius: 2px;
+        margin: auto;
+    }
+    .terminal-input {
+        width: 540px;
+        background-color: black;
+        border: 5px solid gray;
+        border-radius: 2px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+  } 
+
+  @media (max-width: 576px) {
+    .terminal textarea {
+        height: 200px;
+        width: 266px;
+        background-color: black;
+        align-items: center;
+        border: 2px solid gray;
+        border-radius: 1px;
+        margin: auto;
+    }
+    .terminal-input {
+        width: 266px;
+        background-color: black;
+        border: 2px solid gray;
+        border-radius: 2px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+  }
+
+  .terminal-input input {
+    width: 80%;
+  }
+
+  .terminal-input .send-button {
+    width: 20%;
+    background-color: #0d6efd;
+    color: aliceblue;
+  }
