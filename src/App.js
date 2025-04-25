@@ -161,7 +161,7 @@ function App() {
 
   const renderPotentiometr = (isPotentiometrEnabled) => {
     if (isPotentiometrEnabled) {
-      return <Potentiometr/>
+      return <Potentiometr tokenId={token}/>
     } else {
       return <div><h2>Potentiometr</h2></div>
     }

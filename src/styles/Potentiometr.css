@@ -1,0 +1,7 @@
+.round-slider-potentiometr-image {
+    width: 122px;
+    height: 112px;
+    display: table-cell;
+    text-align: center;
+    background: url("../img/roundslider_potentiometr_marks.png") no-repeat;
+}
