@@ -18,7 +18,7 @@ function CameraView({tokenId}) {
         <iframe
           src={getUrlForRequest('/api/stream/?token=' + tokenId)}
           title="CameraView"
-          scrolling="no"
+          scrolling="yes"
         ></iframe>
       );
     }
