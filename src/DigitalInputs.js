@@ -9,7 +9,7 @@ function DigitalInputs({tokenId}) {
   const [di_pin_1, setPin1Mode] = useState("none") 
   const [di_pin_2, setPin2Mode] = useState("none") 
   const [di_pin_3, setPin3Mode] = useState("none") 
-  // const [di_pin_4, setPin4Mode] = useState("none") 
+  const [di_pin_4, setPin4Mode] = useState("none") 
 
   const onPin1ModeChange = e => {
     setPin1Mode(e.target.value)
@@ -23,9 +23,9 @@ function DigitalInputs({tokenId}) {
     setPin3Mode(e.target.value)
   }
 
-  /*const onPin4ModeChange = e => {
+  const onPin4ModeChange = e => {
     setPin4Mode(e.target.value)
-  }*/
+  }
 
   // render neccessary components based on the chosen pin mode
   const renderPinMode = (pinType, pin) => {
@@ -62,6 +62,7 @@ function DigitalInputs({tokenId}) {
             <th>1</th>
             <th>2</th>
             <th>3</th>
+            <th>4</th>
           </tr>
           <tr>
             <td>Button</td>
@@ -85,6 +86,13 @@ function DigitalInputs({tokenId}) {
                      checked={di_pin_3 === "button"}
                      onChange={onPin3ModeChange}/>
               <label htmlFor="buttonCh3"></label>
+            </td>
+            <td>&nbsp;&nbsp;
+              <input className="digital-input-radio-button" 
+                     type="radio" id="buttonCh4" name="di_pin_4" value="button"
+                     checked={di_pin_4 === "button"}
+                     onChange={onPin4ModeChange}/>
+              <label htmlFor="buttonCh4"></label>
             </td>
           </tr>
           <tr>
@@ -110,6 +118,13 @@ function DigitalInputs({tokenId}) {
                      onChange={onPin3ModeChange}/>
               <label htmlFor="switchCh3"></label>
             </td>
+            <td>&nbsp;&nbsp;
+              <input className="digital-input-radio-button" 
+                     type="radio" id="switchCh4" name="di_pin_4" value="switch"
+                     checked={di_pin_4 === "switch"}
+                     onChange={onPin4ModeChange}/>
+              <label htmlFor="switchCh4"></label>
+            </td>
           </tr>
           <tr>
             <td>Gen</td>
@@ -133,6 +148,13 @@ function DigitalInputs({tokenId}) {
                      checked={di_pin_3 === "gen"}
                      onChange={onPin3ModeChange}/>
               <label htmlFor="genCh3"></label>
+            </td>
+            <td>&nbsp;&nbsp;
+              <input className="digital-input-radio-button" 
+                     type="radio" id="genCh4" name="di_pin_4" value="gen"
+                     checked={di_pin_4 === "gen"}
+                     onChange={onPin4ModeChange}/>
+              <label htmlFor="genCh4"></label>
             </td>
           </tr>
           <tr>
@@ -158,6 +180,13 @@ function DigitalInputs({tokenId}) {
                      onChange={onPin3ModeChange}/>
               <label htmlFor="noneCh3"></label>
             </td>
+            <td>&nbsp;&nbsp;
+              <input className="digital-input-radio-button" 
+                     type="radio" id="noneCh4" name="di_pin_4" value="none"
+                     checked={di_pin_4 === "none"}
+                     onChange={onPin4ModeChange}/>
+              <label htmlFor="noneCh4"></label>
+            </td>
           </tr>
           <tr>
             <td></td>
@@ -174,6 +203,11 @@ function DigitalInputs({tokenId}) {
             <td>
               <div className="digital-input-wrapper">
                 {renderPinMode(di_pin_3, 3)}                        
+              </div>
+            </td>
+            <td>
+              <div className="digital-input-wrapper">
+                {renderPinMode(di_pin_4, 4)}                        
               </div>
             </td>
           </tr>
