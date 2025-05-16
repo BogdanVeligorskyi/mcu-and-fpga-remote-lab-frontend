@@ -38,4 +38,5 @@ iframe {
     height: 100%;
     width: 100%;
     justify-content: center;
+    transform: rotate(180deg);
 }
