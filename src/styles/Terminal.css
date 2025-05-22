@@ -14,7 +14,7 @@
 }
 
 .terminal-input {
-    margin-top: -8px;
+    margin-top: -14px;
     margin-bottom: 20px;
     background: #0d6efd;
 }
@@ -28,6 +28,9 @@
         border: 5px solid gray;
         border-radius: 2px;
         margin: auto;
+    }
+    .terminal {
+      height: 270px;
     }
     .terminal-input {
         width: 360px;
@@ -48,6 +51,9 @@
         border-radius: 2px;
         margin: auto;
     }
+    .terminal {
+      height: 400px;
+    }
     .terminal-input {
         width: 540px;
         border: 5px solid gray;
@@ -67,6 +73,9 @@
         border-radius: 1px;
         margin: auto;
     }
+    .terminal {
+      height: 200px;
+    }
     .terminal-input {
         width: 266px;
         border: 2px solid gray;
@@ -76,8 +85,9 @@
     }
   }
 
-  .terminal-input input {
+  .terminal-input .input-field {
     width: 70%;
+    display: inline-block;
   }
 
   .terminal-input .send-button {
@@ -143,4 +153,5 @@
 
   .textarea input[type='number'] {
     display: inline-block;
+    width: 100px;
   }

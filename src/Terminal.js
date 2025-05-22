@@ -1,12 +1,22 @@
 import './styles/Terminal.css'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getUrlForRequest } from './utils/get-url-for-request';
 
-function Terminal() {
+function Terminal({tokenId, socket}) {
 
   const [isSettings, setIsSettings] = useState(false);
   const [terminalOutputText, setTerminalOutputText] = useState("");
   const [enteredCommand, setEnteredCommand] = useState("");
   const [isEchoEnabled, setIsEchoEnabled] = useState(true);
+  const [terminalSpeed, setTerminalSpeed] = useState(9600);
+
+  useEffect(() => {
+    console.log("Terminal useEffect");
+    console.log('Child => socket', socket);
+    if (socket) {
+      console.log('attaching socket events');
+    }
+  }, [socket]);
 
   const renderTerminalPane = (isSettings) => {
     if (!isSettings) {
@@ -19,7 +29,7 @@ function Terminal() {
           <label htmlFor="terminalEcho"> Echo </label><br/>
         </div>
         <div className="input-fields">
-          <input id="terminalSpeed" type="number"/>
+          <input id="terminalSpeed" min="1" max="10000" value={terminalSpeed} onChange={onTerminalSpeedValueChange} type="number"/>
           <label htmlFor="terminalSpeed"> Terminal Speed </label><br/>
         </div>
       </div>
@@ -32,6 +42,42 @@ function Terminal() {
     } else {
       return <div className="send-button"></div>
     }
+  }
+
+  const renderCommandInput = (isSettings) => {
+    if (!isSettings) {
+      return <input className="input-field" value={enteredCommand} onKeyUp={handleKeyDown} onChange={e => setEnteredCommand(e.target.value)} type="text" placeholder="Enter command:"/>
+    } else {
+      return <div className="input-field"></div>
+    }
+  }
+
+  const onTerminalSpeedValueChange = e => {
+    console.log(e.target.value);
+    let value = Number(e.target.value);
+    if (e.target.value == null) {
+      return;
+    }
+    if (Number(e.target.value) >= 10000) {
+      value = 10000;
+    } else if (Number(e.target.value) <= 0) {
+      value = 1;
+    }
+    setTerminalSpeed(value);
+    sendTerminalSpeedValue(value);
+  }
+
+  const sendTerminalSpeedValue = async (value) => {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
+      body: JSON.stringify({ speed: Number(value) }),
+      credentials: 'include'
+    };
+    const response = await fetch(getUrlForRequest('/api/uart/speed'), requestOptions);
+    const responseText = await response.json();
+    console.log('response.status =', response.status);
+    console.log('response text: ' + responseText['message']);  
   }
 
   const onTerminalEchoCBChange = () => {
@@ -90,7 +136,7 @@ function Terminal() {
         <h2>Terminal</h2>
         <div className="terminal">{renderTerminalPane(isSettings)}</div>
         <div className={"terminal-input" + (isSettings ? " terminal-input-spec" : " ")}>
-          <input value={enteredCommand} disabled={isSettings} onKeyUp={handleKeyDown} onChange={e => setEnteredCommand(e.target.value)} type="text" placeholder="Enter command:"/>
+          {renderCommandInput(isSettings)}
           {renderSendButton(isSettings)}
           <div className="dropdown">
             <button className="options-dropdown"><i className="bi bi-caret-down-fill"></i></button>

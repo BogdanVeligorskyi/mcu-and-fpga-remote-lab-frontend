@@ -34,6 +34,8 @@ function App() {
   const [endTime, setEndTime] = useState("");
   const [deviceType, setDeviceType] = useState("");
 
+  const ws = useRef(null);
+
   const query = useQuery();
   const token = query.get("token");  
 
@@ -169,7 +171,7 @@ function App() {
 
   const renderTerminal = (isTerminalEnabled) => {
     if (isTerminalEnabled) {
-      return <Terminal/>
+      return <Terminal tokenId={token} socket={ws.current}/>
     } else {
       return <div><h2>Terminal</h2></div>
     }
@@ -262,27 +264,27 @@ function App() {
     }
 
     console.log(window.location.host);
-    const ws = new WebSocket('wss://' + window.location.host +'/ws?token=' + token);
+    ws.current = new WebSocket('wss://' + window.location.host +'/ws?token=' + token);
     
     // Connection opened
-    ws.addEventListener("open", event => {
-      ws.send("Connection established");
+    ws.current.addEventListener("open", event => {
+      ws.current.send("Connection established");
       console.log("Socket connection established");
     });
 
-    ws.addEventListener("message", event => {
+    ws.current.addEventListener("message", event => {
       console.log("Message from server ", event.data);
     });
 
     // Connection closed
-    ws.addEventListener("close", event => {
+    ws.current.addEventListener("close", event => {
       console.log("Socket closed");
       setIsSocketClosed(true);
     });
     setInterval(() => {
-      if (ws.readyState === WebSocket.OPEN) {
+      if (ws.current.readyState === WebSocket.OPEN) {
         console.log("Socket send ping message");
-        ws.send(JSON.stringify({ type: 'ping' }));
+        ws.current.send(JSON.stringify({ type: 'ping' }));
       }
     }, 30000);
     
