@@ -16,6 +16,18 @@ function Terminal({tokenId, socket}) {
     if (socket) {
       console.log('attaching socket events');
     }
+
+    socket.addEventListener("message", event => {
+      console.log("Message from server ", event.data);
+      const response = JSON.parse(event.data);
+      
+      // if response is type: uart - renew terminal window
+      if (response.type === "uart") {
+        setTerminalOutputText(terminalOutputText + "\n" + response.text);
+      }
+      console.log('response text: ' + response.text);  
+    });
+
   }, [socket]);
 
   const renderTerminalPane = (isSettings) => {
@@ -75,9 +87,8 @@ function Terminal({tokenId, socket}) {
       credentials: 'include'
     };
     const response = await fetch(getUrlForRequest('/api/uart/speed'), requestOptions);
-    const responseText = await response.json();
     console.log('response.status =', response.status);
-    console.log('response text: ' + responseText['message']);  
+    // console.log('response text: ' + responseText['message']);  
   }
 
   const onTerminalEchoCBChange = () => {
@@ -103,10 +114,20 @@ function Terminal({tokenId, socket}) {
     console.log("is echo enabled: " + isEchoEnabled);
     if (isEchoEnabled) {
       setTerminalOutputText(terminalOutputText + "\n $" + enteredCommand + "\n" + "Command result");
+      sendCommandToServer(enteredCommand);
     } else {
       setTerminalOutputText(terminalOutputText + "\n" + "Command result");
     }
     setEnteredCommand("");
+    socket.addEventListener("message", event => {
+      console.log("Message from server ", event.data);
+    });
+  }
+
+  const sendCommandToServer = (message) => {
+    if (socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({ type: 'uart', text: message }));
+    }
   }
 
   const onSendClick = () => {

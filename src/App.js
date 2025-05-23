@@ -266,6 +266,8 @@ function App() {
     console.log(window.location.host);
     ws.current = new WebSocket('wss://' + window.location.host +'/ws?token=' + token);
     
+    //ws.current = new WebSocket('wss://' + "digitrans.stu.cn.ua:8086" +'/ws?token=' + token);
+
     // Connection opened
     ws.current.addEventListener("open", event => {
       ws.current.send("Connection established");
