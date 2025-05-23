@@ -11,6 +11,7 @@ const ProgramDeviceForm = ({isFPGADev, tokenId}) => {
   const [isRequestCompleted, setIsRequestCompleted] = useState(false)
   const [statusFPGA, setStatusFPGA] = useState(0)
   const [statusMCU, setStatusMCU] = useState(0)
+  const [isResetEnabled, setIsResetEnabled] = useState(true)
 
   const renderResultBlock = (isRequestCompleted, statusFPGA, statusMCU) => {
     if (isFPGADev) {
@@ -39,6 +40,46 @@ const ProgramDeviceForm = ({isFPGADev, tokenId}) => {
       return <button type="submit" className="btn btn-primary my-2">Program MCU</button>
     }
   } 
+
+  const renderResetButton = (isFPGADev) => {
+    if (!isFPGADev) {
+      return <button disabled={!isResetEnabled} onClick={onResetButton} className="btn btn-secondary mx-2 my-2">Reset</button>
+    }
+  }
+
+  const onResetButton = () => {
+    setIsResetEnabled(false);
+    setStatusMCU(0);
+    setResultMCUMessage("Reprogramming mcu...");
+
+    const requestOptions = {
+      method: 'POST',
+      headers: {'Authorization': tokenId}, 
+      body: true,
+      credentials: 'include'
+    }
+
+    fetch(getUrlForRequest("/api/mcu/reset"), requestOptions).then(
+      (response) => {
+        console.log('response.status =', response.status);
+        if (response.status === 200) {
+          setResultMCUMessage("STM32 has been reset!");
+          setIsRequestCompleted(true);
+          setStatusMCU(200);
+          setIsResetEnabled(true);
+        } else {
+          setResultMCUMessage("An error occured during MCU reprogramming!");
+          setIsRequestCompleted(true);
+          setStatusMCU(500);
+          setIsResetEnabled(true);
+        } 
+        console.log(resultMCUMessage);
+        console.log('response text: ', response.json());
+      }
+    ).catch(error => {
+      console.log(error)
+    });
+  }
 
   function handleFileChange(event) {
     setFile(event.target.files[0])
@@ -117,8 +158,10 @@ const ProgramDeviceForm = ({isFPGADev, tokenId}) => {
           name="programDeviceFile" 
           onChange={handleFileChange}/> <br/>
           {renderProgramButton(isFPGADev)}
+          {renderResetButton(isFPGADev)}
       </form>
       {renderResultBlock(isRequestCompleted, statusFPGA, statusMCU)}
+
     </div>    
   );
 }
