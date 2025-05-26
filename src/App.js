@@ -157,7 +157,10 @@ function App() {
                   <input type="checkbox" id="scopeCB" name="scopeCB" value="Scope"
                   checked={isScopeEnabled === true}
                   onChange={onScopeCBChange}/>
-                  <label htmlFor="scopeCB"> Scope</label><br/></div>);
+                  <label htmlFor="scopeCB"> Scope</label><br/>
+                
+                </div>);
+                  
     }
   }
 
@@ -197,7 +200,7 @@ function App() {
     if (isFunctionalGeneratorEnabled) {
       return <FunctionalGenerator tokenId={token}/>
     } else {
-      return <div><h2>Functional Generator</h2></div>
+      return <div><h2>Functional Generator (FG)</h2></div>
     }
   }
 

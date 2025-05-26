@@ -4,6 +4,7 @@ import { Line } from 'react-chartjs-2';
 import { useRef, useState } from 'react';
 import './styles/Scope.css';
 import { Chart } from 'chart.js/auto';
+import AnalogMultiplexer from './AnalogMultiplexer';
 
 Chart.register({
   id: 'someBackground',
@@ -563,17 +564,6 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
       <div>
         <h2>Scope</h2>
 
-        <input type="checkbox" id="ch1CB" name="ch1CB" value="CH1"
-        disabled={isRun === true}
-        checked={isCH1Enabled === true}
-        onChange={onCH1CBChange}/>
-        <label htmlFor="ch1CB">CH1</label>
-
-        <input type="checkbox" id="ch2CB" name="ch2CB" value="CH2"
-        disabled={isRun === true}
-        checked={isCH2Enabled === true}
-        onChange={onCH2CBChange}/>
-        <label htmlFor="ch2CB">CH2</label>
         <div className="row">
           <div className="chart">                    
             <Line type="line" 
@@ -583,13 +573,25 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
           </div>
         </div>
         <div className="row m-1">
-          <div className="col-6">
+          <div className="col-6 my-auto">
             <button className="btn btn-md btn-primary m-2" 
-            onClick={changeButton}>{buttonName + " Scope "}</button>
+            onClick={changeButton}><i className={isRun ? "bi bi-pause" : "bi bi-caret-right"}></i></button>
+            <button className="btn btn-md btn-primary m-2" 
+            onClick={saveWaveform}><i className="bi bi-download"></i></button>
           </div>
-          <div className="col-6">
-            <button className="btn btn-md btn-primary m-2" 
-            onClick={saveWaveform}>Save Chart</button>
+          <div className="col-6 my-auto">
+            <input type="checkbox" id="ch1CB" name="ch1CB" value="CH1"
+              disabled={isRun === true}
+              checked={isCH1Enabled === true}
+              onChange={onCH1CBChange}/>
+            <label htmlFor="ch1CB">CH1</label>
+            <AnalogMultiplexer token={tokenId} channel={1} disabled={!isCH1Enabled} className="m-2"/> <br/>
+            <input type="checkbox" id="ch2CB" name="ch2CB" value="CH2"
+              disabled={isRun === true}
+              checked={isCH2Enabled === true}
+              onChange={onCH2CBChange}/>
+            <label htmlFor="ch2CB">CH2</label>
+            <AnalogMultiplexer token={tokenId} channel={2} disabled={!isCH2Enabled} className="m-2"/>
           </div>
         </div>
         <div className="row m-1">

@@ -6,7 +6,7 @@ function FunctionalGenerator({tokenId}) {
 
   return (
     <div>
-      <h2>Functional Generator</h2>
+      <h2>Functional Generator (FG)</h2>
       <div className="row m-1">
         <div className="col-xl m-1 px-1 border-spec">
           <FunctionalGeneratorChannelParams channelNum={1} tokenId={tokenId} />
