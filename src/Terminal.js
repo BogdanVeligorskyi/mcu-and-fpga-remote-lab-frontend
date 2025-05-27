@@ -5,7 +5,7 @@ import { getUrlForRequest } from './utils/get-url-for-request';
 function Terminal({tokenId, socket}) {
 
   const [isSettings, setIsSettings] = useState(false);
-  const [terminalOutputText, setTerminalOutputText] = useState("");
+  const [terminalOutputText, setTerminalOutputText] = useState([]);
   const [enteredCommand, setEnteredCommand] = useState("");
   const [isEchoEnabled, setIsEchoEnabled] = useState(true);
   const [terminalSpeed, setTerminalSpeed] = useState(9600);
@@ -13,8 +13,9 @@ function Terminal({tokenId, socket}) {
   useEffect(() => {
     console.log("Terminal useEffect");
     console.log('Child => socket', socket);
-    if (socket) {
+    /*if (socket) {
       console.log('attaching socket events');
+      sendTerminalSpeedValue(terminalSpeed);
     }
 
     socket.addEventListener("message", event => {
@@ -23,16 +24,20 @@ function Terminal({tokenId, socket}) {
       
       // if response is type: uart - renew terminal window
       if (response.type === "uart") {
-        setTerminalOutputText(terminalOutputText + "\n" + response.text);
+        setTerminalOutputText([...terminalOutputText, { text: "Command result", style: { color: 'white'} }]);
       }
       console.log('response text: ' + response.text);  
-    });
+    });*/
 
   }, [socket]);
 
   const renderTerminalPane = (isSettings) => {
     if (!isSettings) {
-      return <textarea className="textarea" value={terminalOutputText} readOnly={true}></textarea>
+      return <div className="textarea">
+        {terminalOutputText.map((paragraph, index) => (
+        <p key={index} style={paragraph.style}>{paragraph.text}</p>
+      ))}
+      </div>
     } else {
       return <div className="textarea">
         <h2>Terminal Settings</h2>
@@ -41,7 +46,7 @@ function Terminal({tokenId, socket}) {
           <label htmlFor="terminalEcho"> Echo </label><br/>
         </div>
         <div className="input-fields">
-          <input id="terminalSpeed" min="1" max="10000" value={terminalSpeed} onChange={onTerminalSpeedValueChange} type="number"/>
+          <input id="terminalSpeed" min="1" max="1000000" value={terminalSpeed} onChange={onTerminalSpeedValueChange} type="number"/>
           <label htmlFor="terminalSpeed"> Terminal Speed </label><br/>
         </div>
       </div>
@@ -70,8 +75,8 @@ function Terminal({tokenId, socket}) {
     if (e.target.value == null) {
       return;
     }
-    if (Number(e.target.value) >= 10000) {
-      value = 10000;
+    if (Number(e.target.value) >= 1000000) {
+      value = 1000000;
     } else if (Number(e.target.value) <= 0) {
       value = 1;
     }
@@ -106,22 +111,20 @@ function Terminal({tokenId, socket}) {
     }
 
     if (enteredCommand === "clear") {
-      setTerminalOutputText("");
+      setTerminalOutputText([]);
       setEnteredCommand("");
       return;
     }
 
     console.log("is echo enabled: " + isEchoEnabled);
     if (isEchoEnabled) {
-      setTerminalOutputText(terminalOutputText + "\n $" + enteredCommand + "\n" + "Command result");
+      setTerminalOutputText([...terminalOutputText, { text: "$" + enteredCommand, style: { color: 'lightgreen'} }, { text: "Command result", style: { color: 'white'} }]);
       sendCommandToServer(enteredCommand);
     } else {
-      setTerminalOutputText(terminalOutputText + "\n" + "Command result");
+      setTerminalOutputText([...terminalOutputText, { text: "Command result", style: { color: 'white'} }]);
+      sendCommandToServer(enteredCommand);
     }
     setEnteredCommand("");
-    socket.addEventListener("message", event => {
-      console.log("Message from server ", event.data);
-    });
   }
 
   const sendCommandToServer = (message) => {
