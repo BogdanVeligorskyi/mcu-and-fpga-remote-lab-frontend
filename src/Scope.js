@@ -585,13 +585,13 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
               checked={isCH1Enabled === true}
               onChange={onCH1CBChange}/>
             <label htmlFor="ch1CB">CH1</label>
-            <AnalogMultiplexer token={tokenId} channel={1} disabled={!isCH1Enabled} className="m-2"/> <br/>
+            <AnalogMultiplexer tokenId={tokenId} amChannel={1} disabled={!isCH1Enabled} className="m-2"/> <br/>
             <input type="checkbox" id="ch2CB" name="ch2CB" value="CH2"
               disabled={isRun === true}
               checked={isCH2Enabled === true}
               onChange={onCH2CBChange}/>
             <label htmlFor="ch2CB">CH2</label>
-            <AnalogMultiplexer token={tokenId} channel={2} disabled={!isCH2Enabled} className="m-2"/>
+            <AnalogMultiplexer tokenId={tokenId} amChannel={2} disabled={!isCH2Enabled} className="m-2"/>
           </div>
         </div>
         <div className="row m-1">

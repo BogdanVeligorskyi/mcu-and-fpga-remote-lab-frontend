@@ -13,7 +13,7 @@ function Terminal({tokenId, socket}) {
   useEffect(() => {
     console.log("Terminal useEffect");
     console.log('Child => socket', socket);
-    /*if (socket) {
+    if (socket) {
       console.log('attaching socket events');
       sendTerminalSpeedValue(terminalSpeed);
     }
@@ -27,7 +27,7 @@ function Terminal({tokenId, socket}) {
         setTerminalOutputText([...terminalOutputText, { text: "Command result", style: { color: 'white'} }]);
       }
       console.log('response text: ' + response.text);  
-    });*/
+    });
 
   }, [socket]);
 

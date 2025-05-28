@@ -142,22 +142,22 @@ function App() {
       <input type="checkbox" id="potentiometrCB" name="potentiometrCB" value="Potentiometr"
                   checked={isPotentiometrEnabled === true}
                   onChange={onPotentiometrCBChange}/>
-                  <label htmlFor="potentiometrCB">Potentiometr</label><br/>
+                  <label htmlFor="potentiometrCB"><i className="bi bi-speedometer"></i> Potentiometr</label><br/>
 
                   <input type="checkbox" id="terminalCB" name="terminalCB" value="Terminal"
                   checked={isTerminalEnabled === true}
                   onChange={onTerminalCBChange}/>
-                  <label htmlFor="terminalCB"> Terminal</label><br/>
+                  <label htmlFor="terminalCB"><i className="bi bi-terminal"></i> Terminal</label><br/>
 
                   <input type="checkbox" id="functionalGeneratorCB" name="functionalGeneratorCB" value="FunctionalGenerator"
                   checked={isFunctionalGeneratorEnabled === true}
                   onChange={onFunctionalGeneratorCBChange}/>
-                  <label htmlFor="functionalGeneratorCB"> Functional Generator</label><br/>
+                  <label htmlFor="functionalGeneratorCB"><i className="bi bi-alt"></i> Functional Generator</label><br/>
 
                   <input type="checkbox" id="scopeCB" name="scopeCB" value="Scope"
                   checked={isScopeEnabled === true}
                   onChange={onScopeCBChange}/>
-                  <label htmlFor="scopeCB"> Scope</label><br/>
+                  <label htmlFor="scopeCB"><i className="bi bi-clipboard-pulse"></i> Scope</label><br/>
                 
                 </div>);
                   
@@ -366,22 +366,22 @@ function App() {
                   <input type="checkbox" id="instructionsCB" name="instructionsCB" value="Instructions" 
                   checked={isInstructionsEnabled === true} 
                   onChange={onInstructionsCBChange}/>
-                  <label htmlFor="instructionsCB"> Instructions</label><br/>
+                  <label htmlFor="instructionsCB"><i className="bi bi-card-text"></i> Instructions</label><br/>
                             
                   <input type="checkbox" id="programDeviceCB" name="programDeviceCB" value="ProgramDevice"
                   checked={isProgramDeviceEnabled === true}
                   onChange={onProgramDeviceCBChange}/>
-                  <label htmlFor="programDeviceCB"> Program Device</label><br/>
+                  <label htmlFor="programDeviceCB"><i className="bi bi-file-code"></i> Program Device</label><br/>
                             
                   <input type="checkbox" id="digitalInputsCB" name="digitalInputsCB" value="DigitalInputs"
                   checked={isDigitalInputsEnabled === true}
                   onChange={onDigitalInputsCBChange}/>
-                  <label htmlFor="digitalInputsCB"> Digital Inputs</label><br/>
+                  <label htmlFor="digitalInputsCB"><i className="bi bi-toggles"></i> Digital Inputs</label><br/>
                             
                   <input type="checkbox" id="cameraViewCB" name="cameraViewCB" value="CameraView"
                   checked={isCameraViewEnabled === true}
                   onChange={onCameraViewCBChange}/>
-                  <label htmlFor="cameraViewCB"> Camera View</label><br/>
+                  <label htmlFor="cameraViewCB"><i className="bi bi-camera-video"></i> Camera View</label><br/>
 
                   {renderMCUSpecificComponents(deviceType)}
 
