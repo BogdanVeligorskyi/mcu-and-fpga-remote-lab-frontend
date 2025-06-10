@@ -24,7 +24,7 @@ function Terminal({tokenId, socket}) {
       
       // if response is type: uart - renew terminal window
       if (response.type === "uart") {
-        setTerminalOutputText([...terminalOutputText, { text: "Command result", style: { color: 'white'} }]);
+        setTerminalOutputText(prev => [...prev, { text: response.text, style: { color: 'white'} }]);
       }
       console.log('response text: ' + response.text);  
     });
