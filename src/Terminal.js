@@ -146,7 +146,7 @@ function Terminal({tokenId, socket}) {
   const onClearClick = () => {
     console.log("clear click!");
     setIsSettings(false);
-    setTerminalOutputText("");
+    setTerminalOutputText([]);
   }
 
   const handleKeyDown = (event) => {
