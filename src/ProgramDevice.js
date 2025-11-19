@@ -6,8 +6,8 @@ import './styles/ProgramDevice.css'
 const ProgramDeviceForm = ({isFPGADev, tokenId}) => {
 
   const [file, setFile] = useState()
-  const [resultFPGAMessage, setResultFPGAMessage] = useState("")
-  const [resultMCUMessage, setResultMCUMessage] = useState("")    
+  const [resultFPGAMessage, setResultFPGAMessage] = useState("...")
+  const [resultMCUMessage, setResultMCUMessage] = useState("...")    
   const [isRequestCompleted, setIsRequestCompleted] = useState(false)
   const [statusFPGA, setStatusFPGA] = useState(0)
   const [statusMCU, setStatusMCU] = useState(0)
@@ -177,12 +177,24 @@ function ProgramDevice({isFPGADevice, tokenId}) {
   };
 
   return(
-    <div>
-      {renderName(isFPGADevice)}
-      <div className="program-device-file">
-        <ProgramDeviceForm isFPGADev={isFPGADevice} tokenId={tokenId}/>
+      
+      <div className='col d-flex h-100'>
+        <div class="row h-100 mx-auto">         
+          <div class="row mx-auto">
+            <div class="col">{renderName(isFPGADevice)}</div>
+          </div>
+          <div class="row mx-auto">
+            <div class="col align-self-center">
+              <div className="program-device-file">
+                <ProgramDeviceForm isFPGADev={isFPGADevice} tokenId={tokenId}/>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col"></div>
+          </div>              
+        </div>
       </div>
-    </div>
   );
 }
 

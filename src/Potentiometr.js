@@ -32,26 +32,35 @@ function Potentiometr( {tokenId} ) {
   }
 
   return(
-    <div>
-      <h2>Potentiometr</h2>
-      <div className="potentiometr">
-        
-        <label>Value </label><br/>
-        
-        <label className="round-sliders-label mcu-lab-background-special">{resistanceValue} %</label>
-        
-          <div className="round-slider-wrapper">
-            <div className="round-slider-potentiometr-image">
-              <CircularSlider
-                hideLabelValue  
-                min={0}
-                max={100}
-                width={115}
-                trackColor="#ffffff"
-                onChange={onPotentiometrValueChange}/>           
+      
+    <div className='col d-flex h-100'>
+      <div class="row h-100 mx-auto">         
+        <div class="row mx-auto">
+          <h2>Potentiometr</h2>
+        </div>
+        <div class="row mx-auto">
+          <div class="col align-self-center">
+            <div className="potentiometr">
+              <label>Value </label><br/>
+              <label className="round-sliders-label mcu-lab-background-special">{resistanceValue} %</label>
+              <div className="round-slider-wrapper">
+                <div className="round-slider-potentiometr-image">
+                  <CircularSlider
+                    hideLabelValue  
+                    min={0}
+                    max={100}
+                    width={115}
+                    trackColor="#ffffff"
+                    onChange={onPotentiometrValueChange}/>           
                 </div>
-            </div>
-          <div className="scope-scroll-slider-none"></div>
+              </div>
+              <div className="scope-scroll-slider-none"></div>
+            </div>      
+          </div>
+        </div>
+        <div class="row">
+          <div class="col"></div>
+        </div>              
       </div>
     </div>
   );
