@@ -1,7 +1,7 @@
 @media (min-width: 576px) {
     .camera-frame {
-        height: 270px;
-        width: 360px;
+        height: 480px;
+        width: 640px;
         background-color: black;
         align-items: center;
         border: 5px solid gray;
@@ -12,8 +12,8 @@
 
   @media (min-width: 1200px) {
     .camera-frame {
-        height: 400px;
-        width: 540px;
+        height: 600px;
+        width: 800px;
         background-color: black;
         align-items: center;
         border: 5px solid gray;
@@ -22,10 +22,22 @@
     }
   } 
 
+  @media (max-width: 768px) {
+    .camera-frame {
+        height: 320px;
+        width: 480px;
+        background-color: black;
+        align-items: center;
+        border: 2px solid gray;
+        border-radius: 1px;
+        margin: auto;
+    }
+  }
+
   @media (max-width: 576px) {
     .camera-frame {
-        height: 200px;
-        width: 266px;
+        height: 240px;
+        width: 320px;
         background-color: black;
         align-items: center;
         border: 2px solid gray;

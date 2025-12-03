@@ -168,20 +168,11 @@ const ProgramDeviceForm = ({isFPGADev, tokenId}) => {
 
 function ProgramDevice({isFPGADevice, tokenId}) {
 
-  const renderName = (isFPGADevice) => {    
-    if (isFPGADevice) {
-      return <h2>Program FPGA</h2>
-    } else {
-      return <h2>Program MCU</h2>
-    }
-  };
-
   return(
       
       <div className='col d-flex h-100'>
         <div class="row h-100 mx-auto">         
           <div class="row mx-auto">
-            <div class="col">{renderName(isFPGADevice)}</div>
           </div>
           <div class="row mx-auto">
             <div class="col align-self-center">

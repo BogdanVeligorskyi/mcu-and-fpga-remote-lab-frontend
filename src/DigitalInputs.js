@@ -53,7 +53,6 @@ function DigitalInputs({tokenId}) {
 
   return(
     <div>
-      <h2>Digital Inputs</h2>
       <br/>
       <table>
         <tbody>

@@ -4,7 +4,6 @@ import { useLocation } from 'react-router-dom';
 import { getUrlForRequest } from './utils/get-url-for-request';
 import ScrollToTop from 'react-scroll-to-top';
 import AppCountdown from './AppCountdown';
-import Instructions from './Instructions';
 import ProgramDevice from './ProgramDevice';
 import DigitalInputs from './DigitalInputs';
 import CameraView from './CameraView';
@@ -20,9 +19,7 @@ function useQuery() {
 
 function App() {
  
-  const [isInstructionsEnabled, setIsInstructionsEnabled] = useState(true);  
   const [isProgramDeviceEnabled, setIsProgramDeviceEnabled] = useState(true);
-  const [isDigitalInputsEnabled, setIsDigitalInputsEnabled] = useState(true);
   const [isCameraViewEnabled, setIsCameraViewEnabled] = useState(true);
   const [isFunctionalGeneratorEnabled, setIsFunctionalGeneratorEnabled] = useState(true);
   const [isPotentiometrEnabled, setIsPotentiometrEnabled] = useState(false);
@@ -65,18 +62,10 @@ function App() {
   const onCollapseClicked = () => {
     setIsSubMenuCollapsed(!isSubMenuCollapsed);
   }
-  
-  const onInstructionsCBChange = () => {
-    setIsInstructionsEnabled(!isInstructionsEnabled);
-  }
 
   const onProgramDeviceCBChange = () => {
     setIsProgramDeviceEnabled(!isProgramDeviceEnabled);
   }  
-
-  const onDigitalInputsCBChange = () => {
-    setIsDigitalInputsEnabled(!isDigitalInputsEnabled);
-  }
 
   const onPotentiometrCBChange = () => {
     setIsPotentiometrEnabled(!isPotentiometrEnabled);
@@ -108,30 +97,36 @@ function App() {
     }
   }
 
-  const renderInstructions = (isInstructionsEnabled) => {
-    if (isInstructionsEnabled) {
-      return <Instructions/>
-    } else {
-      return <div><h2>Instructions</h2></div>
+  const renderDIandProgramPaneName = (deviceType) => {
+    if (deviceType === "") {
+      return <div><h2>Digital Inputs and Program Device</h2></div>
+    } 
+   
+    if (deviceType === "fpga") {
+      return <div><h2>Digital Inputs and Program FPGA</h2></div> 
+    }
+
+    if (deviceType === "mcu") {
+      return <div><h2>Digital Inputs and Program MCU</h2></div>
     }
   }
 
   const renderProgramFPGAorMCU = (isProgramDeviceEnabled, deviceType) => {
    
     if (deviceType === "") {
-      return <div><h2>Program Device</h2></div>
+      return <div></div>
     } 
    
     if (isProgramDeviceEnabled && deviceType === "fpga") {
       return <ProgramDevice isFPGADevice={true} tokenId={token}/>
     } else if (!isProgramDeviceEnabled && deviceType === "fpga") {
-      return <div><h2>Program FPGA</h2></div> 
+      return <div></div> 
     }
 
     if (isProgramDeviceEnabled && deviceType === "mcu") {
       return <ProgramDevice isFPGADevice={false} tokenId={token}/>
     } else if (!isProgramDeviceEnabled && deviceType === "mcu") {
-      return <div><h2>Program MCU</h2></div>
+      return <div></div>
     }
         
   }
@@ -184,7 +179,7 @@ function App() {
     if (isDigitalInputsEnabled) {
       return <DigitalInputs tokenId={token}/>
     } else {
-      return <div><h2>Digital Inputs</h2></div>
+      return <div></div>
     }
   }
 
@@ -363,20 +358,11 @@ function App() {
                 <div className={"text-start "+(isSubMenuCollapsed ? 'components-list' : 'components-list-none')} >
                   
                   {/* Submenu checkboxes */}              
-                  <input type="checkbox" id="instructionsCB" name="instructionsCB" value="Instructions" 
-                  checked={isInstructionsEnabled === true} 
-                  onChange={onInstructionsCBChange}/>
-                  <label htmlFor="instructionsCB"><i className="bi bi-card-text"></i> Instructions</label><br/>
                             
                   <input type="checkbox" id="programDeviceCB" name="programDeviceCB" value="ProgramDevice"
                   checked={isProgramDeviceEnabled === true}
                   onChange={onProgramDeviceCBChange}/>
-                  <label htmlFor="programDeviceCB"><i className="bi bi-file-code"></i> Program Device</label><br/>
-                            
-                  <input type="checkbox" id="digitalInputsCB" name="digitalInputsCB" value="DigitalInputs"
-                  checked={isDigitalInputsEnabled === true}
-                  onChange={onDigitalInputsCBChange}/>
-                  <label htmlFor="digitalInputsCB"><i className="bi bi-toggles"></i> Digital Inputs</label><br/>
+                  <label htmlFor="programDeviceCB"><i className="bi bi-file-code"></i> Program Device, DI</label><br/>
                             
                   <input type="checkbox" id="cameraViewCB" name="cameraViewCB" value="CameraView"
                   checked={isCameraViewEnabled === true}
@@ -403,23 +389,19 @@ function App() {
 
             {/* Components */}
             <div>
-              {/* Instructions and Program Device */}
+              {/* Camera View */}
               <div className="row">
                 <div className="col-lg app-component-box">
-                  {renderInstructions(isInstructionsEnabled)}
-                </div>
-                <div className="col-lg app-component-box">
-                  {renderProgramFPGAorMCU(isProgramDeviceEnabled, deviceType)}
+                {renderCameraView(isCameraViewEnabled)}
                 </div>
               </div>
-
-              {/* Digital Inputs and Camera View */}
-              <div className="row">
-                <div className="col-lg app-component-box">
-                  {renderDigitalInputs(isDigitalInputsEnabled)}
+              <div className="row app-component-box">
+                {renderDIandProgramPaneName(deviceType)}
+                <div className="col-lg">
+                  {renderDigitalInputs(isProgramDeviceEnabled)}
                 </div>
-                <div className="col-lg app-component-box">
-                  {renderCameraView(isCameraViewEnabled)}
+                <div className="col-lg">
+                  {renderProgramFPGAorMCU(isProgramDeviceEnabled, deviceType)}
                 </div>
               </div>
 
