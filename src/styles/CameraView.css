@@ -1,54 +1,85 @@
-@media (min-width: 576px) {
+
+
+
+  @media (min-width: 576px) {
     .camera-frame {
-        height: 480px;
-        width: 640px;
+        height: 278px;
+        width: 488px;
         background-color: black;
-        align-items: center;
-        border: 5px solid gray;
-        border-radius: 2px;
+        border: 3px solid gray;
+        border-radius: 1px;
         margin: auto;
     }
-  } 
+    iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1920px;
+      height: 1080px;
+      transform: rotate(180deg) scale(0.25) translate(150%, 150%);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .camera-frame {
+        height: 370px;
+        width: 650px;
+        background-color: black;
+        border: 4px solid gray;
+        border-radius: 1px;
+        margin: auto;
+    }
+    iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1920px;
+      height: 1080px;
+      transform: rotate(180deg) scale(0.33) translate(101%, 101%);
+    }
+  }
 
   @media (min-width: 1200px) {
     .camera-frame {
-        height: 600px;
-        width: 800px;
+      position: relative;
+        height: 550px;
+        width: 970px;
         background-color: black;
-        align-items: center;
         border: 5px solid gray;
         border-radius: 2px;
         margin: auto;
     }
-  } 
-
-  @media (max-width: 768px) {
-    .camera-frame {
-        height: 320px;
-        width: 480px;
-        background-color: black;
-        align-items: center;
-        border: 2px solid gray;
-        border-radius: 1px;
-        margin: auto;
+    
+    iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1920px;
+      height: 1080px;
+      transform: rotate(180deg) scale(0.5) translate(50%, 50%);
     }
   }
 
   @media (max-width: 576px) {
     .camera-frame {
-        height: 240px;
-        width: 320px;
+        height: 216px;
+        width: 384px;
         background-color: black;
-        align-items: center;
+        /* align-items: center; */
         border: 2px solid gray;
         border-radius: 1px;
         margin: auto;
     }
+    iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1920px;
+      height: 1080px;
+      transform: rotate(180deg) scale(0.125) translate(300%, 300%);
+    }
   }
 
-iframe {
-    height: 100%;
-    width: 100%;
-    justify-content: center;
-    transform: rotate(180deg);
+.camera-frame {
+  position: relative;
 }
