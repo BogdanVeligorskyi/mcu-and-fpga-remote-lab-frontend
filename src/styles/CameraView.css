@@ -1,84 +1,103 @@
-
-
-
-  @media (min-width: 576px) {
-    .camera-frame {
-        height: 278px;
-        width: 488px;
-        background-color: black;
-        border: 3px solid gray;
-        border-radius: 1px;
-        margin: auto;
-    }
-    iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 1920px;
-      height: 1080px;
-      transform: rotate(180deg) scale(0.25) translate(150%, 150%);
-    }
+/*576px - 768px*/
+@media (max-width: 768px) and (min-width: 576px) {
+  .camera-frame {
+    height: 278px;
+    width: 488px;
+    background-color: black;
+    border: 3px solid gray;
+    border-radius: 1px;
+    margin: auto;
   }
-
-  @media (min-width: 768px) {
-    .camera-frame {
-        height: 370px;
-        width: 650px;
-        background-color: black;
-        border: 4px solid gray;
-        border-radius: 1px;
-        margin: auto;
-    }
-    iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 1920px;
-      height: 1080px;
-      transform: rotate(180deg) scale(0.33) translate(101%, 101%);
-    }
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    transform: rotate(180deg) scale(0.25) translate(150%, 150%);
   }
+}
 
-  @media (min-width: 1200px) {
-    .camera-frame {
-      position: relative;
-        height: 550px;
-        width: 970px;
-        background-color: black;
-        border: 5px solid gray;
-        border-radius: 2px;
-        margin: auto;
-    }
-    
-    iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 1920px;
-      height: 1080px;
-      transform: rotate(180deg) scale(0.5) translate(50%, 50%);
-    }
+/*768px - 1200px*/
+@media (max-width: 1200px) and (min-width: 768px) {
+  .camera-frame {
+    height: 370px;
+    width: 650px;
+    background-color: black;
+    border: 4px solid gray;
+    border-radius: 1px;
+    margin: auto;
   }
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    transform: rotate(180deg) scale(0.33) translate(101%, 101%);
+  }
+}
 
-  @media (max-width: 576px) {
-    .camera-frame {
-        height: 216px;
-        width: 384px;
-        background-color: black;
-        /* align-items: center; */
-        border: 2px solid gray;
-        border-radius: 1px;
-        margin: auto;
-    }
-    iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 1920px;
-      height: 1080px;
-      transform: rotate(180deg) scale(0.125) translate(300%, 300%);
-    }
+/*1200px and more*/
+@media (min-width: 1200px) {
+  .camera-frame {
+    position: relative;
+    height: 550px;
+    width: 970px;
+    background-color: black;
+    border: 5px solid gray;
+    border-radius: 2px;
+    margin: auto;
+  }   
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    transform: rotate(180deg) scale(0.5) translate(50%, 50%);
   }
+}
+
+/*440px - 576px*/
+@media (min-width: 440px) and (max-width: 576px) {
+  .camera-frame {
+    height: 220px;
+    width: 388px;
+    background-color: black;
+    border: 2px solid gray;
+    border-radius: 1px;
+    margin: auto;
+  }
+iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+  transform: rotate(180deg) scale(0.2) translate(200%, 200%);
+  }
+}
+
+/*440px and less*/
+@media (max-width: 440px) {
+  .camera-frame {
+    height: 144px;
+    width: 256px;
+    background-color: black;
+    border: 2px solid gray;
+    border-radius: 1px;
+    margin: auto;
+  }
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    transform: rotate(180deg) scale(0.13) translate(335%, 335%);
+  }
+}
 
 .camera-frame {
   position: relative;

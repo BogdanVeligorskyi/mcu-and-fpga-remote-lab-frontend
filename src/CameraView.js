@@ -17,7 +17,6 @@ function CameraView({tokenId}) {
       return (
         <iframe
           src={getUrlForRequest('/api/stream/?token=' + tokenId)}
-          // src={'https://digitrans.stu.cn.ua:8081/api/stream?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhc2hib2FyZCIsImlhdCI6MTc2NDg2ODkxMiwiZXhwIjoxNzY0ODY5NTEyfQ.nXaOLB9KWKr3f_kI5m5htJ3pjwYAkdnCDfB6I9DUeSU'}
           title="CameraView"
           scrolling="no"
         ></iframe>
