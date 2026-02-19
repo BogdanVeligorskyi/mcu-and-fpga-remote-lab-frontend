@@ -128,6 +128,7 @@ function FunctionalGeneratorChannelParams( {channelNum, tokenId, deviceType} ) {
       setDutyCycle(50);
       sendDutyCycleValue(50);    
     }
+    sendAmplitudeValue(amplitudeValue);
     sendFunctionType(e.target.value);
   }
 
@@ -141,6 +142,7 @@ function FunctionalGeneratorChannelParams( {channelNum, tokenId, deviceType} ) {
         freq = frequencyValue * 1.0;
     }
     console.log(frequencyValue + " " + frequencyPrefix);
+    sendAmplitudeValue(amplitudeValue);
     sendFrequencyValue(freq);
   }
 
@@ -168,6 +170,7 @@ function FunctionalGeneratorChannelParams( {channelNum, tokenId, deviceType} ) {
     } else {
       freq = value * 1.0;
     }
+    sendAmplitudeValue(amplitudeValue);
     sendFrequencyValue(freq);
   }
 
@@ -203,7 +206,8 @@ function FunctionalGeneratorChannelParams( {channelNum, tokenId, deviceType} ) {
       sendFunctionType(functionType);
       sendDutyCycleValue(Number(dutyCycle));
     }
-    sendChannelEnabled(isEnabledInt);    
+    sendChannelEnabled(isEnabledInt);
+    sendAmplitudeValue(amplitudeValue);  
   }
 
   return (
