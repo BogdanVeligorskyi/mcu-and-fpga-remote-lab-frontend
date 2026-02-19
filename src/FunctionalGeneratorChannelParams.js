@@ -3,7 +3,7 @@ import { useState } from "react";
 import CircularSlider from '@fseehawer/react-circular-slider';
 import Switch from 'react-switch';
 
-function FunctionalGeneratorChannelParams( {channelNum, tokenId} ) {
+function FunctionalGeneratorChannelParams( {channelNum, tokenId, deviceType} ) {
 
   const [functionType, setFunctionType] = useState("sine");
   const [frequencyPrefix, setFrequencyPrefix] = useState("Hz");
@@ -270,8 +270,8 @@ function FunctionalGeneratorChannelParams( {channelNum, tokenId} ) {
             <td><label>Freq</label></td>
           </tr>
           <tr>
-            <td><label className="round-sliders-label mcu-lab-background-special">{amplitudeValue} V</label></td>
-            <td><label className="round-sliders-label mcu-lab-background-special">{frequencyValue} {frequencyPrefix}</label></td>
+            <td><label className={'round-sliders-label ' + (deviceType === "mcu"? "mcu-lab-background-special" : "fpga-lab-background-special")}>{amplitudeValue} V</label></td>
+            <td><label className={'round-sliders-label ' + (deviceType === "mcu"? "mcu-lab-background-special" : "fpga-lab-background-special")}>{frequencyValue} {frequencyPrefix}</label></td>
           </tr>
           <tr>
             <td className="round-slider-amplitude-image">

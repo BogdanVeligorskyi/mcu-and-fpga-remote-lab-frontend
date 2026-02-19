@@ -3,7 +3,7 @@ import './styles/Potentiometr.css'
 import CircularSlider from '@fseehawer/react-circular-slider';
 import { getUrlForRequest } from './utils/get-url-for-request';
 
-function Potentiometr( {tokenId} ) {
+function Potentiometr( {tokenId, deviceType} ) {
 
   const [resistanceValue, setResistanceValue] = useState(0);
 
@@ -34,15 +34,15 @@ function Potentiometr( {tokenId} ) {
   return(
       
     <div className='col d-flex h-100'>
-      <div class="row h-100 mx-auto">         
-        <div class="row mx-auto">
+      <div className="row h-100 mx-auto">         
+        <div className="row mx-auto">
           <h2>Potentiometr</h2>
         </div>
-        <div class="row mx-auto">
-          <div class="col align-self-center">
+        <div className="row mx-auto">
+          <div className="col align-self-center">
             <div className="potentiometr">
               <label>Value </label><br/>
-              <label className="round-sliders-label mcu-lab-background-special">{resistanceValue} %</label>
+              <label className={'round-sliders-label ' + (deviceType === "mcu"? "mcu-lab-background-special" : "fpga-lab-background-special")}>{resistanceValue} %</label>
               <div className="round-slider-wrapper">
                 <div className="round-slider-potentiometr-image">
                   <CircularSlider
@@ -58,8 +58,8 @@ function Potentiometr( {tokenId} ) {
             </div>      
           </div>
         </div>
-        <div class="row">
-          <div class="col"></div>
+        <div className="row">
+          <div className="col"></div>
         </div>              
       </div>
     </div>

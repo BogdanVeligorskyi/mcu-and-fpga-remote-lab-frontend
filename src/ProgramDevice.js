@@ -171,18 +171,18 @@ function ProgramDevice({isFPGADevice, tokenId}) {
   return(
       
       <div className='col d-flex h-100'>
-        <div class="row h-100 mx-auto">         
-          <div class="row mx-auto">
+        <div className="row h-100 mx-auto">         
+          <div className="row mx-auto">
           </div>
-          <div class="row mx-auto">
-            <div class="col align-self-center">
+          <div className="row mx-auto">
+            <div className="col align-self-center">
               <div className="program-device-file">
                 <ProgramDeviceForm isFPGADev={isFPGADevice} tokenId={tokenId}/>
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col"></div>
+          <div className="row">
+            <div className="col"></div>
           </div>              
         </div>
       </div>

@@ -132,7 +132,6 @@ function App() {
   }
 
   const renderMCUSpecificComponents = (deviceType) => {
-    if (deviceType === "mcu") {
       return (<div>
       <input type="checkbox" id="potentiometrCB" name="potentiometrCB" value="Potentiometr"
                   checked={isPotentiometrEnabled === true}
@@ -156,12 +155,11 @@ function App() {
                 
                 </div>);
                   
-    }
   }
 
   const renderPotentiometr = (isPotentiometrEnabled) => {
     if (isPotentiometrEnabled) {
-      return <Potentiometr tokenId={token}/>
+      return <Potentiometr tokenId={token} deviceType={deviceType}/>
     } else {
       return <div><h2>Potentiometr</h2></div>
     }
@@ -193,7 +191,7 @@ function App() {
 
   const renderFunctionalGenerator = (isFunctionalGeneratorEnabled) => {
     if (isFunctionalGeneratorEnabled) {
-      return <FunctionalGenerator tokenId={token}/>
+      return <FunctionalGenerator tokenId={token} deviceType={deviceType}/>
     } else {
       return <div><h2>Functional Generator (FG)</h2></div>
     }
@@ -201,7 +199,7 @@ function App() {
 
   const renderScope = (isScopeEnabled) => {
     if (isScopeEnabled) {
-      return <Scope tokenId={token}/>
+      return <Scope tokenId={token} deviceType={deviceType}/>
     } else {
       return <div><h2>Scope</h2></div>
     }
@@ -406,7 +404,7 @@ function App() {
               </div>
 
               {/* Potentiometr and Terminal */}
-              <div className={deviceType === "mcu" ? 'row' : 'components-list-none'}>
+              <div className='row'>
                 <div className="col-lg app-component-box">
                   {renderPotentiometr(isPotentiometrEnabled)}
                 </div>
@@ -416,12 +414,12 @@ function App() {
               </div>
 
               {/* Functional Generator */}
-              <div className={deviceType === "mcu" ? 'row app-component-box' : 'components-list-none'}>
+              <div className='row app-component-box'>
                   {renderFunctionalGenerator(isFunctionalGeneratorEnabled)}
               </div>
 
               {/* Scope */}
-              <div className={deviceType === "mcu" ? 'row app-component-box' : 'components-list-none'}>
+              <div className='row app-component-box'>
                   {renderScope(isScopeEnabled)}
               </div>
 
