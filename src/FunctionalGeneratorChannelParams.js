@@ -181,6 +181,7 @@ function FunctionalGeneratorChannelParams( {channelNum, tokenId, deviceType} ) {
     }
     if (startStop === "Start") {
       setStartStop("Stop");
+      sendAmplitudeValue(amplitudeValue);
       sendGeneratorConfig(1);
     } else {
       setStartStop("Start")
@@ -188,13 +189,13 @@ function FunctionalGeneratorChannelParams( {channelNum, tokenId, deviceType} ) {
     }
   }
 
-  // ivoked when duty cycle is changed
+  // invoked when duty cycle is changed
   const onDutyCycleChange = e => {
     setDutyCycle(e.target.value);
     sendDutyCycleValue(Number(e.target.value));
   }
 
-  // ivoked when channel state is changed
+  // invoked when channel state is changed
   const onStateChange = () => {
     setIsEnabled(!isEnabled);
     let isEnabledInt;
