@@ -11,6 +11,7 @@ import FunctionalGenerator from './FunctionalGenerator';
 import Scope from './Scope';
 import Potentiometr from './Potentiometr';
 import Terminal from './Terminal';
+import LogicAnalyzer from './LogicAnalyzer';
 import PageTitle from './PageTitle';
 
 function useQuery() {
@@ -25,6 +26,7 @@ function App() {
   const [isPotentiometrEnabled, setIsPotentiometrEnabled] = useState(false);
   const [isTerminalEnabled, setIsTerminalEnabled] = useState(false);
   const [isScopeEnabled, setIsScopeEnabled] = useState(true);
+  const [isLogicAnalyzerEnabled, setIsLogicAnalyzerEnabled] = useState(true);
   const [isSubMenuCollapsed, setIsSubMenuCollapsed] = useState(false);
   const [isSocketClosed, setIsSocketClosed] = useState(false);
   const [connStatus, setConnStatus] = useState(0);
@@ -202,6 +204,14 @@ function App() {
       return <Scope tokenId={token} deviceType={deviceType}/>
     } else {
       return <div><h2>Scope</h2></div>
+    }
+  }
+
+  const renderLogicAnalyzer = (isLogicAnalyzerEnabled) => {
+    if (isScopeEnabled) {
+      return <LogicAnalyzer/>
+    } else {
+      return <div><h2>Logic Analyzer</h2></div>
     }
   }
 
@@ -412,6 +422,13 @@ function App() {
                   {renderTerminal(isTerminalEnabled)}
                 </div>
               </div>
+
+              {/* Logic Analyzer */}
+              {/* <div className="row"> */}
+                {/* <div className="col-lg app-component-box"> */}
+                {/* {renderLogicAnalyzer(isLogicAnalyzerEnabled)} */}
+                {/* </div> */}
+              {/* </div> */}
 
               {/* Functional Generator */}
               <div className='row app-component-box'>
