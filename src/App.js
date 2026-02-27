@@ -81,6 +81,10 @@ function App() {
     setIsCameraViewEnabled(!isCameraViewEnabled);
   }
 
+  const onLogicAnalyzerCBChange = () => {
+    setIsLogicAnalyzerEnabled(!isLogicAnalyzerEnabled);
+  }
+
   const onFunctionalGeneratorCBChange = () => {
     setIsFunctionalGeneratorEnabled(!isFunctionalGeneratorEnabled);
   }
@@ -145,6 +149,11 @@ function App() {
                   onChange={onTerminalCBChange}/>
                   <label htmlFor="terminalCB"><i className="bi bi-terminal"></i> Terminal</label><br/>
 
+                  <input type="checkbox" id="logicAnalyzerCB" name="logicAnalyzerCB" value="LogicAnalyzer"
+                  checked={isLogicAnalyzerEnabled === true}
+                  onChange={onLogicAnalyzerCBChange}/>
+                  <label htmlFor="logicAnalyzerCB"><i className="bi bi-alt"></i> Logic Analyzer</label><br/>
+
                   <input type="checkbox" id="functionalGeneratorCB" name="functionalGeneratorCB" value="FunctionalGenerator"
                   checked={isFunctionalGeneratorEnabled === true}
                   onChange={onFunctionalGeneratorCBChange}/>
@@ -208,8 +217,8 @@ function App() {
   }
 
   const renderLogicAnalyzer = (isLogicAnalyzerEnabled) => {
-    if (isScopeEnabled) {
-      return <LogicAnalyzer/>
+    if (isLogicAnalyzerEnabled) {
+      return <LogicAnalyzer tokenId={token} deviceType={deviceType}/>
     } else {
       return <div><h2>Logic Analyzer</h2></div>
     }
@@ -424,11 +433,11 @@ function App() {
               </div>
 
               {/* Logic Analyzer */}
-              {/* <div className="row"> */}
-                {/* <div className="col-lg app-component-box"> */}
-                {/* {renderLogicAnalyzer(isLogicAnalyzerEnabled)} */}
-                {/* </div> */}
-              {/* </div> */}
+              <div className="row">
+                <div className="col-lg app-component-box">
+                {renderLogicAnalyzer(isLogicAnalyzerEnabled)}
+                </div>
+              </div>
 
               {/* Functional Generator */}
               <div className='row app-component-box'>

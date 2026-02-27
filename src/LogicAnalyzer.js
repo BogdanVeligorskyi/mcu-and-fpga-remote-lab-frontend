@@ -1,4 +1,5 @@
 import { Chart } from 'chart.js/auto';
+import CircularSlider from "@fseehawer/react-circular-slider";
 import { Line } from 'react-chartjs-2';
 import { useRef, useState } from 'react';
 
@@ -18,7 +19,7 @@ Chart.register({
   },
 });
 
-function LogicAnalyzer() {
+function LogicAnalyzer({tokenId, deviceType}) {
 
     let voltagesCH0 = [];
     let voltagesCH1 = [];
@@ -60,6 +61,9 @@ function LogicAnalyzer() {
     const [isFirstCapture, setIsFirstCapture] = useState(true);
     const [intervalID, setIntervalID] = useState();
     const [buttonName, setButtonName] = useState("Run");
+    const [xInputMin, setXInputMin] = useState(294);
+    const [xInputMax, setXInputMax] = useState(306);
+    const [xCenterValue, setXCenterValue] = useState(300);
 
 
     const [list, setList] = useState([]);
@@ -83,6 +87,8 @@ function LogicAnalyzer() {
     const onTriggerTypeChange = e => {
         setTriggerType(e.target.value);
     }
+
+    
 
     const onChannel0Change = () => {
         setCh0(!ch0);  
@@ -711,13 +717,13 @@ function LogicAnalyzer() {
     }
 
     const [xStepSize, setXStepSize] = useState(1);
-    // const [yStepSize, setYStepSize] = useState(1);
+    const [horizontalScale, setHorizontalScale] = useState("1us");
 
     const [xScaleOptions, setXScaleOptions] = useState(
-        { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: xStepSize, color: "white", font: {size: 14} }, type: 'linear', min: 293, max: 307 }
+        { title: { display: false }, grid: { color: "#393b3d", }, ticks: { stepSize: xStepSize, color: "black", font: {size: 14} }, type: 'linear', min: 294, max: 306 }
       );
       const [yScaleOptions, setYScaleOptions] = useState(
-        { title: { display: true, color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 1, color: "white", font: {size: 14} }, min: 0.0, max: 1.2 }
+        { title: { display: false }, grid: { color: "#393b3d", }, ticks: { stepSize: 1, color: "white", font: {size: 14} }, min: 0.0, max: 1.0 }
       );
 
     const [chartOptions, setChartOptions] = useState(
@@ -731,20 +737,24 @@ function LogicAnalyzer() {
             y: yScaleOptions
           },
         }
-      );
+    );
 
-      const [chartData0, setChartData0] = useState({
-        labels: [],
-        datasets: [
-        {
-          label: "CH0",
-          data: [],
-          borderColor: "yellow",
-          borderWidth: 1,
-          stepped: true
-        }
-      ]
-    });
+    const [chartSpecOptions, setChartSpecOptions] = useState(
+      {
+        elements: { point: { radius: 0, } },
+        animation: { duration: 100 },
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
+        scales: { 
+          x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { display: true, stepSize: 1, color: "white", font: {size: 14} }, type: 'linear', min: 294, max: 306 },
+          y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 1, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
+        },
+      }
+    );
+
+      const [chartData0, setChartData0] = useState(
+        { labels: [], datasets: [ { label: "CH0", data: [], borderColor: "yellow", borderWidth: 1, stepped: true } ] }
+      );
 
       const [chartData1, setChartData1] = useState({
           labels: [],
@@ -941,6 +951,36 @@ function LogicAnalyzer() {
       ]
     });
 
+    // handler for 'Save Waveform' button
+  const saveWaveform = () => {
+    if (chartRef === null) {
+      return;
+    }
+    let a = document.createElement('a');
+    a.href = chartRef.current.toBase64Image();
+    a.download = 'waveform.png';
+    a.click();
+};
+
+    const renderChartXAxis = (list) => {
+      if (list.length !== 0) {
+        return <div className="row"><div className="chart-logic-analyzer-x">                    
+        <Line type="line" 
+            data={{
+              labels: [],
+              datasets: [
+              {
+                data: times
+              }
+            ]
+          }} 
+            options={chartSpecOptions} 
+            ref={chartRef}/>
+                </div>
+                </div>
+}
+    }
+
     const changeButton = () => {
         console.log("isFirstCapture: " + isFirstCapture);
         if (isRun) {
@@ -966,143 +1006,336 @@ function LogicAnalyzer() {
           console.error("Error fetching chart data:", error);
         }
       };
+
+      const renderScaleScroll = (scaleName) => {
+        if (scaleName.toUpperCase() === "X") {
+          if (xStepSize === 50) {
+            return <div className="scope-scroll-slider-none"></div>;
+          } else {
+            return (
+              <input className="scope-scroll-slider"
+                type="range" 
+                id={("xScaleRangeLA")} 
+                name={("xScaleRangeLA")} 
+                title='Use this slider to move through X-Scale (LEFT/RIGHT)'
+                min={xInputMin} 
+                step={xStepSize} 
+                max={xInputMax}
+                value={xCenterValue} 
+                onChange={onXScaleInputChange} />);
+          }
+        }
+      }
+
+      // handler for X-scale change
+  const onHorizontalScaleValueChange = value => {
+    setHorizontalScale(value);
+    console.log(value);
+    switch (value) {
+      case "1us":
+        setXStepSize(1);
+        setXCenterValue(300);
+        setXInputMin(6);
+        setXInputMax(594);
+        setXScaleOptions(
+          { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 1, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 294, max: 306 }
+        );
+        setChartSpecOptions(
+          {
+            elements: { point: { radius: 0, } },
+            animation: { duration: 100 },
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
+            scales: { 
+              x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { display: true, stepSize: 1, color: "white", font: {size: 14} }, type: 'linear', min: 294, max: 306 },
+              y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 1, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
+            },
+          }
+        );
+        setChartOptions(
+          {
+            elements: { point: { radius: 0, } },
+            animation: { duration: 100 },
+            maintainAspectRatio: false,
+            plugins: { legend: { labels: { color: "white" } } },
+            scales: { 
+              x: { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 1, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 294, max: 306 },
+              y: yScaleOptions
+            },
+          }
+        );
+        break;
+      case "10us":
+        setXStepSize(10);
+        setXCenterValue(300);
+        setXInputMin(60);
+        setXInputMax(540);
+        setXScaleOptions(
+          { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 10, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 240, max: 360 }
+        );
+        setChartSpecOptions(
+          {
+            elements: { point: { radius: 0, } },
+            animation: { duration: 100 },
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
+            scales: { 
+              x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { display: true, stepSize: 10, color: "white", font: {size: 14} }, type: 'linear', min: 240, max: 360 },
+              y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 10, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
+            },
+          }
+        );
+        setChartOptions(
+          {
+            elements: { point: { radius: 0, } },
+            animation: { duration: 100 },
+            maintainAspectRatio: false,
+            plugins: { legend: { labels: { color: "white" } } },
+            scales: { 
+              x: { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 10, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 240, max: 360 },
+              y: yScaleOptions
+            },
+          }
+        );
+        break;
+      case "50us":
+        setXStepSize(50);
+        setXScaleOptions(
+          { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 50, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: true, min: 0, max: 600 }
+        );
+        setChartSpecOptions(
+          {
+            elements: { point: { radius: 0, } },
+            animation: { duration: 100 },
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
+            scales: { 
+              x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { display: true, stepSize: 50, color: "white", font: {size: 14} }, type: 'linear', min: 0, max: 600 },
+              y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 50, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
+            },
+          }
+        );
+        setChartOptions(
+          {
+            elements: { point: { radius: 0, } },
+            animation: { duration: 100 },
+            maintainAspectRatio: false,
+            plugins: { legend: { labels: { color: "white" } } },
+            scales: { 
+              x: { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 50, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 0, max: 600 },
+              y: yScaleOptions
+            },
+          }
+        );
+        break;
+      case "20us":
+        setXStepSize(20);
+        setXCenterValue(300);
+        setXInputMin(120);
+        setXInputMax(480);
+        setXScaleOptions(
+          { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 20, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 170, max: 410 }
+        );
+        setChartSpecOptions(
+          {
+            elements: { point: { radius: 0, } },
+            animation: { duration: 100 },
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
+            scales: { 
+              x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { display: true, stepSize: 20, color: "white", font: {size: 14} }, type: 'linear', min: 170, max: 410 },
+              y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 20, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
+            },
+          }
+        );
+        setChartOptions(
+          {
+            elements: { point: { radius: 0, } },
+            animation: { duration: 100 },
+            maintainAspectRatio: false,
+            plugins: { legend: { labels: { color: "white" } } },
+            scales: { 
+              x: { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 20, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 170, max: 410 },
+              y: yScaleOptions
+            },
+          }
+        );
+        break;
+      default:
+        setXStepSize(xStepSize);
+        setXScaleOptions(xScaleOptions);
+        setChartOptions(chartOptions);
+        setChartSpecOptions(chartSpecOptions);
+    }
+  };
+
+  const onXScaleInputChange = e => {
+    setXCenterValue(e.target.value);
+    setXScaleOptions(
+      { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: xStepSize, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(e.target.value) - 6 * xStepSize), max: (Number(e.target.value) + 6 * xStepSize) }
+    );
+    setChartOptions(
+      {
+        elements: { point: { radius: 0, } },
+        animation: { duration: 100 },
+        maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: "white" } } },
+        scales: { 
+          x: { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: xStepSize, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(e.target.value) - 6 * xStepSize), max: (Number(e.target.value) + 6 * xStepSize) },
+          y: yScaleOptions
+        },
+      }
+    );
+    setChartSpecOptions(
+      {
+        elements: { point: { radius: 0, } },
+        animation: { duration: 100 },
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
+        scales: { 
+          x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { stepSize: xStepSize, color: "white", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(e.target.value) - 6 * xStepSize), max: (Number(e.target.value) + 6 * xStepSize) },
+          y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 20, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
+        },
+      }
+    );
+  }
       
 
     return (
         <div>
-            <h2>Logic Analyzer</h2>
-                {renderChart0(ch0)}
-                {renderChart1(ch1)}
-                {renderChart2(ch2)}
-                {renderChart3(ch3)}
-                {renderChart4(ch4)}
-                {renderChart5(ch5)}
-                {renderChart6(ch6)}
-                {renderChart7(ch7)}
-                {renderChart8(ch8)}
-                {renderChart9(ch9)}
-                {renderChart10(ch10)}
-                {renderChart11(ch11)}
-                {renderChart12(ch12)}
-                {renderChart13(ch13)}
-                {renderChart14(ch14)}
-                {renderChart15(ch15)}
-            <div className="row">
-            <div className="col-9 logic-analyzer-channels">
-            <div className="col-9 logic-analyzer-table">
+          <h2>Logic Analyzer</h2>
+            {renderChart0(ch0)}
+            {renderChart1(ch1)}
+            {renderChart2(ch2)}
+            {renderChart3(ch3)}
+            {renderChart4(ch4)}
+            {renderChart5(ch5)}
+            {renderChart6(ch6)}
+            {renderChart7(ch7)}
+            {renderChart8(ch8)}
+            {renderChart9(ch9)}
+            {renderChart10(ch10)}
+            {renderChart11(ch11)}
+            {renderChart12(ch12)}
+            {renderChart13(ch13)}
+            {renderChart14(ch14)}
+            {renderChart15(ch15)}
+            {renderChartXAxis(list)}
+          <div className="row">
+            <div className="col-lg">
+              <div className="row">
+              <div className="col-lg">
                 <h3>Channels</h3>
                 <table>
-                    <tbody>
-                        <tr>
-                            <td>CH0</td>
-                            <td>
-                                <input type="checkbox" id="ch0" name="ch0" value="Ch0"
-                                checked={ch0 === true}
-                                onChange={onChannel0Change}/>
-                            </td>
-                            <td>CH4</td>
-                            <td>
-                                <input type="checkbox" id="ch4" name="ch4" value="Ch4"
-                                checked={ch4 === true}
-                                onChange={onChannel4Change}/>
-                            </td>
-                            <td>CH8</td>
-                            <td>
-                                <input type="checkbox" id="ch8" name="ch8" value="Ch8"
-                                checked={ch8 === true}
-                                onChange={onChannel8Change}/>
-                            </td>
-                            <td>CH12</td>
-                            <td>
-                            <input type="checkbox" id="ch12" name="ch12" value="Ch12"
-                                checked={ch12 === true}
-                                onChange={onChannel12Change}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>CH1</td>
-                            <td>
-                                <input type="checkbox" id="ch1" name="ch1" value="Ch1"
-                                checked={ch1 === true}
-                                onChange={onChannel1Change}/>
-                            </td>
-                            <td>CH5</td>
-                            <td>
-                                <input type="checkbox" id="ch5" name="ch5" value="Ch5"
-                                checked={ch5 === true}
-                                onChange={onChannel5Change}/>
-                            </td>
-                            <td>CH9</td>
-                            <td>
-                                <input type="checkbox" id="ch9" name="ch9" value="Ch9"
-                                checked={ch9 === true}
-                                onChange={onChannel9Change}/>
-                            </td>
-                            <td>CH13</td>
-                            <td>
-                            <input type="checkbox" id="ch13" name="ch13" value="Ch13"
-                                checked={ch13 === true}
-                                onChange={onChannel13Change}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>CH2</td>
-                            <td>
-                                <input type="checkbox" id="ch2" name="ch2" value="Ch2"
-                                checked={ch2 === true}
-                                onChange={onChannel2Change}/>
-                            </td>
-                            <td>CH6</td>
-                            <td>
-                                <input type="checkbox" id="ch6" name="ch6" value="Ch6"
-                                checked={ch6 === true}
-                                onChange={onChannel6Change}/>
-                            </td>
-                            <td>CH10</td>
-                            <td>
-                                <input type="checkbox" id="ch10" name="ch10" value="Ch10"
-                                checked={ch10 === true}
-                                onChange={onChannel10Change}/>
-                            </td>
-                            <td>CH14</td>
-                            <td>
-                            <input type="checkbox" id="ch14" name="ch14" value="Ch14"
-                                checked={ch14 === true}
-                                onChange={onChannel14Change}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>CH3</td>
-                            <td>
-                                <input type="checkbox" id="ch3" name="ch3" value="Ch3"
-                                checked={ch3 === true}
-                                onChange={onChannel3Change}/>
-                            </td>
-                            <td>CH7</td>
-                            <td>
-                                <input type="checkbox" id="ch7" name="ch7" value="Ch7"
-                                checked={ch7 === true}
-                                onChange={onChannel7Change}/>
-                            </td>
-                            <td>CH11</td>
-                            <td>
-                                <input type="checkbox" id="ch11" name="ch11" value="Ch11"
-                                checked={ch11 === true}
-                                onChange={onChannel11Change}/>
-                            </td>
-                            <td>CH15</td>
-                            <td>
-                            <input type="checkbox" id="ch15" name="ch15" value="Ch15"
-                                checked={ch15 === true}
-                                onChange={onChannel15Change}/>
-                            </td>
-                        </tr>
-                    </tbody>
+                  <tbody>
+                    <tr>
+                      <td>CH0</td>
+                      <td>
+                        <input type="checkbox" id="ch0" name="ch0" value="Ch0"
+                          checked={ch0 === true}
+                          onChange={onChannel0Change}/>
+                      </td>
+                      <td>CH4</td>
+                      <td>
+                        <input type="checkbox" id="ch4" name="ch4" value="Ch4"
+                          checked={ch4 === true}
+                          onChange={onChannel4Change}/>
+                      </td>
+                      <td>CH8</td>
+                      <td>
+                        <input type="checkbox" id="ch8" name="ch8" value="Ch8"
+                          checked={ch8 === true}
+                          onChange={onChannel8Change}/>
+                      </td>
+                      <td>CH12</td>
+                      <td>
+                        <input type="checkbox" id="ch12" name="ch12" value="Ch12"
+                          checked={ch12 === true}
+                          onChange={onChannel12Change}/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>CH1</td>
+                      <td>
+                        <input type="checkbox" id="ch1" name="ch1" value="Ch1"
+                          checked={ch1 === true}
+                          onChange={onChannel1Change}/>
+                      </td>
+                      <td>CH5</td>
+                      <td>
+                        <input type="checkbox" id="ch5" name="ch5" value="Ch5"
+                          checked={ch5 === true}
+                          onChange={onChannel5Change}/>
+                      </td>
+                      <td>CH9</td>
+                      <td>
+                        <input type="checkbox" id="ch9" name="ch9" value="Ch9"
+                          checked={ch9 === true}
+                          onChange={onChannel9Change}/>
+                      </td>
+                      <td>CH13</td>
+                      <td>
+                        <input type="checkbox" id="ch13" name="ch13" value="Ch13"
+                          checked={ch13 === true}
+                          onChange={onChannel13Change}/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>CH2</td>
+                      <td>
+                        <input type="checkbox" id="ch2" name="ch2" value="Ch2"
+                          checked={ch2 === true}
+                          onChange={onChannel2Change}/>
+                      </td>
+                      <td>CH6</td>
+                      <td>
+                        <input type="checkbox" id="ch6" name="ch6" value="Ch6"
+                          checked={ch6 === true}
+                          onChange={onChannel6Change}/>
+                      </td>
+                      <td>CH10</td>
+                      <td>
+                        <input type="checkbox" id="ch10" name="ch10" value="Ch10"
+                          checked={ch10 === true}
+                          onChange={onChannel10Change}/>
+                      </td>
+                      <td>CH14</td>
+                      <td>
+                        <input type="checkbox" id="ch14" name="ch14" value="Ch14"
+                          checked={ch14 === true}
+                          onChange={onChannel14Change}/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>CH3</td>
+                      <td>
+                        <input type="checkbox" id="ch3" name="ch3" value="Ch3"
+                          checked={ch3 === true}
+                          onChange={onChannel3Change}/>
+                      </td>
+                      <td>CH7</td>
+                      <td>
+                        <input type="checkbox" id="ch7" name="ch7" value="Ch7"
+                          checked={ch7 === true}
+                          onChange={onChannel7Change}/>
+                      </td>
+                      <td>CH11</td>
+                      <td>
+                        <input type="checkbox" id="ch11" name="ch11" value="Ch11"
+                          checked={ch11 === true}
+                          onChange={onChannel11Change}/>
+                      </td>
+                      <td>CH15</td>
+                      <td>
+                        <input type="checkbox" id="ch15" name="ch15" value="Ch15"
+                          checked={ch15 === true}
+                          onChange={onChannel15Change}/>
+                      </td>
+                    </tr>
+                  </tbody>
                 </table>
-            </div>
-            </div>
-            <div className="col-3 logic-analyzer-trigger">
-            <div className="col-3 logic-analyzer-table">
+                </div>
+              <div className="col-3 logic-analyzer-trigger">
                 <h3>Trigger</h3>
                 <table>
                     <tbody>
@@ -1130,7 +1363,6 @@ function LogicAnalyzer() {
                         </tr>
                     </tbody>
                 </table>
-                <select></select>
                 Source <br/>
                 <select className="logic-analyzer-select" name="logicAnalyzerChannels">
                     {list.map((channel)=> {
@@ -1141,13 +1373,32 @@ function LogicAnalyzer() {
                         )
                     })}
                 </select>
+              </div>
+              </div>
             </div>
+            <div className="col-3 logic-analyzer-trigger">
+              <div className="col-3 logic-analyzer-table">
+                <label>X-Scale</label><br/>
+                <label className={"round-sliders-label " + (deviceType==="mcu" ? "mcu-lab-background-special" : "fpga-lab-background-special")}>
+                {horizontalScale}/div</label>
+                <div className="round-slider-wrapper">
+                  <div className="round-slider-horizontal-scale-image">
+                    <CircularSlider
+                      hideLabelValue  
+                      data={["1us", "10us", "20us", "50us"]} 
+                      width={115}
+                      trackColor="#ffffff"
+                      onChange={onHorizontalScaleValueChange}/>
+                  </div>
+                </div>
+                {renderScaleScroll("X")}
+              </div>
             </div>
             <div className="col-6 my-auto">
             <button className="btn btn-md btn-primary m-2" 
             onClick={changeButton}><i className={isRun ? "bi bi-pause" : "bi bi-caret-right"}></i></button>
             <button className="btn btn-md btn-primary m-2" 
-            onClick={changeButton}><i className="bi bi-download"></i></button>
+            onClick={saveWaveform}><i className="bi bi-download"></i></button>
           </div>
         </div>
         </div>
