@@ -2,6 +2,7 @@ import { Chart } from 'chart.js/auto';
 import CircularSlider from "@fseehawer/react-circular-slider";
 import { Line } from 'react-chartjs-2';
 import { useRef, useState } from 'react';
+import './styles/LogicAnalyzer.css';
 
 
 Chart.register({
@@ -11,11 +12,11 @@ Chart.register({
     if (!context) {
       return;
     }
-    context.save();
-    context.globalCompositeOperation = 'destination-over';
-    context.fillStyle = 'black';
-    context.fillRect(0, 0, chartRef.width, chartRef.height);
-    context.restore();
+    // context.save();
+    // context.globalCompositeOperation = 'destination-over';
+    // context.fillStyle = 'white';
+    // context.fillRect(0, 0, chartRef.width, chartRef.height);
+    // context.restore();
   },
 });
 
@@ -38,6 +39,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
     let voltagesCH14 = [];
     let voltagesCH15 = [];
     let times = [];
+    let currentIteration = 0;
 
     const chartRef = useRef(null);
     const [ch0, setCh0] = useState(false);
@@ -58,63 +60,66 @@ function LogicAnalyzer({tokenId, deviceType}) {
     const [ch15, setCh15] = useState(false);
     const [triggerType, setTriggerType] = useState("fall-edge");
     const [isRun, setIsRun] = useState(false);
+    const [isRecordRun, setIsRecordRun] = useState(false);
     const [isFirstCapture, setIsFirstCapture] = useState(true);
     const [intervalID, setIntervalID] = useState();
-    const [buttonName, setButtonName] = useState("Run");
+    // const [intervalIDRecord, setIntervalIDRecord] = useState();
+    const [defaultMode, setDefaultMode] = useState("live-data");
     const [xInputMin, setXInputMin] = useState(294);
     const [xInputMax, setXInputMax] = useState(306);
     const [xCenterValue, setXCenterValue] = useState(300);
 
-
     const [list, setList] = useState([]);
-    // const [selectedChannel, setSelectedChannel] = useState("");
+    const [listTimeout, setListTimeout] = useState(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
+    ]);
+    
+    const [selectedChannel, setSelectedChannel] = useState("");
+    const [selectedTimeout, setSelectedTimeout] = useState(1);
 
     const addNewElemToList = (newListElem) => {
-        let temp = [...list, newListElem];
-        temp.sort();
-        setList(temp);
+      let temp = [...list, newListElem];
+      temp.sort();
+      setList(temp);
     }
 
     const removeElemFromList = (channelName) => {
-        let arr = [...list];
-        var index = arr.indexOf(channelName);
-        if (index !== -1) {
-            arr.splice(index, 1);
-            setList(arr);
-        }
+      let arr = [...list];
+      var index = arr.indexOf(channelName);
+      if (index !== -1) {
+        arr.splice(index, 1);
+        setList(arr);
+      }
     }
 
     const onTriggerTypeChange = e => {
-        setTriggerType(e.target.value);
+      setTriggerType(e.target.value);
     }
 
-    
-
     const onChannel0Change = () => {
-        setCh0(!ch0);  
-        if (!ch0) {
-            addNewElemToList("CH0");       
-        } else {
-            removeElemFromList("CH0");
-        }
+      setCh0(!ch0);  
+      if (!ch0) {
+        addNewElemToList("CH0");       
+      } else {
+        removeElemFromList("CH0");
+      }
     }
 
     const onChannel1Change = () => {
-        setCh1(!ch1);
-        if (!ch1) {
-            addNewElemToList("CH1");       
-        } else {
-            removeElemFromList("CH1");
-        }
+      setCh1(!ch1);
+      if (!ch1) {
+        addNewElemToList("CH1");       
+      } else {
+        removeElemFromList("CH1");
+      }
     }
 
     const onChannel2Change = () => {
-        setCh2(!ch2);
-        if (!ch2) {
-            addNewElemToList("CH2");       
-        } else {
-            removeElemFromList("CH2");
-        }
+      setCh2(!ch2);
+      if (!ch2) {
+        addNewElemToList("CH2");       
+      } else {
+        removeElemFromList("CH2");
+      }
     }
 
     const onChannel3Change = () => {
@@ -226,13 +231,269 @@ function LogicAnalyzer({tokenId, deviceType}) {
     }
 
     const onChannel15Change = () => {
-        setCh15(!ch15);
-        if (!ch15) {
-            addNewElemToList("CH15");       
-        } else {
-            removeElemFromList("CH15");
-        }
+      setCh15(!ch15);
+      if (!ch15) {
+        addNewElemToList("CH15");       
+      } else {
+        removeElemFromList("CH15");
+      }
     }
+
+    const fetchChartRecordData = async (ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7,
+      ch8, ch9, ch10, ch11, ch12, ch13, ch14, ch15) => {
+        if (process.env.REACT_APP_IS_FRONTEND_DEV_MODE.toUpperCase() === "TRUE") {
+          console.log("in here");
+          for (let i = currentIteration * 1000000; i < ((currentIteration + 1) * 1000000); i++) {
+            if (ch0) {
+              voltagesCH0[i] = Math.floor(Math.random() * 2.0);
+            }
+            if (ch1) {
+              voltagesCH1[i] = Math.floor(Math.random() * 2.0);
+            }
+            if (ch2) {
+              voltagesCH2[i] = Math.floor(Math.random() * 2.0);
+            }
+            if (ch3) {
+              voltagesCH3[i] = Math.floor(Math.random() * 2.0);
+            }
+            if (ch4) {
+              voltagesCH4[i] = Math.floor(Math.random() * 2.0);
+            }
+            if (ch5) {
+              voltagesCH5[i] = Math.floor(Math.random() * 2.0);
+            }
+            if (ch6) {
+              voltagesCH6[i] = Math.floor(Math.random() * 2.0);
+            }
+            if (ch7) {
+              voltagesCH7[i] = Math.floor(Math.random() * 2.0);
+            }
+            if (ch8) {
+              voltagesCH8[i] = Math.floor(Math.random() * 2.0);
+            }
+            if (ch9) {
+              voltagesCH9[i] = Math.floor(Math.random() * 2.0);
+            }
+            if (ch10) {
+              voltagesCH10[i] = Math.floor(Math.random() * 2.0);
+            }
+            if (ch11) {
+              voltagesCH11[i] = Math.floor(Math.random() * 2.0);
+            }
+            if (ch12) {
+              voltagesCH12[i] = Math.floor(Math.random() * 2.0);
+            }
+            if (ch13) {
+              voltagesCH13[i] = Math.floor(Math.random() * 2.0);
+            }
+            if (ch14) {
+              voltagesCH14[i] = Math.floor(Math.random() * 2.0);
+            }
+            if (ch15) {
+              voltagesCH15[i] = Math.floor(Math.random() * 2.0);
+            }
+            
+            times[i] = i+1;
+          }
+          setChartData0({
+              labels: times,
+              datasets: [
+              {
+                label: "CH0",
+                data: voltagesCH0,
+                borderColor: "yellow",
+                borderWidth: 1,
+                stepped: true
+              }
+            ]
+          });
+          setChartData1({
+              labels: times,
+              datasets: [
+              {
+                label: "CH1",
+                data: voltagesCH1,
+                borderColor: "#0d99d1",
+                borderWidth: 1,
+                stepped: true
+              }
+            ]
+          });
+          setChartData2({
+              labels: times,
+              datasets: [
+              {
+                label: "CH2",
+                data: voltagesCH2,
+                borderColor: "green",
+                borderWidth: 1,
+                stepped: true
+              }
+            ]
+          });
+          setChartData3({
+              labels: times,
+              datasets: [
+              {
+                label: "CH3",
+                data: voltagesCH3,
+                borderColor: "red",
+                borderWidth: 1,
+                stepped: true
+              }
+            ]
+          });
+          setChartData4(
+              {
+              labels: times,
+              datasets: [
+              {
+                label: "CH4",
+                data: voltagesCH4,
+                borderColor: "orange",
+                borderWidth: 1,
+                stepped: true
+              }
+            ]
+          }
+          );
+          setChartData5({
+              labels: times,
+              datasets: [
+              {
+                label: "CH5",
+                data: voltagesCH5,
+                borderColor: "pink",
+                borderWidth: 1,
+                stepped: true
+              }
+            ]
+          });
+          setChartData6({
+              labels: times,
+              datasets: [
+              {
+                label: "CH6",
+                data: voltagesCH6,
+                borderColor: "brown",
+                borderWidth: 1,
+                stepped: true
+              }
+            ]
+          });
+          setChartData7({
+              labels: times,
+              datasets: [
+              {
+                label: "CH7",
+                data: voltagesCH7,
+                borderColor: "purple",
+                borderWidth: 1,
+                stepped: true
+              }
+            ]
+          });
+          setChartData8({
+              labels: times,
+              datasets: [
+              {
+                label: "CH8",
+                data: voltagesCH8,
+                borderColor: "#917833",
+                borderWidth: 1,
+                stepped: true
+              }
+            ]
+          });
+          setChartData9({
+              labels: times,
+              datasets: [
+              {
+                label: "CH9",
+                data: voltagesCH9,
+                borderColor: "#5110e8",
+                borderWidth: 1,
+                stepped: true
+              }
+            ]
+          });
+          setChartData10({
+              labels: times,
+              datasets: [
+              {
+                label: "CH10",
+                data: voltagesCH10,
+                borderColor: "#f2070b",
+                borderWidth: 1,
+                stepped: true
+              }
+            ]
+          });
+          setChartData11({
+              labels: times,
+              datasets: [
+              {
+                label: "CH11",
+                data: voltagesCH11,
+                borderColor: "#d9c80f",
+                borderWidth: 1,
+                stepped: true
+              }
+            ]
+          });
+          setChartData12({
+              labels: times,
+              datasets: [
+              {
+                label: "CH12",
+                data: voltagesCH12,
+                borderColor: "#797adb",
+                borderWidth: 1,
+                stepped: true
+              }
+            ]
+          });
+          setChartData13({
+              labels: times,
+              datasets: [
+              {
+                label: "CH13",
+                data: voltagesCH13,
+                borderColor: "#32d4ed",
+                borderWidth: 1,
+                stepped: true
+              }
+            ]
+          });
+          setChartData14({
+              labels: times,
+              datasets: [
+              {
+                label: "CH14",
+                data: voltagesCH14,
+                borderColor: "#c77130",
+                borderWidth: 1,
+                stepped: true
+              }
+            ]
+          });
+          setChartData15({
+              labels: times,
+              datasets: [
+              {
+                label: "CH15",
+                data: voltagesCH15,
+                borderColor: "#47dec2",
+                borderWidth: 1,
+                stepped: true
+              }
+            ]
+          });
+        
+        currentIteration++;
+        
+    }
+  }
 
     // fetch voltage values from backend
     const fetchChartData = async (ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7,
@@ -960,40 +1221,52 @@ function LogicAnalyzer({tokenId, deviceType}) {
     a.href = chartRef.current.toBase64Image();
     a.download = 'waveform.png';
     a.click();
-};
+  };
 
-    const renderChartXAxis = (list) => {
-      if (list.length !== 0) {
-        return <div className="row"><div className="chart-logic-analyzer-x">                    
-        <Line type="line" 
-            data={{
-              labels: [],
-              datasets: [
-              {
-                data: times
-              }
-            ]
-          }} 
-            options={chartSpecOptions} 
-            ref={chartRef}/>
-                </div>
-                </div>
-}
+  const renderChartXAxis = (list) => {
+    if (list.length !== 0) {
+      return <div className="row"><div className="chart-logic-analyzer-x">                    
+      <Line type="line" 
+        data={{
+        labels: [],
+        datasets: [
+          {
+            data: times
+          }
+        ]
+        }} 
+        options={chartSpecOptions} 
+        ref={chartRef}/>
+        </div></div>
     }
+  }
 
     const changeButton = () => {
-        console.log("isFirstCapture: " + isFirstCapture);
-        if (isRun) {
-          setButtonName("Run");
-          setIsRun(false);
-          clearInterval(intervalID);
-        } else {
-          setButtonName("Stop");
-          setIsRun(true);
-          setIsFirstCapture(true);
-          setIntervalID(setInterval(() => refreshChartData(), 1000));
-        }
-      };
+      setDefaultMode("live-data");
+      console.log("isFirstCapture: " + isFirstCapture);
+      if (isRun) {
+        setIsRun(false);
+        clearInterval(intervalID);
+      } else {
+        setIsRun(true);
+        setIsFirstCapture(true);
+        setIntervalID(setInterval(() => refreshChartData(), 1000));
+      }
+    };
+
+    const changeRecordButton = () => {
+      setDefaultMode("record-data");
+      console.log("heree");
+      setIsRecordRun(true);
+      console.log(selectedTimeout);
+      let i = setInterval(() => refreshChartRecordData(), 1000);
+      setTimeout(function() { setIsRecordRun(false); clearInterval( i ); currentIteration = 0; }, 1000 * (Number(selectedTimeout)));
+    };
+
+    const onTimeoutValueChange = (e) => {
+      setSelectedTimeout(Number(e.target.value));
+      console.log(e.target.value);
+    };
     
       // refresh chart points according to values from oscilloscope
       const refreshChartData = async () => {
@@ -1006,6 +1279,17 @@ function LogicAnalyzer({tokenId, deviceType}) {
           console.error("Error fetching chart data:", error);
         }
       };
+
+      const refreshChartRecordData = async () => {
+        try {
+          await fetchChartRecordData(ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7,
+            ch8, ch9, ch10, ch11, ch12, ch13, ch14, ch15);
+        //   setChartData(data);
+          // setIsFirstCapture(false);
+        } catch (error) {
+          console.error("Error fetching chart record data:", error);
+        }
+      }
 
       const renderScaleScroll = (scaleName) => {
         if (scaleName.toUpperCase() === "X") {
@@ -1031,6 +1315,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
   const onHorizontalScaleValueChange = value => {
     setHorizontalScale(value);
     console.log(value);
+    if (defaultMode === "live-data") {
     switch (value) {
       case "1us":
         setXStepSize(1);
@@ -1167,6 +1452,147 @@ function LogicAnalyzer({tokenId, deviceType}) {
         setChartOptions(chartOptions);
         setChartSpecOptions(chartSpecOptions);
     }
+    }
+    if (defaultMode === "record-data") {
+      switch (value) {
+        case "1us":
+          setXStepSize(1);
+          setXCenterValue((Number(selectedTimeout)) * 1000000 / 2);
+          setXInputMin(6);
+          setXInputMax((Number(selectedTimeout)) * 1000000 - 6);
+          setXScaleOptions(
+            { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 1, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(selectedTimeout)) * 1000000 / 2 - 6, max: (Number(selectedTimeout)) * 1000000 / 2 + 6 }
+          );
+          setChartSpecOptions(
+            {
+              elements: { point: { radius: 0, } },
+              animation: { duration: 100 },
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
+              scales: { 
+                x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { display: true, stepSize: 1, color: "white", font: {size: 14} }, type: 'linear', min: (Number(selectedTimeout)) * 1000000 / 2 - 6, max: (Number(selectedTimeout)) * 1000000 / 2 + 6 },
+                y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 1, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
+              },
+            }
+          );
+          setChartOptions(
+            {
+              elements: { point: { radius: 0, } },
+              animation: { duration: 100 },
+              maintainAspectRatio: false,
+              plugins: { legend: { labels: { color: "white" } } },
+              scales: { 
+                x: { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 1, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(selectedTimeout)) * 1000000 / 2 - 6, max: (Number(selectedTimeout)) * 1000000 / 2 + 6 },
+                y: yScaleOptions
+              },
+            }
+          );
+          break;
+        case "10us":
+          setXStepSize(10);
+          setXCenterValue((Number(selectedTimeout)) * 1000000 / 2);
+          setXInputMin(60);
+          setXInputMax((Number(selectedTimeout)) * 1000000 - 60);
+          setXScaleOptions(
+            { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 10, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(selectedTimeout)) * 1000000 / 2 - 60, max: (Number(selectedTimeout)) * 1000000 / 2 + 60 }
+          );
+          setChartSpecOptions(
+            {
+              elements: { point: { radius: 0, } },
+              animation: { duration: 100 },
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
+              scales: { 
+                x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { display: true, stepSize: 10, color: "white", font: {size: 14} }, type: 'linear', min: (Number(selectedTimeout)) * 1000000 / 2 - 60, max: (Number(selectedTimeout)) * 1000000 / 2 + 60 },
+                y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 10, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
+              },
+            }
+          );
+          setChartOptions(
+            {
+              elements: { point: { radius: 0, } },
+              animation: { duration: 100 },
+              maintainAspectRatio: false,
+              plugins: { legend: { labels: { color: "white" } } },
+              scales: { 
+                x: { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 10, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(selectedTimeout)) * 1000000 / 2 - 60, max: (Number(selectedTimeout)) * 1000000 / 2 + 60 },
+                y: yScaleOptions
+              },
+            }
+          );
+          break;
+        case "50us":
+          setXCenterValue((Number(selectedTimeout)) * 1000000 / 2);
+          setXStepSize(50);
+          setXInputMax((Number(selectedTimeout)) * 1000000 - 300);
+          setXScaleOptions(
+            { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 50, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: true, min: 0, max: (Number(selectedTimeout)) * 1000000 / 2 + 300 }
+          );
+          setChartSpecOptions(
+            {
+              elements: { point: { radius: 0, } },
+              animation: { duration: 100 },
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
+              scales: { 
+                x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { display: true, stepSize: 50, color: "white", font: {size: 14} }, type: 'linear', min: 0, max: (Number(selectedTimeout)) * 1000000 / 2 + 300 },
+                y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 50, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
+              },
+            }
+          );
+          setChartOptions(
+            {
+              elements: { point: { radius: 0, } },
+              animation: { duration: 100 },
+              maintainAspectRatio: false,
+              plugins: { legend: { labels: { color: "white" } } },
+              scales: { 
+                x: { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 50, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 0, max: (Number(selectedTimeout)) * 1000000 / 2 + 300 },
+                y: yScaleOptions
+              },
+            }
+          );
+          break;
+        case "20us":
+          setXStepSize(20);
+          setXCenterValue((Number(selectedTimeout)) * 1000000 / 2);
+          setXInputMin(120);
+          setXInputMax((Number(selectedTimeout)) * 1000000 - 120);
+          setXScaleOptions(
+            { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 20, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(selectedTimeout)) * 1000000 / 2 - 130, max: (Number(selectedTimeout)) * 1000000 / 2 + 110 }
+          );
+          setChartSpecOptions(
+            {
+              elements: { point: { radius: 0, } },
+              animation: { duration: 100 },
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
+              scales: { 
+                x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { display: true, stepSize: 20, color: "white", font: {size: 14} }, type: 'linear', min: (Number(selectedTimeout)) * 1000000 / 2 - 130, max: (Number(selectedTimeout)) * 1000000 / 2 + 110 },
+                y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 20, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
+              },
+            }
+          );
+          setChartOptions(
+            {
+              elements: { point: { radius: 0, } },
+              animation: { duration: 100 },
+              maintainAspectRatio: false,
+              plugins: { legend: { labels: { color: "white" } } },
+              scales: { 
+                x: { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 20, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(selectedTimeout)) * 1000000 / 2 - 130, max: (Number(selectedTimeout)) * 1000000 / 2 + 110 },
+                y: yScaleOptions
+              },
+            }
+          );
+          break;
+        default:
+          setXStepSize(xStepSize);
+          setXScaleOptions(xScaleOptions);
+          setChartOptions(chartOptions);
+          setChartSpecOptions(chartSpecOptions);
+      }
+    }
   };
 
   const onXScaleInputChange = e => {
@@ -1221,11 +1647,21 @@ function LogicAnalyzer({tokenId, deviceType}) {
             {renderChart14(ch14)}
             {renderChart15(ch15)}
             {renderChartXAxis(list)}
-          <div className="row">
-            <div className="col-lg">
-              <div className="row">
-              <div className="col-lg">
-                <h3>Channels</h3>
+            <div className="col-6 my-auto mx-auto">
+              <button className="btn btn-md btn-primary m-2" disabled={isRecordRun}
+              onClick={changeButton}><i className={isRun ? "bi bi-pause" : "bi bi-caret-right"}></i></button>
+
+              <button className="btn btn-md btn-primary m-2" disabled={isRecordRun || isRun}
+              onClick={changeRecordButton}><i className="bi bi-record-circle"></i></button>
+
+              <button className="btn btn-md btn-primary m-2" 
+              onClick={saveWaveform}><i className="bi bi-download"></i></button>
+            </div>
+          <div className="">
+            <div className="">
+              <div className="">
+              <div className="logic-analyzer-table">
+              <h3>Channels</h3>
                 <table>
                   <tbody>
                     <tr>
@@ -1233,24 +1669,28 @@ function LogicAnalyzer({tokenId, deviceType}) {
                       <td>
                         <input type="checkbox" id="ch0" name="ch0" value="Ch0"
                           checked={ch0 === true}
+                          disabled={isRecordRun || isRun}
                           onChange={onChannel0Change}/>
                       </td>
                       <td>CH4</td>
                       <td>
                         <input type="checkbox" id="ch4" name="ch4" value="Ch4"
                           checked={ch4 === true}
+                          disabled={isRecordRun || isRun}
                           onChange={onChannel4Change}/>
                       </td>
                       <td>CH8</td>
                       <td>
                         <input type="checkbox" id="ch8" name="ch8" value="Ch8"
                           checked={ch8 === true}
+                          disabled={isRecordRun || isRun}
                           onChange={onChannel8Change}/>
                       </td>
                       <td>CH12</td>
                       <td>
                         <input type="checkbox" id="ch12" name="ch12" value="Ch12"
                           checked={ch12 === true}
+                          disabled={isRecordRun || isRun}
                           onChange={onChannel12Change}/>
                       </td>
                     </tr>
@@ -1259,24 +1699,28 @@ function LogicAnalyzer({tokenId, deviceType}) {
                       <td>
                         <input type="checkbox" id="ch1" name="ch1" value="Ch1"
                           checked={ch1 === true}
+                          disabled={isRecordRun || isRun}
                           onChange={onChannel1Change}/>
                       </td>
                       <td>CH5</td>
                       <td>
                         <input type="checkbox" id="ch5" name="ch5" value="Ch5"
                           checked={ch5 === true}
+                          disabled={isRecordRun || isRun}
                           onChange={onChannel5Change}/>
                       </td>
                       <td>CH9</td>
                       <td>
                         <input type="checkbox" id="ch9" name="ch9" value="Ch9"
                           checked={ch9 === true}
+                          disabled={isRecordRun || isRun}
                           onChange={onChannel9Change}/>
                       </td>
                       <td>CH13</td>
                       <td>
                         <input type="checkbox" id="ch13" name="ch13" value="Ch13"
                           checked={ch13 === true}
+                          disabled={isRecordRun || isRun}
                           onChange={onChannel13Change}/>
                       </td>
                     </tr>
@@ -1285,24 +1729,28 @@ function LogicAnalyzer({tokenId, deviceType}) {
                       <td>
                         <input type="checkbox" id="ch2" name="ch2" value="Ch2"
                           checked={ch2 === true}
+                          disabled={isRecordRun || isRun}
                           onChange={onChannel2Change}/>
                       </td>
                       <td>CH6</td>
                       <td>
                         <input type="checkbox" id="ch6" name="ch6" value="Ch6"
                           checked={ch6 === true}
+                          disabled={isRecordRun || isRun}
                           onChange={onChannel6Change}/>
                       </td>
                       <td>CH10</td>
                       <td>
                         <input type="checkbox" id="ch10" name="ch10" value="Ch10"
                           checked={ch10 === true}
+                          disabled={isRecordRun || isRun}
                           onChange={onChannel10Change}/>
                       </td>
                       <td>CH14</td>
                       <td>
                         <input type="checkbox" id="ch14" name="ch14" value="Ch14"
                           checked={ch14 === true}
+                          disabled={isRecordRun || isRun}
                           onChange={onChannel14Change}/>
                       </td>
                     </tr>
@@ -1311,31 +1759,63 @@ function LogicAnalyzer({tokenId, deviceType}) {
                       <td>
                         <input type="checkbox" id="ch3" name="ch3" value="Ch3"
                           checked={ch3 === true}
+                          disabled={isRecordRun || isRun}
                           onChange={onChannel3Change}/>
                       </td>
                       <td>CH7</td>
                       <td>
                         <input type="checkbox" id="ch7" name="ch7" value="Ch7"
                           checked={ch7 === true}
+                          disabled={isRecordRun || isRun}
                           onChange={onChannel7Change}/>
                       </td>
                       <td>CH11</td>
                       <td>
                         <input type="checkbox" id="ch11" name="ch11" value="Ch11"
                           checked={ch11 === true}
+                          disabled={isRecordRun || isRun}
                           onChange={onChannel11Change}/>
                       </td>
                       <td>CH15</td>
                       <td>
                         <input type="checkbox" id="ch15" name="ch15" value="Ch15"
                           checked={ch15 === true}
+                          disabled={isRecordRun || isRun}
                           onChange={onChannel15Change}/>
                       </td>
                     </tr>
                   </tbody>
                 </table>
+                <div className="logic-analyzer-table">
+                Source
+                <div className="tables-in-row">
+                <select disabled={triggerType === "immediate" || isRecordRun || isRun} className="logic-analyzer-select" name="logicAnalyzerChannels">
+                    {list.map((channel)=> {
+                        return (
+                            <option key={channel}>
+                                {channel}
+                            </option>
+                        )
+                    })}
+                </select>
                 </div>
-              <div className="col-3 logic-analyzer-trigger">
+                </div>
+                <div className="logic-analyzer-table">
+                <div className="tables-in-row">
+                Timeout, s
+                <select value={selectedTimeout} onChange={onTimeoutValueChange} disabled={isRecordRun || isRun} className="logic-analyzer-select" name="logicAnalyzerTimeout">
+                    {listTimeout.map((channel)=> {
+                        return (
+                            <option key={channel}>
+                                {channel}
+                            </option>
+                        )
+                    })}
+                </select>
+                </div>
+                </div>
+                </div>
+              <div className="logic-analyzer-table">
                 <h3>Trigger</h3>
                 <table>
                     <tbody>
@@ -1347,6 +1827,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
                                 name="triggerFallEdge"
                                 value="fall-edge"
                                 checked={triggerType === "fall-edge"}
+                                disabled={isRecordRun || isRun}
                                 onChange={onTriggerTypeChange}/>
                             </td>
                         </tr>
@@ -1358,27 +1839,27 @@ function LogicAnalyzer({tokenId, deviceType}) {
                                 name="triggerRiseEdge"
                                 value="rise-edge"
                                 checked={triggerType === "rise-edge"}
+                                disabled={isRecordRun || isRun}
+                                onChange={onTriggerTypeChange}/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Immediate</td>
+                            <td>
+                                <input type="radio" 
+                                id="triggerImmediate" 
+                                name="triggerImmediate"
+                                value="immediate"
+                                checked={triggerType === "immediate"}
+                                disabled={isRecordRun || isRun}
                                 onChange={onTriggerTypeChange}/>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-                Source <br/>
-                <select className="logic-analyzer-select" name="logicAnalyzerChannels">
-                    {list.map((channel)=> {
-                        return (
-                            <option key={channel}>
-                                {channel}
-                            </option>
-                        )
-                    })}
-                </select>
               </div>
-              </div>
-            </div>
-            <div className="col-3 logic-analyzer-trigger">
-              <div className="col-3 logic-analyzer-table">
-                <label>X-Scale</label><br/>
+              <div className="logic-analyzer-table">
+                X-Scale<br/>
                 <label className={"round-sliders-label " + (deviceType==="mcu" ? "mcu-lab-background-special" : "fpga-lab-background-special")}>
                 {horizontalScale}/div</label>
                 <div className="round-slider-wrapper">
@@ -1392,14 +1873,9 @@ function LogicAnalyzer({tokenId, deviceType}) {
                   </div>
                 </div>
                 {renderScaleScroll("X")}
+            </div>
               </div>
             </div>
-            <div className="col-6 my-auto">
-            <button className="btn btn-md btn-primary m-2" 
-            onClick={changeButton}><i className={isRun ? "bi bi-pause" : "bi bi-caret-right"}></i></button>
-            <button className="btn btn-md btn-primary m-2" 
-            onClick={saveWaveform}><i className="bi bi-download"></i></button>
-          </div>
         </div>
         </div>
 

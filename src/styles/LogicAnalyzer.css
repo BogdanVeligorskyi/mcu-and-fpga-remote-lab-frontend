@@ -1,0 +1,23 @@
+@media(min-width: 1200px) {
+  .logic-analyzer-table {
+    padding: 45px;
+    margin: 0px;
+    vertical-align: middle;
+    display: inline-block;
+    text-align: center;
+  }
+}
+
+@media(max-width: 1200px) {
+  .logic-analyzer-table {
+    padding: 15px;
+    margin: 0px;
+    vertical-align: middle;
+    display: inline-block;
+    text-align: center;
+  }
+}
+
+.logic-analyzer-table label {
+  text-align: center;
+}
