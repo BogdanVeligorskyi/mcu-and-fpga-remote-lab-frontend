@@ -990,7 +990,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
     const [chartOptions, setChartOptions] = useState(
         {
           elements: { point: { radius: 0, } },
-          animation: { duration: 100 },
+          spanGaps: false,
+          animation: false,
           maintainAspectRatio: false,
           plugins: { legend: { labels: { color: "white" } } },
           scales: { 
@@ -1003,7 +1004,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
     const [chartSpecOptions, setChartSpecOptions] = useState(
       {
         elements: { point: { radius: 0, } },
-        animation: { duration: 100 },
+        animation: false,
+        spanGaps: false,
         maintainAspectRatio: false,
         plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
         scales: { 
@@ -1328,7 +1330,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
         setChartSpecOptions(
           {
             elements: { point: { radius: 0, } },
-            animation: { duration: 100 },
+            spanGaps: false,
+            animation: false,
             maintainAspectRatio: false,
             plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
             scales: { 
@@ -1340,7 +1343,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
         setChartOptions(
           {
             elements: { point: { radius: 0, } },
-            animation: { duration: 100 },
+            spanGaps: false,
+            animation: false,
             maintainAspectRatio: false,
             plugins: { legend: { labels: { color: "white" } } },
             scales: { 
@@ -1361,7 +1365,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
         setChartSpecOptions(
           {
             elements: { point: { radius: 0, } },
-            animation: { duration: 100 },
+            spanGaps: false,
+            animation: false,
             maintainAspectRatio: false,
             plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
             scales: { 
@@ -1373,7 +1378,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
         setChartOptions(
           {
             elements: { point: { radius: 0, } },
-            animation: { duration: 100 },
+            spanGaps: false,
+            animation: false,
             maintainAspectRatio: false,
             plugins: { legend: { labels: { color: "white" } } },
             scales: { 
@@ -1391,7 +1397,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
         setChartSpecOptions(
           {
             elements: { point: { radius: 0, } },
-            animation: { duration: 100 },
+            spanGaps: false,
+            animation: false,
             maintainAspectRatio: false,
             plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
             scales: { 
@@ -1403,7 +1410,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
         setChartOptions(
           {
             elements: { point: { radius: 0, } },
-            animation: { duration: 100 },
+            animation: false,
+            spanGaps: false,
             maintainAspectRatio: false,
             plugins: { legend: { labels: { color: "white" } } },
             scales: { 
@@ -1424,7 +1432,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
         setChartSpecOptions(
           {
             elements: { point: { radius: 0, } },
-            animation: { duration: 100 },
+            spanGaps: false,
+            animation: false,
             maintainAspectRatio: false,
             plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
             scales: { 
@@ -1436,7 +1445,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
         setChartOptions(
           {
             elements: { point: { radius: 0, } },
-            animation: { duration: 100 },
+            animation: false,
+            spanGaps: false,
             maintainAspectRatio: false,
             plugins: { legend: { labels: { color: "white" } } },
             scales: { 
@@ -1466,7 +1476,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
           setChartSpecOptions(
             {
               elements: { point: { radius: 0, } },
-              animation: { duration: 100 },
+              spanGaps: false,
+              animation: false,
               maintainAspectRatio: false,
               plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
               scales: { 
@@ -1478,7 +1489,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
           setChartOptions(
             {
               elements: { point: { radius: 0, } },
-              animation: { duration: 100 },
+              spanGaps: false,
+              animation: false,
               maintainAspectRatio: false,
               plugins: { legend: { labels: { color: "white" } } },
               scales: { 
@@ -1499,7 +1511,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
           setChartSpecOptions(
             {
               elements: { point: { radius: 0, } },
-              animation: { duration: 100 },
+              spanGaps: false,
+              animation: false,
               maintainAspectRatio: false,
               plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
               scales: { 
@@ -1511,7 +1524,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
           setChartOptions(
             {
               elements: { point: { radius: 0, } },
-              animation: { duration: 100 },
+              spanGaps: false,
+              animation: false,
               maintainAspectRatio: false,
               plugins: { legend: { labels: { color: "white" } } },
               scales: { 
@@ -1531,7 +1545,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
           setChartSpecOptions(
             {
               elements: { point: { radius: 0, } },
-              animation: { duration: 100 },
+              spanGaps: false,
+              animation: false,
               maintainAspectRatio: false,
               plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
               scales: { 
@@ -1543,7 +1558,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
           setChartOptions(
             {
               elements: { point: { radius: 0, } },
-              animation: { duration: 100 },
+              spanGaps: false,
+              animation: false,
               maintainAspectRatio: false,
               plugins: { legend: { labels: { color: "white" } } },
               scales: { 
@@ -1564,7 +1580,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
           setChartSpecOptions(
             {
               elements: { point: { radius: 0, } },
-              animation: { duration: 100 },
+              spanGaps: false,
+              animation: false,
               maintainAspectRatio: false,
               plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
               scales: { 
@@ -1576,7 +1593,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
           setChartOptions(
             {
               elements: { point: { radius: 0, } },
-              animation: { duration: 100 },
+              spanGaps: false,
+              animation: false,
               maintainAspectRatio: false,
               plugins: { legend: { labels: { color: "white" } } },
               scales: { 
@@ -1603,7 +1621,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
     setChartOptions(
       {
         elements: { point: { radius: 0, } },
-        animation: { duration: 100 },
+        spanGaps: false,
+        animation: false,
         maintainAspectRatio: false,
         plugins: { legend: { labels: { color: "white" } } },
         scales: { 
@@ -1615,7 +1634,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
     setChartSpecOptions(
       {
         elements: { point: { radius: 0, } },
-        animation: { duration: 100 },
+        spanGaps: false,
+        animation: false,
         maintainAspectRatio: false,
         plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
         scales: { 
