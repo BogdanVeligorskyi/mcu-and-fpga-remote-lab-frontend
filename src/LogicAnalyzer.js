@@ -4,7 +4,6 @@ import { Line } from 'react-chartjs-2';
 import { useRef, useState } from 'react';
 import './styles/LogicAnalyzer.css';
 
-
 Chart.register({
   id: 'someBackgroundForLogicAnalyzer',
   beforeDraw: (chartRef, args, opts) => {
@@ -63,15 +62,13 @@ function LogicAnalyzer({tokenId, deviceType}) {
     const [isRecordRun, setIsRecordRun] = useState(false);
     const [isFirstCapture, setIsFirstCapture] = useState(true);
     const [intervalID, setIntervalID] = useState();
-    // const [intervalIDRecord, setIntervalIDRecord] = useState();
     const [defaultMode, setDefaultMode] = useState("live-data");
     const [xInputMin, setXInputMin] = useState(294);
     const [xInputMax, setXInputMax] = useState(306);
     const [xCenterValue, setXCenterValue] = useState(300);
 
     const [list, setList] = useState([]);
-    const [listTimeout, setListTimeout] = useState(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
-    ]);
+    const [listTimeout, setListTimeout] = useState(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']);
     
     const [selectedChannel, setSelectedChannel] = useState("");
     const [selectedTimeout, setSelectedTimeout] = useState(1);
@@ -239,10 +236,54 @@ function LogicAnalyzer({tokenId, deviceType}) {
       }
     }
 
+
+    const setChartData = (times, labelName, voltagesArr, color) => {
+      return {
+        labels: times,
+        datasets: [
+        {
+          label: labelName,
+          data: voltagesArr,
+          borderColor: color,
+          borderWidth: 1,
+          stepped: true
+        }
+        ]
+      }
+    }
+
+    const setChartOptionsUnified = (step, minValue, maxValue, yScaleOptions) => {
+      return {
+        elements: { point: { radius: 0, } },
+        spanGaps: false,
+        animation: false,
+        maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: "white" } } },
+        scales: { 
+          x: { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: step, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: minValue, max: maxValue},
+          y: yScaleOptions
+        },
+      }
+    }
+
+    const setChartSpecOptionsUnified = (step, minValue, maxValue) => {
+      return {
+        elements: { point: { radius: 0, } },
+        spanGaps: false,
+        animation: false,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
+        scales: { 
+          x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { display: true, stepSize: step, color: "white", font: {size: 14} }, type: 'linear', min: minValue, max: maxValue },
+          y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 20, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
+        },
+      }
+    }
+
+    // get data fron logic analyzer in record mode
     const fetchChartRecordData = async (ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7,
       ch8, ch9, ch10, ch11, ch12, ch13, ch14, ch15) => {
         if (process.env.REACT_APP_IS_FRONTEND_DEV_MODE.toUpperCase() === "TRUE") {
-          console.log("in here");
           for (let i = currentIteration * 1000000; i < ((currentIteration + 1) * 1000000); i++) {
             if (ch0) {
               voltagesCH0[i] = Math.floor(Math.random() * 2.0);
@@ -292,203 +333,24 @@ function LogicAnalyzer({tokenId, deviceType}) {
             if (ch15) {
               voltagesCH15[i] = Math.floor(Math.random() * 2.0);
             }
-            
             times[i] = i+1;
           }
-          setChartData0({
-              labels: times,
-              datasets: [
-              {
-                label: "CH0",
-                data: voltagesCH0,
-                borderColor: "yellow",
-                borderWidth: 1,
-                stepped: true
-              }
-            ]
-          });
-          setChartData1({
-              labels: times,
-              datasets: [
-              {
-                label: "CH1",
-                data: voltagesCH1,
-                borderColor: "#0d99d1",
-                borderWidth: 1,
-                stepped: true
-              }
-            ]
-          });
-          setChartData2({
-              labels: times,
-              datasets: [
-              {
-                label: "CH2",
-                data: voltagesCH2,
-                borderColor: "green",
-                borderWidth: 1,
-                stepped: true
-              }
-            ]
-          });
-          setChartData3({
-              labels: times,
-              datasets: [
-              {
-                label: "CH3",
-                data: voltagesCH3,
-                borderColor: "red",
-                borderWidth: 1,
-                stepped: true
-              }
-            ]
-          });
-          setChartData4(
-              {
-              labels: times,
-              datasets: [
-              {
-                label: "CH4",
-                data: voltagesCH4,
-                borderColor: "orange",
-                borderWidth: 1,
-                stepped: true
-              }
-            ]
-          }
-          );
-          setChartData5({
-              labels: times,
-              datasets: [
-              {
-                label: "CH5",
-                data: voltagesCH5,
-                borderColor: "pink",
-                borderWidth: 1,
-                stepped: true
-              }
-            ]
-          });
-          setChartData6({
-              labels: times,
-              datasets: [
-              {
-                label: "CH6",
-                data: voltagesCH6,
-                borderColor: "brown",
-                borderWidth: 1,
-                stepped: true
-              }
-            ]
-          });
-          setChartData7({
-              labels: times,
-              datasets: [
-              {
-                label: "CH7",
-                data: voltagesCH7,
-                borderColor: "purple",
-                borderWidth: 1,
-                stepped: true
-              }
-            ]
-          });
-          setChartData8({
-              labels: times,
-              datasets: [
-              {
-                label: "CH8",
-                data: voltagesCH8,
-                borderColor: "#917833",
-                borderWidth: 1,
-                stepped: true
-              }
-            ]
-          });
-          setChartData9({
-              labels: times,
-              datasets: [
-              {
-                label: "CH9",
-                data: voltagesCH9,
-                borderColor: "#5110e8",
-                borderWidth: 1,
-                stepped: true
-              }
-            ]
-          });
-          setChartData10({
-              labels: times,
-              datasets: [
-              {
-                label: "CH10",
-                data: voltagesCH10,
-                borderColor: "#f2070b",
-                borderWidth: 1,
-                stepped: true
-              }
-            ]
-          });
-          setChartData11({
-              labels: times,
-              datasets: [
-              {
-                label: "CH11",
-                data: voltagesCH11,
-                borderColor: "#d9c80f",
-                borderWidth: 1,
-                stepped: true
-              }
-            ]
-          });
-          setChartData12({
-              labels: times,
-              datasets: [
-              {
-                label: "CH12",
-                data: voltagesCH12,
-                borderColor: "#797adb",
-                borderWidth: 1,
-                stepped: true
-              }
-            ]
-          });
-          setChartData13({
-              labels: times,
-              datasets: [
-              {
-                label: "CH13",
-                data: voltagesCH13,
-                borderColor: "#32d4ed",
-                borderWidth: 1,
-                stepped: true
-              }
-            ]
-          });
-          setChartData14({
-              labels: times,
-              datasets: [
-              {
-                label: "CH14",
-                data: voltagesCH14,
-                borderColor: "#c77130",
-                borderWidth: 1,
-                stepped: true
-              }
-            ]
-          });
-          setChartData15({
-              labels: times,
-              datasets: [
-              {
-                label: "CH15",
-                data: voltagesCH15,
-                borderColor: "#47dec2",
-                borderWidth: 1,
-                stepped: true
-              }
-            ]
-          });
+          setChartData0(setChartData(times, "CH0", voltagesCH0, "yellow"));
+          setChartData1(setChartData(times, "CH1", voltagesCH1, "#0d99d1"));
+          setChartData2(setChartData(times, "CH2", voltagesCH2, "green"));
+          setChartData3(setChartData(times, "CH3", voltagesCH3, "red"));
+          setChartData4(setChartData(times, "CH4", voltagesCH4, "orange"));
+          setChartData5(setChartData(times, "CH5", voltagesCH5, "pink"));
+          setChartData6(setChartData(times, "CH6", voltagesCH6, "brown"));
+          setChartData7(setChartData(times, "CH7", voltagesCH7, "purple"));
+          setChartData8(setChartData(times, "CH8", voltagesCH8, "#917833"));
+          setChartData9(setChartData(times, "CH9", voltagesCH9, "#5110e8"));
+          setChartData10(setChartData(times, "CH10", voltagesCH10, "#f2070b"));
+          setChartData11(setChartData(times, "CH11", voltagesCH11, "#d9c80f"));
+          setChartData12(setChartData(times, "CH12", voltagesCH12, "#797adb"));
+          setChartData13(setChartData(times, "CH13", voltagesCH13, "#32d4ed"));
+          setChartData14(setChartData(times, "CH14", voltagesCH14, "#c77130"));
+          setChartData15(setChartData(times, "CH15", voltagesCH15, "#47dec2"));
         
         currentIteration++;
         
@@ -558,200 +420,23 @@ function LogicAnalyzer({tokenId, deviceType}) {
           
           times[i] = i+1;
         }
-        setChartData0({
-            labels: times,
-            datasets: [
-            {
-              label: "CH0",
-              data: voltagesCH0,
-              borderColor: "yellow",
-              borderWidth: 1,
-              stepped: true
-            }
-          ]
-        });
-        setChartData1({
-            labels: times,
-            datasets: [
-            {
-              label: "CH1",
-              data: voltagesCH1,
-              borderColor: "#0d99d1",
-              borderWidth: 1,
-              stepped: true
-            }
-          ]
-        });
-        setChartData2({
-            labels: times,
-            datasets: [
-            {
-              label: "CH2",
-              data: voltagesCH2,
-              borderColor: "green",
-              borderWidth: 1,
-              stepped: true
-            }
-          ]
-        });
-        setChartData3({
-            labels: times,
-            datasets: [
-            {
-              label: "CH3",
-              data: voltagesCH3,
-              borderColor: "red",
-              borderWidth: 1,
-              stepped: true
-            }
-          ]
-        });
-        setChartData4(
-            {
-            labels: times,
-            datasets: [
-            {
-              label: "CH4",
-              data: voltagesCH4,
-              borderColor: "orange",
-              borderWidth: 1,
-              stepped: true
-            }
-          ]
-        }
-        );
-        setChartData5({
-            labels: times,
-            datasets: [
-            {
-              label: "CH5",
-              data: voltagesCH5,
-              borderColor: "pink",
-              borderWidth: 1,
-              stepped: true
-            }
-          ]
-        });
-        setChartData6({
-            labels: times,
-            datasets: [
-            {
-              label: "CH6",
-              data: voltagesCH6,
-              borderColor: "brown",
-              borderWidth: 1,
-              stepped: true
-            }
-          ]
-        });
-        setChartData7({
-            labels: times,
-            datasets: [
-            {
-              label: "CH7",
-              data: voltagesCH7,
-              borderColor: "purple",
-              borderWidth: 1,
-              stepped: true
-            }
-          ]
-        });
-        setChartData8({
-            labels: times,
-            datasets: [
-            {
-              label: "CH8",
-              data: voltagesCH8,
-              borderColor: "#917833",
-              borderWidth: 1,
-              stepped: true
-            }
-          ]
-        });
-        setChartData9({
-            labels: times,
-            datasets: [
-            {
-              label: "CH9",
-              data: voltagesCH9,
-              borderColor: "#5110e8",
-              borderWidth: 1,
-              stepped: true
-            }
-          ]
-        });
-        setChartData10({
-            labels: times,
-            datasets: [
-            {
-              label: "CH10",
-              data: voltagesCH10,
-              borderColor: "#f2070b",
-              borderWidth: 1,
-              stepped: true
-            }
-          ]
-        });
-        setChartData11({
-            labels: times,
-            datasets: [
-            {
-              label: "CH11",
-              data: voltagesCH11,
-              borderColor: "#d9c80f",
-              borderWidth: 1,
-              stepped: true
-            }
-          ]
-        });
-        setChartData12({
-            labels: times,
-            datasets: [
-            {
-              label: "CH12",
-              data: voltagesCH12,
-              borderColor: "#797adb",
-              borderWidth: 1,
-              stepped: true
-            }
-          ]
-        });
-        setChartData13({
-            labels: times,
-            datasets: [
-            {
-              label: "CH13",
-              data: voltagesCH13,
-              borderColor: "#32d4ed",
-              borderWidth: 1,
-              stepped: true
-            }
-          ]
-        });
-        setChartData14({
-            labels: times,
-            datasets: [
-            {
-              label: "CH14",
-              data: voltagesCH14,
-              borderColor: "#c77130",
-              borderWidth: 1,
-              stepped: true
-            }
-          ]
-        });
-        setChartData15({
-            labels: times,
-            datasets: [
-            {
-              label: "CH15",
-              data: voltagesCH15,
-              borderColor: "#47dec2",
-              borderWidth: 1,
-              stepped: true
-            }
-          ]
-        });
+        setChartData0(setChartData(times, "CH0", voltagesCH0, "yellow"));
+        setChartData1(setChartData(times, "CH1", voltagesCH1, "#0d99d1"));
+        setChartData2(setChartData(times, "CH2", voltagesCH2, "green"));
+        setChartData3(setChartData(times, "CH3", voltagesCH3, "red"));
+        setChartData4(setChartData(times, "CH4", voltagesCH4, "orange"));
+        setChartData5(setChartData(times, "CH5", voltagesCH5, "pink"));
+        setChartData6(setChartData(times, "CH6", voltagesCH6, "brown"));
+        setChartData7(setChartData(times, "CH7", voltagesCH7, "purple"));
+        setChartData8(setChartData(times, "CH8", voltagesCH8, "#917833"));
+        setChartData9(setChartData(times, "CH9", voltagesCH9, "#5110e8"));
+        setChartData10(setChartData(times, "CH10", voltagesCH10, "#f2070b"));
+        setChartData11(setChartData(times, "CH11", voltagesCH11, "#d9c80f"));
+        setChartData12(setChartData(times, "CH12", voltagesCH12, "#797adb"));
+        setChartData13(setChartData(times, "CH13", voltagesCH13, "#32d4ed"));
+        setChartData14(setChartData(times, "CH14", voltagesCH14, "#c77130"));
+        setChartData15(setChartData(times, "CH15", voltagesCH15, "#47dec2"));
+
         // online mode
       } else {
     
@@ -1015,204 +700,22 @@ function LogicAnalyzer({tokenId, deviceType}) {
       }
     );
 
-      const [chartData0, setChartData0] = useState(
-        { labels: [], datasets: [ { label: "CH0", data: [], borderColor: "yellow", borderWidth: 1, stepped: true } ] }
-      );
-
-      const [chartData1, setChartData1] = useState({
-          labels: [],
-          datasets: [
-          {
-            label: "CH1",
-            data: [],
-            borderColor: "#0d99d1",
-            borderWidth: 1,
-            stepped: true
-          }
-        ]
-      });
-
-    const [chartData2, setChartData2] = useState({
-        labels: [],
-        datasets: [
-        {
-          label: "CH2",
-          data: [],
-          borderColor: "green",
-          borderWidth: 1,
-          stepped: true
-        }
-      ]
-    });
-
-    const [chartData3, setChartData3] = useState({
-        labels: [],
-        datasets: [
-        {
-          label: "CH3",
-          data: [],
-          borderColor: "red",
-          borderWidth: 1,
-          stepped: true
-        }
-      ]
-    });
-
-    const [chartData4, setChartData4] = useState({
-        labels: [],
-        datasets: [
-        {
-          label: "CH4",
-          data: [],
-          borderColor: "orange",
-          borderWidth: 1,
-          stepped: true
-        }
-      ]
-    });
-
-    const [chartData5, setChartData5] = useState({
-        labels: [],
-        datasets: [
-        {
-          label: "CH5",
-          data: [],
-          borderColor: "pink",
-          borderWidth: 1,
-          stepped: true
-        }
-      ]
-    });
-
-    const [chartData6, setChartData6] = useState({
-        labels: [],
-        datasets: [
-        {
-          label: "CH6",
-          data: [],
-          borderColor: "brown",
-          borderWidth: 1,
-          stepped: true
-        }
-      ]
-    });
-
-    const [chartData7, setChartData7] = useState({
-        labels: [],
-        datasets: [
-        {
-          label: "CH7",
-          data: [],
-          borderColor: "purple",
-          borderWidth: 1,
-          stepped: true
-        }
-      ]
-    });
-
-    const [chartData8, setChartData8] = useState({
-        labels: [],
-        datasets: [
-        {
-          label: "CH8",
-          data: [],
-          borderColor: "#917833",
-          borderWidth: 1,
-          stepped: true
-        }
-      ]
-    });
-
-    const [chartData9, setChartData9] = useState({
-        labels: [],
-        datasets: [
-        {
-          label: "CH9",
-          data: [],
-          borderColor: "#5110e8",
-          borderWidth: 1,
-          stepped: true
-        }
-      ]
-    });
-
-    const [chartData10, setChartData10] = useState({
-        labels: [],
-        datasets: [
-        {
-          label: "CH10",
-          data: [],
-          borderColor: "#f2070b",
-          borderWidth: 1,
-          stepped: true
-        }
-      ]
-    });
-
-    const [chartData11, setChartData11] = useState({
-        labels: [],
-        datasets: [
-        {
-          label: "CH11",
-          data: [],
-          borderColor: "#d9c80f",
-          borderWidth: 1,
-          stepped: true
-        }
-      ]
-    });
-
-    const [chartData12, setChartData12] = useState({
-        labels: [],
-        datasets: [
-        {
-          label: "CH12",
-          data: [],
-          borderColor: "#797adb",
-          borderWidth: 1,
-          stepped: true
-        }
-      ]
-    });
-
-    const [chartData13, setChartData13] = useState({
-        labels: [],
-        datasets: [
-        {
-          label: "CH13",
-          data: [],
-          borderColor: "#32d4ed",
-          borderWidth: 1,
-          stepped: true
-        }
-      ]
-    });
-
-    const [chartData14, setChartData14] = useState({
-        labels: [],
-        datasets: [
-        {
-          label: "CH14",
-          data: [],
-          borderColor: "#c77130",
-          borderWidth: 1,
-          stepped: true
-        }
-      ]
-    });
-
-    const [chartData15, setChartData15] = useState({
-        labels: [],
-        datasets: [
-        {
-          label: "CH15",
-          data: [],
-          borderColor: "#47dec2",
-          borderWidth: 1,
-          stepped: true
-        }
-      ]
-    });
+    const [chartData0, setChartData0] = useState(setChartData([], "CH0", [], "yellow"));
+    const [chartData1, setChartData1] = useState(setChartData([], "CH1", [], "#0d99d1"));
+    const [chartData2, setChartData2] = useState(setChartData([], "CH2", [], "green"));
+    const [chartData3, setChartData3] = useState(setChartData([], "CH3", [], "red"));
+    const [chartData4, setChartData4] = useState(setChartData([], "CH4", [], "orange"));
+    const [chartData5, setChartData5] = useState(setChartData([], "CH5", [], "pink"));
+    const [chartData6, setChartData6] = useState(setChartData([], "CH6", [], "brown"));
+    const [chartData7, setChartData7] = useState(setChartData([], "CH7", [], "purple"));
+    const [chartData8, setChartData8] = useState(setChartData([], "CH8", [], "#917833"));
+    const [chartData9, setChartData9] = useState(setChartData([], "CH9", [], "#5110e8"));
+    const [chartData10, setChartData10] = useState(setChartData([], "CH10", [], "#f2070b"));
+    const [chartData11, setChartData11] = useState(setChartData([], "CH11", [], "#d9c80f"));
+    const [chartData12, setChartData12] = useState(setChartData([], "CH12", [], "#797adb"));
+    const [chartData13, setChartData13] = useState(setChartData([], "CH13", [], "#32d4ed"));
+    const [chartData14, setChartData14] = useState(setChartData([], "CH14", [], "#c77130"));
+    const [chartData15, setChartData15] = useState(setChartData([], "CH15", [], "#47dec2"));
 
     // handler for 'Save Waveform' button
   const saveWaveform = () => {
@@ -1244,6 +747,10 @@ function LogicAnalyzer({tokenId, deviceType}) {
   }
 
     const changeButton = () => {
+      if (defaultMode === "record-data") {
+        configureScalesForLiveMode(horizontalScale);
+      } 
+
       setDefaultMode("live-data");
       console.log("isFirstCapture: " + isFirstCapture);
       if (isRun) {
@@ -1257,6 +764,9 @@ function LogicAnalyzer({tokenId, deviceType}) {
     };
 
     const changeRecordButton = () => {
+      if (defaultMode === "live-data") {
+        configureScalesForRecordMode(horizontalScale);
+      }
       setDefaultMode("record-data");
       console.log("heree");
       setIsRecordRun(true);
@@ -1295,7 +805,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
 
       const renderScaleScroll = (scaleName) => {
         if (scaleName.toUpperCase() === "X") {
-          if (xStepSize === 50) {
+          if (xStepSize === 50 && defaultMode === "live-data") {
             return <div className="scope-scroll-slider-none"></div>;
           } else {
             return (
@@ -1313,11 +823,61 @@ function LogicAnalyzer({tokenId, deviceType}) {
         }
       }
 
-      // handler for X-scale change
-  const onHorizontalScaleValueChange = value => {
-    setHorizontalScale(value);
-    console.log(value);
-    if (defaultMode === "live-data") {
+  const configureScalesForRecordMode = (value) => {
+    switch (value) {
+      case "1us":
+        setXStepSize(1);
+        setXCenterValue((Number(selectedTimeout)) * 1000000 / 2);
+        setXInputMin(6);
+        setXInputMax((Number(selectedTimeout)) * 1000000 - 6);
+        setXScaleOptions(
+          { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 1, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(selectedTimeout)) * 1000000 / 2 - 6, max: (Number(selectedTimeout)) * 1000000 / 2 + 6 }
+        );
+        setChartSpecOptions(setChartSpecOptionsUnified(1, (Number(selectedTimeout)) * 1000000 / 2 - 6, (Number(selectedTimeout)) * 1000000 / 2 + 6));
+        setChartOptions(setChartOptionsUnified(1, (Number(selectedTimeout)) * 1000000 / 2 - 6, (Number(selectedTimeout)) * 1000000 / 2 + 6, yScaleOptions));
+        break;
+      case "10us":
+        setXStepSize(10);
+        setXCenterValue((Number(selectedTimeout)) * 1000000 / 2);
+        setXInputMin(60);
+        setXInputMax((Number(selectedTimeout)) * 1000000 - 60);
+        setXScaleOptions(
+          { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 10, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(selectedTimeout)) * 1000000 / 2 - 60, max: (Number(selectedTimeout)) * 1000000 / 2 + 60 }
+        );
+        setChartSpecOptions(setChartSpecOptionsUnified(10, (Number(selectedTimeout)) * 1000000 / 2 - 60, (Number(selectedTimeout)) * 1000000 / 2 + 60));
+        setChartOptions(setChartOptionsUnified(10, (Number(selectedTimeout)) * 1000000 / 2 - 60, (Number(selectedTimeout)) * 1000000 / 2 + 60, yScaleOptions));
+        break;
+      case "50us":
+        setXCenterValue((Number(selectedTimeout)) * 1000000 / 2);
+        setXStepSize(50);
+        setXInputMin(300);
+        setXInputMax((Number(selectedTimeout)) * 1000000 - 300);
+        setXScaleOptions(
+          { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 50, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: true, min: (Number(selectedTimeout)) * 1000000 / 2 - 300, max: (Number(selectedTimeout)) * 1000000 / 2 + 300 }
+        );
+        setChartSpecOptions(setChartSpecOptionsUnified(50, (Number(selectedTimeout)) * 1000000 / 2 - 300, (Number(selectedTimeout)) * 1000000 / 2 + 300));
+        setChartOptions(setChartOptionsUnified(50, (Number(selectedTimeout)) * 1000000 / 2 - 300, (Number(selectedTimeout)) * 1000000 / 2 + 300, yScaleOptions));
+        break;
+      case "20us":
+        setXStepSize(20);
+        setXCenterValue((Number(selectedTimeout)) * 1000000 / 2);
+        setXInputMin(120);
+        setXInputMax((Number(selectedTimeout)) * 1000000 - 120);
+        setXScaleOptions(
+          { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 20, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(selectedTimeout)) * 1000000 / 2 - 130, max: (Number(selectedTimeout)) * 1000000 / 2 + 110 }
+        );
+        setChartSpecOptions(setChartSpecOptionsUnified(20, (Number(selectedTimeout)) * 1000000 / 2 - 130, (Number(selectedTimeout)) * 1000000 / 2 + 110));
+        setChartOptions(setChartOptionsUnified(20, (Number(selectedTimeout)) * 1000000 / 2 - 130, (Number(selectedTimeout)) * 1000000 / 2 + 110, yScaleOptions));
+        break;
+      default:
+        setXStepSize(xStepSize);
+        setXScaleOptions(xScaleOptions);
+        setChartOptions(chartOptions);
+        setChartSpecOptions(chartSpecOptions);
+    }
+  }
+
+  const configureScalesForLiveMode = (value) => {
     switch (value) {
       case "1us":
         setXStepSize(1);
@@ -1327,32 +887,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
         setXScaleOptions(
           { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 1, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 294, max: 306 }
         );
-        setChartSpecOptions(
-          {
-            elements: { point: { radius: 0, } },
-            spanGaps: false,
-            animation: false,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
-            scales: { 
-              x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { display: true, stepSize: 1, color: "white", font: {size: 14} }, type: 'linear', min: 294, max: 306 },
-              y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 1, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
-            },
-          }
-        );
-        setChartOptions(
-          {
-            elements: { point: { radius: 0, } },
-            spanGaps: false,
-            animation: false,
-            maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: "white" } } },
-            scales: { 
-              x: { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 1, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 294, max: 306 },
-              y: yScaleOptions
-            },
-          }
-        );
+        setChartSpecOptions(setChartSpecOptionsUnified(1, 294, 306));
+        setChartOptions(setChartOptionsUnified(1, 294, 306, yScaleOptions));
         break;
       case "10us":
         setXStepSize(10);
@@ -1362,64 +898,16 @@ function LogicAnalyzer({tokenId, deviceType}) {
         setXScaleOptions(
           { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 10, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 240, max: 360 }
         );
-        setChartSpecOptions(
-          {
-            elements: { point: { radius: 0, } },
-            spanGaps: false,
-            animation: false,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
-            scales: { 
-              x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { display: true, stepSize: 10, color: "white", font: {size: 14} }, type: 'linear', min: 240, max: 360 },
-              y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 10, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
-            },
-          }
-        );
-        setChartOptions(
-          {
-            elements: { point: { radius: 0, } },
-            spanGaps: false,
-            animation: false,
-            maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: "white" } } },
-            scales: { 
-              x: { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 10, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 240, max: 360 },
-              y: yScaleOptions
-            },
-          }
-        );
+        setChartSpecOptions(setChartSpecOptionsUnified(10, 240, 360));
+        setChartOptions(setChartOptionsUnified(10, 240, 360, yScaleOptions));
         break;
       case "50us":
         setXStepSize(50);
         setXScaleOptions(
           { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 50, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: true, min: 0, max: 600 }
         );
-        setChartSpecOptions(
-          {
-            elements: { point: { radius: 0, } },
-            spanGaps: false,
-            animation: false,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
-            scales: { 
-              x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { display: true, stepSize: 50, color: "white", font: {size: 14} }, type: 'linear', min: 0, max: 600 },
-              y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 50, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
-            },
-          }
-        );
-        setChartOptions(
-          {
-            elements: { point: { radius: 0, } },
-            animation: false,
-            spanGaps: false,
-            maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: "white" } } },
-            scales: { 
-              x: { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 50, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 0, max: 600 },
-              y: yScaleOptions
-            },
-          }
-        );
+        setChartSpecOptions(setChartSpecOptionsUnified(50, 0, 600));
+        setChartOptions(setChartOptionsUnified(50, 0, 600, yScaleOptions));
         break;
       case "20us":
         setXStepSize(20);
@@ -1429,32 +917,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
         setXScaleOptions(
           { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 20, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 170, max: 410 }
         );
-        setChartSpecOptions(
-          {
-            elements: { point: { radius: 0, } },
-            spanGaps: false,
-            animation: false,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
-            scales: { 
-              x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { display: true, stepSize: 20, color: "white", font: {size: 14} }, type: 'linear', min: 170, max: 410 },
-              y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 20, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
-            },
-          }
-        );
-        setChartOptions(
-          {
-            elements: { point: { radius: 0, } },
-            animation: false,
-            spanGaps: false,
-            maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: "white" } } },
-            scales: { 
-              x: { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 20, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 170, max: 410 },
-              y: yScaleOptions
-            },
-          }
-        );
+        setChartSpecOptions(setChartSpecOptionsUnified(20, 170, 410));
+        setChartOptions(setChartOptionsUnified(20, 170, 410, yScaleOptions));
         break;
       default:
         setXStepSize(xStepSize);
@@ -1462,154 +926,17 @@ function LogicAnalyzer({tokenId, deviceType}) {
         setChartOptions(chartOptions);
         setChartSpecOptions(chartSpecOptions);
     }
+  }
+
+      // handler for X-scale change
+  const onHorizontalScaleValueChange = value => {
+    setHorizontalScale(value);
+    console.log(value);
+    if (defaultMode === "live-data") {
+      configureScalesForLiveMode(value);
     }
     if (defaultMode === "record-data") {
-      switch (value) {
-        case "1us":
-          setXStepSize(1);
-          setXCenterValue((Number(selectedTimeout)) * 1000000 / 2);
-          setXInputMin(6);
-          setXInputMax((Number(selectedTimeout)) * 1000000 - 6);
-          setXScaleOptions(
-            { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 1, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(selectedTimeout)) * 1000000 / 2 - 6, max: (Number(selectedTimeout)) * 1000000 / 2 + 6 }
-          );
-          setChartSpecOptions(
-            {
-              elements: { point: { radius: 0, } },
-              spanGaps: false,
-              animation: false,
-              maintainAspectRatio: false,
-              plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
-              scales: { 
-                x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { display: true, stepSize: 1, color: "white", font: {size: 14} }, type: 'linear', min: (Number(selectedTimeout)) * 1000000 / 2 - 6, max: (Number(selectedTimeout)) * 1000000 / 2 + 6 },
-                y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 1, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
-              },
-            }
-          );
-          setChartOptions(
-            {
-              elements: { point: { radius: 0, } },
-              spanGaps: false,
-              animation: false,
-              maintainAspectRatio: false,
-              plugins: { legend: { labels: { color: "white" } } },
-              scales: { 
-                x: { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 1, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(selectedTimeout)) * 1000000 / 2 - 6, max: (Number(selectedTimeout)) * 1000000 / 2 + 6 },
-                y: yScaleOptions
-              },
-            }
-          );
-          break;
-        case "10us":
-          setXStepSize(10);
-          setXCenterValue((Number(selectedTimeout)) * 1000000 / 2);
-          setXInputMin(60);
-          setXInputMax((Number(selectedTimeout)) * 1000000 - 60);
-          setXScaleOptions(
-            { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 10, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(selectedTimeout)) * 1000000 / 2 - 60, max: (Number(selectedTimeout)) * 1000000 / 2 + 60 }
-          );
-          setChartSpecOptions(
-            {
-              elements: { point: { radius: 0, } },
-              spanGaps: false,
-              animation: false,
-              maintainAspectRatio: false,
-              plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
-              scales: { 
-                x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { display: true, stepSize: 10, color: "white", font: {size: 14} }, type: 'linear', min: (Number(selectedTimeout)) * 1000000 / 2 - 60, max: (Number(selectedTimeout)) * 1000000 / 2 + 60 },
-                y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 10, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
-              },
-            }
-          );
-          setChartOptions(
-            {
-              elements: { point: { radius: 0, } },
-              spanGaps: false,
-              animation: false,
-              maintainAspectRatio: false,
-              plugins: { legend: { labels: { color: "white" } } },
-              scales: { 
-                x: { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 10, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(selectedTimeout)) * 1000000 / 2 - 60, max: (Number(selectedTimeout)) * 1000000 / 2 + 60 },
-                y: yScaleOptions
-              },
-            }
-          );
-          break;
-        case "50us":
-          setXCenterValue((Number(selectedTimeout)) * 1000000 / 2);
-          setXStepSize(50);
-          setXInputMax((Number(selectedTimeout)) * 1000000 - 300);
-          setXScaleOptions(
-            { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 50, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: true, min: 0, max: (Number(selectedTimeout)) * 1000000 / 2 + 300 }
-          );
-          setChartSpecOptions(
-            {
-              elements: { point: { radius: 0, } },
-              spanGaps: false,
-              animation: false,
-              maintainAspectRatio: false,
-              plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
-              scales: { 
-                x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { display: true, stepSize: 50, color: "white", font: {size: 14} }, type: 'linear', min: 0, max: (Number(selectedTimeout)) * 1000000 / 2 + 300 },
-                y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 50, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
-              },
-            }
-          );
-          setChartOptions(
-            {
-              elements: { point: { radius: 0, } },
-              spanGaps: false,
-              animation: false,
-              maintainAspectRatio: false,
-              plugins: { legend: { labels: { color: "white" } } },
-              scales: { 
-                x: { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 50, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 0, max: (Number(selectedTimeout)) * 1000000 / 2 + 300 },
-                y: yScaleOptions
-              },
-            }
-          );
-          break;
-        case "20us":
-          setXStepSize(20);
-          setXCenterValue((Number(selectedTimeout)) * 1000000 / 2);
-          setXInputMin(120);
-          setXInputMax((Number(selectedTimeout)) * 1000000 - 120);
-          setXScaleOptions(
-            { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 20, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(selectedTimeout)) * 1000000 / 2 - 130, max: (Number(selectedTimeout)) * 1000000 / 2 + 110 }
-          );
-          setChartSpecOptions(
-            {
-              elements: { point: { radius: 0, } },
-              spanGaps: false,
-              animation: false,
-              maintainAspectRatio: false,
-              plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
-              scales: { 
-                x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { display: true, stepSize: 20, color: "white", font: {size: 14} }, type: 'linear', min: (Number(selectedTimeout)) * 1000000 / 2 - 130, max: (Number(selectedTimeout)) * 1000000 / 2 + 110 },
-                y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 20, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
-              },
-            }
-          );
-          setChartOptions(
-            {
-              elements: { point: { radius: 0, } },
-              spanGaps: false,
-              animation: false,
-              maintainAspectRatio: false,
-              plugins: { legend: { labels: { color: "white" } } },
-              scales: { 
-                x: { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 20, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(selectedTimeout)) * 1000000 / 2 - 130, max: (Number(selectedTimeout)) * 1000000 / 2 + 110 },
-                y: yScaleOptions
-              },
-            }
-          );
-          break;
-        default:
-          setXStepSize(xStepSize);
-          setXScaleOptions(xScaleOptions);
-          setChartOptions(chartOptions);
-          setChartSpecOptions(chartSpecOptions);
-      }
+      configureScalesForRecordMode(value);
     }
   };
 
@@ -1618,32 +945,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
     setXScaleOptions(
       { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: xStepSize, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(e.target.value) - 6 * xStepSize), max: (Number(e.target.value) + 6 * xStepSize) }
     );
-    setChartOptions(
-      {
-        elements: { point: { radius: 0, } },
-        spanGaps: false,
-        animation: false,
-        maintainAspectRatio: false,
-        plugins: { legend: { labels: { color: "white" } } },
-        scales: { 
-          x: { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: xStepSize, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(e.target.value) - 6 * xStepSize), max: (Number(e.target.value) + 6 * xStepSize) },
-          y: yScaleOptions
-        },
-      }
-    );
-    setChartSpecOptions(
-      {
-        elements: { point: { radius: 0, } },
-        spanGaps: false,
-        animation: false,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
-        scales: { 
-          x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { stepSize: xStepSize, color: "white", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(e.target.value) - 6 * xStepSize), max: (Number(e.target.value) + 6 * xStepSize) },
-          y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 20, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
-        },
-      }
-    );
+    setChartOptions(setChartOptionsUnified(xStepSize, (Number(e.target.value) - 6 * xStepSize), (Number(e.target.value) + 6 * xStepSize), yScaleOptions));
+    setChartSpecOptions(setChartSpecOptionsUnified(xStepSize, (Number(e.target.value) - 6 * xStepSize), (Number(e.target.value) + 6 * xStepSize)));
   }
       
 
