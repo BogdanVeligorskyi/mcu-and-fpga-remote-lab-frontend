@@ -1,4 +1,5 @@
 import { Chart } from 'chart.js/auto';
+import { getUrlForRequest } from './utils/get-url-for-request';
 import CircularSlider from "@fseehawer/react-circular-slider";
 import { Line } from 'react-chartjs-2';
 import { useRef, useState } from 'react';
@@ -57,34 +58,35 @@ function LogicAnalyzer({tokenId, deviceType}) {
     const [ch13, setCh13] = useState(false);
     const [ch14, setCh14] = useState(false);
     const [ch15, setCh15] = useState(false);
-    const [triggerType, setTriggerType] = useState("fall-edge");
+    const [triggerType, setTriggerType] = useState("falling");
     const [isRun, setIsRun] = useState(false);
     const [isRecordRun, setIsRecordRun] = useState(false);
     const [isFirstCapture, setIsFirstCapture] = useState(true);
     const [intervalID, setIntervalID] = useState();
     const [defaultMode, setDefaultMode] = useState("live-data");
+    
     const [xInputMin, setXInputMin] = useState(294);
     const [xInputMax, setXInputMax] = useState(306);
     const [xCenterValue, setXCenterValue] = useState(300);
 
-    const [list, setList] = useState([]);
+    const [listChannels, setListChannels] = useState([]);
     const [listTimeout, setListTimeout] = useState(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']);
     
     const [selectedChannel, setSelectedChannel] = useState("");
     const [selectedTimeout, setSelectedTimeout] = useState(1);
 
-    const addNewElemToList = (newListElem) => {
-      let temp = [...list, newListElem];
+    const addNewChannelToList = (newChannel) => {
+      let temp = [...listChannels, newChannel];
       temp.sort();
-      setList(temp);
+      setListChannels(temp);
     }
 
-    const removeElemFromList = (channelName) => {
-      let arr = [...list];
+    const removeChannelFromList = (channelName) => {
+      let arr = [...listChannels];
       var index = arr.indexOf(channelName);
       if (index !== -1) {
         arr.splice(index, 1);
-        setList(arr);
+        setListChannels(arr);
       }
     }
 
@@ -95,147 +97,146 @@ function LogicAnalyzer({tokenId, deviceType}) {
     const onChannel0Change = () => {
       setCh0(!ch0);  
       if (!ch0) {
-        addNewElemToList("CH0");       
+        addNewChannelToList(0);       
       } else {
-        removeElemFromList("CH0");
+        removeChannelFromList(0);
       }
     }
 
     const onChannel1Change = () => {
       setCh1(!ch1);
       if (!ch1) {
-        addNewElemToList("CH1");       
+        addNewChannelToList(1);       
       } else {
-        removeElemFromList("CH1");
+        removeChannelFromList(1);
       }
     }
 
     const onChannel2Change = () => {
       setCh2(!ch2);
       if (!ch2) {
-        addNewElemToList("CH2");       
+        addNewChannelToList(2);       
       } else {
-        removeElemFromList("CH2");
+        removeChannelFromList(2);
       }
     }
 
     const onChannel3Change = () => {
-        setCh3(!ch3);
-        if (!ch3) {
-            addNewElemToList("CH3");       
-        } else {
-            removeElemFromList("CH3");
-        }
+      setCh3(!ch3);
+      if (!ch3) {
+        addNewChannelToList(3);       
+      } else {
+        removeChannelFromList(3);
+      }
     }
 
     const onChannel4Change = () => {
-        setCh4(!ch4);
-        if (!ch4) {
-            addNewElemToList("CH4");       
-        } else {
-            removeElemFromList("CH4");
-        }
+      setCh4(!ch4);
+      if (!ch4) {
+        addNewChannelToList(4);       
+      } else {
+        removeChannelFromList(4);
+      }
     }
 
     const onChannel5Change = () => {
-        setCh5(!ch5);
-        if (!ch5) {
-            addNewElemToList("CH5");       
-        } else {
-            removeElemFromList("CH5");
-        }
+      setCh5(!ch5);
+      if (!ch5) {
+        addNewChannelToList(5);       
+      } else {
+        removeChannelFromList(5);
+      }
     }
 
     const onChannel6Change = () => {
-        setCh6(!ch6);
-        if (!ch6) {
-            addNewElemToList("CH6");       
-        } else {
-            removeElemFromList("CH6");
-        }
+      setCh6(!ch6);
+      if (!ch6) {
+        addNewChannelToList(6);       
+      } else {
+        removeChannelFromList(6);
+      }
     }
 
     const onChannel7Change = () => {
-        setCh7(!ch7);
-        if (!ch7) {
-            addNewElemToList("CH7");       
-        } else {
-            removeElemFromList("CH7");
-        }
+      setCh7(!ch7);
+      if (!ch7) {
+        addNewChannelToList(7);       
+      } else {
+        removeChannelFromList(7);
+      }
     }
 
     const onChannel8Change = () => {
-        setCh8(!ch8);
-        if (!ch8) {
-            addNewElemToList("CH8");       
-        } else {
-            removeElemFromList("CH8");
-        }
+      setCh8(!ch8);
+      if (!ch8) {
+        addNewChannelToList(8);       
+      } else {
+        removeChannelFromList(8);
+      }
     }
 
     const onChannel9Change = () => {
-        setCh9(!ch9);
-        if (!ch9) {
-            addNewElemToList("CH9");       
-        } else {
-            removeElemFromList("CH9");
-        }
+      setCh9(!ch9);
+      if (!ch9) {
+        addNewChannelToList(9);       
+      } else {
+        removeChannelFromList(9);
+      }
     }
 
     const onChannel10Change = () => {
-        setCh10(!ch10);
-        if (!ch10) {
-            addNewElemToList("CH10");       
-        } else {
-            removeElemFromList("CH10");
-        }
+      setCh10(!ch10);
+      if (!ch10) {
+        addNewChannelToList(10);       
+      } else {
+        removeChannelFromList(10);
+      }
     }
 
     const onChannel11Change = () => {
-        setCh11(!ch11);
-        if (!ch11) {
-            addNewElemToList("CH11");       
-        } else {
-            removeElemFromList("CH11");
-        }
+      setCh11(!ch11);
+      if (!ch11) {
+        addNewChannelToList(11);       
+      } else {
+        removeChannelFromList(11);
+      }
     }
 
     const onChannel12Change = () => {
-        setCh12(!ch12);
-        if (!ch12) {
-            addNewElemToList("CH12");       
-        } else {
-            removeElemFromList("CH12");
-        }
+      setCh12(!ch12);
+      if (!ch12) {
+        addNewChannelToList(12);       
+      } else {
+        removeChannelFromList(12);
+      }
     }
 
     const onChannel13Change = () => {
-        setCh13(!ch13);
-        if (!ch13) {
-            addNewElemToList("CH13");       
-        } else {
-            removeElemFromList("CH13");
-        }
+      setCh13(!ch13);
+      if (!ch13) {
+        addNewChannelToList(13);       
+      } else {
+        removeChannelFromList(13);
+      }
     }
 
     const onChannel14Change = () => {
-        setCh14(!ch14);
-        if (!ch14) {
-            addNewElemToList("CH14");       
-        } else {
-            removeElemFromList("CH14");
-        }
+      setCh14(!ch14);
+      if (!ch14) {
+        addNewChannelToList(14);       
+      } else {
+        removeChannelFromList(14);
+      }
     }
 
     const onChannel15Change = () => {
       setCh15(!ch15);
       if (!ch15) {
-        addNewElemToList("CH15");       
+        addNewChannelToList(15);       
       } else {
-        removeElemFromList("CH15");
+        removeChannelFromList(15);
       }
     }
-
 
     const setChartData = (times, labelName, voltagesArr, color) => {
       return {
@@ -353,8 +354,40 @@ function LogicAnalyzer({tokenId, deviceType}) {
           setChartData15(setChartData(times, "CH15", voltagesCH15, "#47dec2"));
         
         currentIteration++;
-        
-    }
+        } else {
+      /*let requestOptions;
+      let trigger = (triggerType !== "immediate" ? "edge" : "immediate");
+      console.log(trigger);
+      console.log(listChannels);
+      requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
+        body: JSON.stringify({ 
+          measurementTimeUs: 100, 
+          channels: listChannels,
+          trigger: {
+            type: trigger,
+            channel: Number(selectedChannel),
+            edge: triggerType,
+            timeoutSec: Number(selectedTimeout),
+          }
+        }),
+        credentials: 'include'
+      }
+    let response = await fetch(getUrlForRequest('/api/logic-analyzer/capture'), requestOptions);
+    let data = await response.json();
+    let measurementTimeUs = data["measurementTimeUs"];
+    let sampleRateHz = data["sampleRateHz"];
+    let triggered = data["triggered"];
+    let triggerTimestampUs = data["triggerTimestampUs"];
+    let warnings = data["warnings"];
+    console.log("measurementTimeUs: " + measurementTimeUs);
+    console.log("sampleRateHz: " + sampleRateHz);
+    console.log("triggered: " + triggered);
+    console.log("triggerTimestampUs: " + triggerTimestampUs);
+    console.log("warnings:" + warnings);
+        */}
+    
   }
 
     // fetch voltage values from backend
@@ -367,7 +400,6 @@ function LogicAnalyzer({tokenId, deviceType}) {
 
       // offline mode
       if (process.env.REACT_APP_IS_FRONTEND_DEV_MODE.toUpperCase() === "TRUE") {
-        console.log("in here");
         for (let i = 0; i < 600; i++) {
           if (ch0) {
             voltagesCH0[i] = Math.floor(Math.random() * 2.0);
@@ -439,36 +471,276 @@ function LogicAnalyzer({tokenId, deviceType}) {
 
         // online mode
       } else {
-    
-      // fetch data for channel 1
-      /*if (isCH1Enabled) {
-        if (times.length === 0) {
-          requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
-            body: JSON.stringify({ channel: 0, isFirstCapture: 1}),
-            credentials: 'include'
-          }
-        } else {
-          requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
-            body: JSON.stringify({ channel: 0, isFirstCapture: 0}),
-            credentials: 'include'
-          }
+        let trigger = (triggerType !== "immediate" ? "edge" : "immediate");
+        console.log(trigger);
+        console.log(listChannels);
+        requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
+          body: JSON.stringify({ 
+            measurementTimeUs: 600, 
+            channels: listChannels,
+            trigger: {
+              type: "immediate",
+              channel: Number(selectedChannel),
+              edge: "immediate",
+              timeoutSec: 0,
+            }
+          }),
+          credentials: 'include'
         }
-        let response = await fetch(getUrlForRequest('/api/scope/get-scope-data'), 
-        requestOptions);
+        let response = await fetch(getUrlForRequest('/api/logic-analyzer/capture'), requestOptions);
         let data = await response.json();
-        voltagesCH1 = data["voltages"];
-        if (times.length === 0) {
-          times = data["times"];
+
+        let measurementTimeUs = data["measurementTimeUs"];
+        let sampleRateHz = data["sampleRateHz"];
+        let triggered = data["triggered"];
+        let triggerTimestampUs = data["triggerTimestampUs"];
+        let warnings = data["warnings"];
+        for (let k = 0; k < 600; k++) {
+          for (let j = 0; j < listChannels.length; j++) {
+            let channel = data["channels"][(String(j))]["channel"];
+            if (channel === 0) {
+              let channelTransitions = data["channels"][(String(j))]["transitions"];
+              for (let m = 0; m < channelTransitions.length; m++) {
+                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                  voltagesCH0[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                  console.log("AA");
+                } else {
+                  voltagesCH0[k] = voltagesCH0[k-1];
+                }
+              }
+            }  
+            if (channel === 1) {
+              let channelTransitions = data["channels"][(String(j))]["transitions"];
+              for (let m = 0; m < channelTransitions.length; m++) {
+                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                  voltagesCH1[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                } else {
+                  voltagesCH1[k] = voltagesCH1[k-1];
+                }
+              }
+            }
+            if (channel === 2) {
+              let channelTransitions = data["channels"][(String(j))]["transitions"];
+              for (let m = 0; m < channelTransitions.length; m++) {
+                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                  voltagesCH2[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                } else {
+                  voltagesCH2[k] = voltagesCH2[k-1];
+                }
+              }
+            }
+            if (channel === 3) {
+              let channelTransitions = data["channels"][(String(j))]["transitions"];
+              for (let m = 0; m < channelTransitions.length; m++) {
+                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                  voltagesCH3[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                } else {
+                  voltagesCH3[k] = voltagesCH3[k-1];
+                }
+              }
+            }
+            if (channel === 4) {
+              let channelTransitions = data["channels"][(String(j))]["transitions"];
+              for (let m = 0; m < channelTransitions.length; m++) {
+                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                  voltagesCH4[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                } else {
+                  voltagesCH4[k] = voltagesCH4[k-1];
+                }
+              }
+            }
+            if (channel === 5) {
+              let channelTransitions = data["channels"][(String(j))]["transitions"];
+              for (let m = 0; m < channelTransitions.length; m++) {
+                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                  voltagesCH5[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                } else {
+                  voltagesCH5[k] = voltagesCH5[k-1];
+                }
+              }
+            }
+            if (channel === 6) {
+              let channelTransitions = data["channels"][(String(j))]["transitions"];
+              for (let m = 0; m < channelTransitions.length; m++) {
+                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                  voltagesCH6[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                } else {
+                  voltagesCH6[k] = voltagesCH6[k-1];
+                }
+              }
+            }
+            if (channel === 7) {
+              let channelTransitions = data["channels"][(String(j))]["transitions"];
+              for (let m = 0; m < channelTransitions.length; m++) {
+                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                  voltagesCH7[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                } else {
+                  voltagesCH7[k] = voltagesCH7[k-1];
+                }
+              }
+            }
+            if (channel === 8) {
+              let channelTransitions = data["channels"][(String(j))]["transitions"];
+              for (let m = 0; m < channelTransitions.length; m++) {
+                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                  voltagesCH8[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                } else {
+                  voltagesCH8[k] = voltagesCH8[k-1];
+                }
+              }
+            }
+            if (channel === 9) {
+              let channelTransitions = data["channels"][(String(j))]["transitions"];
+              for (let m = 0; m < channelTransitions.length; m++) {
+                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                  voltagesCH9[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                } else {
+                  voltagesCH9[k] = voltagesCH9[k-1];
+                }
+              }
+            }
+            if (channel === 10) {
+              let channelTransitions = data["channels"][(String(j))]["transitions"];
+              for (let m = 0; m < channelTransitions.length; m++) {
+                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                  voltagesCH10[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                } else {
+                  voltagesCH10[k] = voltagesCH10[k-1];
+                }
+              }
+            }
+            if (channel === 11) {
+              let channelTransitions = data["channels"][(String(j))]["transitions"];
+              for (let m = 0; m < channelTransitions.length; m++) {
+                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                  voltagesCH11[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                } else {
+                  voltagesCH11[k] = voltagesCH11[k-1];
+                }
+              }
+            }
+            if (channel === 12) {
+              let channelTransitions = data["channels"][(String(j))]["transitions"];
+              for (let m = 0; m < channelTransitions.length; m++) {
+                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                  voltagesCH12[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                } else {
+                  voltagesCH12[k] = voltagesCH12[k-1];
+                }
+              }
+            }
+            if (channel === 13) {
+              let channelTransitions = data["channels"][(String(j))]["transitions"];
+              for (let m = 0; m < channelTransitions.length; m++) {
+                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                  voltagesCH13[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                } else {
+                  voltagesCH13[k] = voltagesCH13[k-1];
+                }
+              }
+            }
+            if (channel === 14) {
+              let channelTransitions = data["channels"][(String(j))]["transitions"];
+              for (let m = 0; m < channelTransitions.length; m++) {
+                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                  voltagesCH14[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                } else {
+                  voltagesCH14[k] = voltagesCH14[k-1];
+                }
+              }
+            }
+            if (channel === 15) {
+              let channelTransitions = data["channels"][(String(j))]["transitions"];
+              for (let m = 0; m < channelTransitions.length; m++) {
+                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                  voltagesCH15[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                } else {
+                  voltagesCH15[k] = voltagesCH15[k-1];
+                }
+              }
+            }
+          times[k] = k;
+          //console.log(channel);
         }
-      } else {
-        voltagesCH1 = [];
-      }*/
-    }
-    }
+        }
+        setChartData0(setChartData(times, "CH0", voltagesCH0, "yellow"));
+        setChartData1(setChartData(times, "CH1", voltagesCH1, "#0d99d1"));
+        setChartData2(setChartData(times, "CH2", voltagesCH2, "green"));
+        setChartData3(setChartData(times, "CH3", voltagesCH3, "red"));
+        setChartData4(setChartData(times, "CH4", voltagesCH4, "orange"));
+        setChartData5(setChartData(times, "CH5", voltagesCH5, "pink"));
+        setChartData6(setChartData(times, "CH6", voltagesCH6, "brown"));
+        setChartData7(setChartData(times, "CH7", voltagesCH7, "purple"));
+        setChartData8(setChartData(times, "CH8", voltagesCH8, "#917833"));
+        setChartData9(setChartData(times, "CH9", voltagesCH9, "#5110e8"));
+        setChartData10(setChartData(times, "CH10", voltagesCH10, "#f2070b"));
+        setChartData11(setChartData(times, "CH11", voltagesCH11, "#d9c80f"));
+        setChartData12(setChartData(times, "CH12", voltagesCH12, "#797adb"));
+        setChartData13(setChartData(times, "CH13", voltagesCH13, "#32d4ed"));
+        setChartData14(setChartData(times, "CH14", voltagesCH14, "#c77130"));
+        setChartData15(setChartData(times, "CH15", voltagesCH15, "#47dec2"));
+
+        /*if (ch0) {
+          voltagesCH0[i] = ;
+        }
+        if (ch1) {
+          voltagesCH1[i] = Math.floor(Math.random() * 2.0);
+        }
+        if (ch2) {
+          voltagesCH2[i] = Math.floor(Math.random() * 2.0);
+        }
+        if (ch3) {
+          voltagesCH3[i] = Math.floor(Math.random() * 2.0);
+        }
+        if (ch4) {
+          voltagesCH4[i] = Math.floor(Math.random() * 2.0);
+        }
+        if (ch5) {
+          voltagesCH5[i] = Math.floor(Math.random() * 2.0);
+        }
+        if (ch6) {
+          voltagesCH6[i] = Math.floor(Math.random() * 2.0);
+        }
+        if (ch7) {
+          voltagesCH7[i] = Math.floor(Math.random() * 2.0);
+        }
+        if (ch8) {
+          voltagesCH8[i] = Math.floor(Math.random() * 2.0);
+        }
+        if (ch9) {
+          voltagesCH9[i] = Math.floor(Math.random() * 2.0);
+        }
+        if (ch10) {
+          voltagesCH10[i] = Math.floor(Math.random() * 2.0);
+        }
+        if (ch11) {
+          voltagesCH11[i] = Math.floor(Math.random() * 2.0);
+        }
+        if (ch12) {
+          voltagesCH12[i] = Math.floor(Math.random() * 2.0);
+        }
+        if (ch13) {
+          voltagesCH13[i] = Math.floor(Math.random() * 2.0);
+        }
+        if (ch14) {
+          voltagesCH14[i] = Math.floor(Math.random() * 2.0);
+        }
+        if (ch15) {
+          voltagesCH15[i] = Math.floor(Math.random() * 2.0);
+        }*/
+        
+        console.log(data);
+        console.log("measurementTimeUs: " + measurementTimeUs);
+        console.log("sampleRateHz: " + sampleRateHz);
+        console.log("triggered: " + triggered);
+        console.log("triggerTimestampUs: " + triggerTimestampUs);
+        console.log("warnings:" + warnings);
+        //data["warnings"]
+      }
+    
+  }
 
     const renderChart0 = (ch0) => {
         if (ch0) {
@@ -728,8 +1000,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
     a.click();
   };
 
-  const renderChartXAxis = (list) => {
-    if (list.length !== 0) {
+  const renderChartXAxis = (listChannels) => {
+    if (listChannels.length !== 0) {
       return <div className="row"><div className="chart-logic-analyzer-x">                    
       <Line type="line" 
         data={{
@@ -777,6 +1049,11 @@ function LogicAnalyzer({tokenId, deviceType}) {
 
     const onTimeoutValueChange = (e) => {
       setSelectedTimeout(Number(e.target.value));
+      console.log(e.target.value);
+    };
+
+    const onSelectedChannelValueChange = (e) => {
+      setSelectedChannel(Number(e.target.value));
       console.log(e.target.value);
     };
     
@@ -969,7 +1246,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
             {renderChart13(ch13)}
             {renderChart14(ch14)}
             {renderChart15(ch15)}
-            {renderChartXAxis(list)}
+            {renderChartXAxis(listChannels)}
             <div className="col-6 my-auto mx-auto">
               <button className="btn btn-md btn-primary m-2" disabled={isRecordRun}
               onClick={changeButton}><i className={isRun ? "bi bi-pause" : "bi bi-caret-right"}></i></button>
@@ -1112,11 +1389,11 @@ function LogicAnalyzer({tokenId, deviceType}) {
                 <div className="logic-analyzer-table">
                 Source
                 <div className="tables-in-row">
-                <select disabled={triggerType === "immediate" || isRecordRun || isRun} className="logic-analyzer-select" name="logicAnalyzerChannels">
-                    {list.map((channel)=> {
+                <select value={selectedChannel} onChange={onSelectedChannelValueChange} disabled={triggerType === "immediate" || isRecordRun || isRun} className="logic-analyzer-select" name="logicAnalyzerChannels">
+                    {listChannels.map((channel)=> {
                         return (
                             <option key={channel}>
-                                {channel}
+                                CH{channel}
                             </option>
                         )
                     })}
@@ -1148,8 +1425,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
                                 <input type="radio" 
                                 id="triggerFallEdge" 
                                 name="triggerFallEdge"
-                                value="fall-edge"
-                                checked={triggerType === "fall-edge"}
+                                value="falling"
+                                checked={triggerType === "falling"}
                                 disabled={isRecordRun || isRun}
                                 onChange={onTriggerTypeChange}/>
                             </td>
@@ -1160,8 +1437,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
                                 <input type="radio" 
                                 id="triggerRiseEdge" 
                                 name="triggerRiseEdge"
-                                value="rise-edge"
-                                checked={triggerType === "rise-edge"}
+                                value="rising"
+                                checked={triggerType === "rising"}
                                 disabled={isRecordRun || isRun}
                                 onChange={onTriggerTypeChange}/>
                             </td>
