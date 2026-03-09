@@ -17,7 +17,6 @@ function AnalogMultiplexer({tokenId, amChannel, disabled}) {
   }
 
   const sendAMModeValue = async (value) => {
-    console.log("Send AM Value" + tokenId);
     console.log("MUX: " + amChannel);
     console.log("Channel: " + value);
     const requestOptions = {
@@ -30,9 +29,7 @@ function AnalogMultiplexer({tokenId, amChannel, disabled}) {
       credentials: 'include'
     };
     const response = await fetch(getUrlForRequest('/api/multiplexer'), requestOptions);
-    const responseText = await response.json()
     console.log('response.status =', response.status);
-    //console.log('response text: ', responseText['message']);
   }
 
   return(

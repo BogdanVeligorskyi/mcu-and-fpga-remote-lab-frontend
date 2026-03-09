@@ -21,3 +21,11 @@
 .logic-analyzer-table label {
   text-align: center;
 }
+
+.logic-analyzer-backend-params {
+  text-align: start;
+}
+
+.logic-analyzer-warnings {
+  color: orange;
+}

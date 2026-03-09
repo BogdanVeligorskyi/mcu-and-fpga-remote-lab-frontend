@@ -40,7 +40,7 @@ function AppCountdown({timeLeft, deviceType}) {
                  <div className={"error-message-info " + (deviceType === "mcu" ? 'mcu-lab-background' : 'fpga-lab-background')}>Your experiment time is over! 
                   <br/>Please, let other students use this lab.<br/>
                   <button className="btn btn-primary countdown-completed-ok" 
-                          onClick={onCountdownCompletedOk}>Ok</button></div>
+                          onClick={onCountdownCompletedOk}>OK</button></div>
                 </div>
       } else {
         return <div className="countdown-completed"></div>

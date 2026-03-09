@@ -61,19 +61,23 @@ function LogicAnalyzer({tokenId, deviceType}) {
     const [triggerType, setTriggerType] = useState("falling");
     const [isRun, setIsRun] = useState(false);
     const [isRecordRun, setIsRecordRun] = useState(false);
-    const [isFirstCapture, setIsFirstCapture] = useState(true);
-    const [intervalID, setIntervalID] = useState();
     const [defaultMode, setDefaultMode] = useState("live-data");
+    const [intervalID, setIntervalID] = useState(); 
     
     const [xInputMin, setXInputMin] = useState(294);
     const [xInputMax, setXInputMax] = useState(306);
     const [xCenterValue, setXCenterValue] = useState(300);
 
     const [listChannels, setListChannels] = useState([]);
-    const [listTimeout, setListTimeout] = useState(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']);
-    
-    const [selectedChannel, setSelectedChannel] = useState("");
+        
+    const [selectedChannel, setSelectedChannel] = useState();
     const [selectedTimeout, setSelectedTimeout] = useState(1);
+
+    const [sampleRateHz, setSampleRateHz] = useState();
+    const [measurementTimeUs, setMeasurementTimeUs] = useState();
+    const [warnings, setWarnings] = useState("");
+
+    const listTimeout = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
     const addNewChannelToList = (newChannel) => {
       let temp = [...listChannels, newChannel];
@@ -253,7 +257,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
       }
     }
 
-    const setChartOptionsUnified = (step, minValue, maxValue, yScaleOptions) => {
+    const setChartOptionsUnified = (step, minValue, maxValue) => {
       return {
         elements: { point: { radius: 0, } },
         spanGaps: false,
@@ -262,7 +266,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
         plugins: { legend: { labels: { color: "white" } } },
         scales: { 
           x: { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: step, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: minValue, max: maxValue},
-          y: yScaleOptions
+          y: { title: { display: false }, grid: { color: "#393b3d", }, ticks: { stepSize: 1, color: "white", font: {size: 14} }, min: 0.0, max: 1.0 }
         },
       }
     }
@@ -354,39 +358,238 @@ function LogicAnalyzer({tokenId, deviceType}) {
           setChartData15(setChartData(times, "CH15", voltagesCH15, "#47dec2"));
         
         currentIteration++;
+
+        // online mode
         } else {
-      /*let requestOptions;
-      let trigger = (triggerType !== "immediate" ? "edge" : "immediate");
-      console.log(trigger);
-      console.log(listChannels);
-      requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
-        body: JSON.stringify({ 
-          measurementTimeUs: 100, 
-          channels: listChannels,
-          trigger: {
-            type: trigger,
-            channel: Number(selectedChannel),
-            edge: triggerType,
-            timeoutSec: Number(selectedTimeout),
+          let trigger = (triggerType !== "immediate" ? "edge" : "immediate");
+          let requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
+            body: JSON.stringify({ 
+              measurementTimeUs: 1000000, 
+              channels: listChannels,
+              trigger: {
+                type: trigger,
+                channel: Number(selectedChannel),
+                edge: triggerType,
+                timeoutSec: Number(selectedTimeout),
+              }
+            }),
+            credentials: 'include'
           }
-        }),
-        credentials: 'include'
-      }
-    let response = await fetch(getUrlForRequest('/api/logic-analyzer/capture'), requestOptions);
-    let data = await response.json();
-    let measurementTimeUs = data["measurementTimeUs"];
-    let sampleRateHz = data["sampleRateHz"];
-    let triggered = data["triggered"];
-    let triggerTimestampUs = data["triggerTimestampUs"];
-    let warnings = data["warnings"];
-    console.log("measurementTimeUs: " + measurementTimeUs);
-    console.log("sampleRateHz: " + sampleRateHz);
-    console.log("triggered: " + triggered);
-    console.log("triggerTimestampUs: " + triggerTimestampUs);
-    console.log("warnings:" + warnings);
-        */}
+          console.log(trigger);
+          console.log(triggerType);
+          console.log(selectedChannel);
+          console.log(selectedTimeout);
+          console.log("current iteration: " + currentIteration);
+          let response = await fetch(getUrlForRequest('/api/logic-analyzer/capture'), requestOptions);
+          let data = await response.json();
+
+          let measurementTimeUs = data["measurementTimeUs"];
+          let sampleRateHz = data["sampleRateHz"];
+          let triggered = data["triggered"];
+          let triggerTimestampUs = data["triggerTimestampUs"];
+          let warnings = data["warnings"];
+          console.log(data["channels"].length);
+          setMeasurementTimeUs("Measurement time: " + measurementTimeUs + " us");
+          setSampleRateHz("Sample rate: " + sampleRateHz + " Hz");
+          for (let k = (currentIteration * 1000000); k < ((currentIteration + 1) * 1000000); k++) {
+            for (let j = 0; j < listChannels.length; j++) {
+              let channel = data["channels"][(String(j))]["channel"];
+              if (channel === 0) {
+                let channelTransitions = data["channels"][(String(j))]["transitions"];
+                for (let m = 0; m < channelTransitions.length; m++) {
+                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === (k % 1000000)) {
+                    voltagesCH0[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                    console.log("AA");
+                  } else {
+                    voltagesCH0[k] = voltagesCH0[k-1];
+                  }
+                }
+              }  
+              if (channel === 1) {
+                let channelTransitions = data["channels"][(String(j))]["transitions"];
+                for (let m = 0; m < channelTransitions.length; m++) {
+                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                    voltagesCH1[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                  } else {
+                    voltagesCH1[k] = voltagesCH1[k-1];
+                  }
+                }
+              }
+              if (channel === 2) {
+                let channelTransitions = data["channels"][(String(j))]["transitions"];
+                for (let m = 0; m < channelTransitions.length; m++) {
+                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                    voltagesCH2[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                  } else {
+                    voltagesCH2[k] = voltagesCH2[k-1];
+                  }
+                }
+              }
+              if (channel === 3) {
+                let channelTransitions = data["channels"][(String(j))]["transitions"];
+                for (let m = 0; m < channelTransitions.length; m++) {
+                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                    voltagesCH3[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                  } else {
+                    voltagesCH3[k] = voltagesCH3[k-1];
+                  }
+                }
+              }
+              if (channel === 4) {
+                let channelTransitions = data["channels"][(String(j))]["transitions"];
+                for (let m = 0; m < channelTransitions.length; m++) {
+                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                    voltagesCH4[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                  } else {
+                    voltagesCH4[k] = voltagesCH4[k-1];
+                }
+                }
+              }
+              if (channel === 5) {
+                let channelTransitions = data["channels"][(String(j))]["transitions"];
+                for (let m = 0; m < channelTransitions.length; m++) {
+                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                    voltagesCH5[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                  } else {
+                    voltagesCH5[k] = voltagesCH5[k-1];
+                  }
+                }
+              }
+              if (channel === 6) {
+                let channelTransitions = data["channels"][(String(j))]["transitions"];
+                for (let m = 0; m < channelTransitions.length; m++) {
+                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                    voltagesCH6[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                  } else {
+                    voltagesCH6[k] = voltagesCH6[k-1];
+                  }
+                }
+              }
+              if (channel === 7) {
+                let channelTransitions = data["channels"][(String(j))]["transitions"];
+                for (let m = 0; m < channelTransitions.length; m++) {
+                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                    voltagesCH7[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                  } else {
+                    voltagesCH7[k] = voltagesCH7[k-1];
+                  }
+                }
+              }
+              if (channel === 8) {
+                let channelTransitions = data["channels"][(String(j))]["transitions"];
+                for (let m = 0; m < channelTransitions.length; m++) {
+                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                    voltagesCH8[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                  } else {
+                    voltagesCH8[k] = voltagesCH8[k-1];
+                  }
+                }
+              }
+              if (channel === 9) {
+                let channelTransitions = data["channels"][(String(j))]["transitions"];
+                for (let m = 0; m < channelTransitions.length; m++) {
+                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                    voltagesCH9[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                  } else {
+                    voltagesCH9[k] = voltagesCH9[k-1];
+                  }
+                }
+              }
+              if (channel === 10) {
+                let channelTransitions = data["channels"][(String(j))]["transitions"];
+                for (let m = 0; m < channelTransitions.length; m++) {
+                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                    voltagesCH10[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                  } else {
+                    voltagesCH10[k] = voltagesCH10[k-1];
+                  }
+                }
+              }
+              if (channel === 11) {
+                let channelTransitions = data["channels"][(String(j))]["transitions"];
+                for (let m = 0; m < channelTransitions.length; m++) {
+                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                    voltagesCH11[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                  } else {
+                    voltagesCH11[k] = voltagesCH11[k-1];
+                  }
+                }
+              }
+              if (channel === 12) {
+                let channelTransitions = data["channels"][(String(j))]["transitions"];
+                for (let m = 0; m < channelTransitions.length; m++) {
+                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                    voltagesCH12[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                  } else {
+                    voltagesCH12[k] = voltagesCH12[k-1];
+                  }
+                }
+              }
+              if (channel === 13) {
+                let channelTransitions = data["channels"][(String(j))]["transitions"];
+                for (let m = 0; m < channelTransitions.length; m++) {
+                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                    voltagesCH13[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                  } else {
+                    voltagesCH13[k] = voltagesCH13[k-1];
+                  }
+                }
+              }
+              if (channel === 14) {
+                let channelTransitions = data["channels"][(String(j))]["transitions"];
+                for (let m = 0; m < channelTransitions.length; m++) {
+                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                    voltagesCH14[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                  } else {
+                    voltagesCH14[k] = voltagesCH14[k-1];
+                  }
+                }
+              }
+              if (channel === 15) {
+                let channelTransitions = data["channels"][(String(j))]["transitions"];
+                for (let m = 0; m < channelTransitions.length; m++) {
+                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                    voltagesCH15[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                  } else {
+                    voltagesCH15[k] = voltagesCH15[k-1];
+                  }
+                }
+              }
+              times[k] = k+1;
+              //console.log(channel);
+            }
+          }
+          setChartData0(setChartData(times, "CH0", voltagesCH0, "yellow"));
+          setChartData1(setChartData(times, "CH1", voltagesCH1, "#0d99d1"));
+          setChartData2(setChartData(times, "CH2", voltagesCH2, "green"));
+          setChartData3(setChartData(times, "CH3", voltagesCH3, "red"));
+          setChartData4(setChartData(times, "CH4", voltagesCH4, "orange"));
+          setChartData5(setChartData(times, "CH5", voltagesCH5, "pink"));
+          setChartData6(setChartData(times, "CH6", voltagesCH6, "brown"));
+          setChartData7(setChartData(times, "CH7", voltagesCH7, "purple"));
+          setChartData8(setChartData(times, "CH8", voltagesCH8, "#917833"));
+          setChartData9(setChartData(times, "CH9", voltagesCH9, "#5110e8"));
+          setChartData10(setChartData(times, "CH10", voltagesCH10, "#f2070b"));
+          setChartData11(setChartData(times, "CH11", voltagesCH11, "#d9c80f"));
+          setChartData12(setChartData(times, "CH12", voltagesCH12, "#797adb"));
+          setChartData13(setChartData(times, "CH13", voltagesCH13, "#32d4ed"));
+          setChartData14(setChartData(times, "CH14", voltagesCH14, "#c77130"));
+          setChartData15(setChartData(times, "CH15", voltagesCH15, "#47dec2"));
+        
+          console.log(data);
+          console.log("measurementTimeUs: " + measurementTimeUs);
+          console.log("sampleRateHz: " + sampleRateHz);
+          console.log("triggered: " + triggered);
+          console.log("triggerTimestampUs: " + triggerTimestampUs);
+          console.log("warnings:" + warnings);
+          for (let i = 0; i < data["warnings"].length; i++) {
+            warnings += data["warnings"][String(i)]["value"];
+          }
+          setWarnings(warnings);
+          currentIteration++;
+        }
     
   }
 
@@ -497,6 +700,9 @@ function LogicAnalyzer({tokenId, deviceType}) {
         let triggered = data["triggered"];
         let triggerTimestampUs = data["triggerTimestampUs"];
         let warnings = data["warnings"];
+        console.log(data["channels"].length);
+        setMeasurementTimeUs("Measurement time: " + measurementTimeUs + " us");
+        setSampleRateHz("Sample rate: " + sampleRateHz + " Hz");
         for (let k = 0; k < 600; k++) {
           for (let j = 0; j < listChannels.length; j++) {
             let channel = data["channels"][(String(j))]["channel"];
@@ -681,55 +887,6 @@ function LogicAnalyzer({tokenId, deviceType}) {
         setChartData13(setChartData(times, "CH13", voltagesCH13, "#32d4ed"));
         setChartData14(setChartData(times, "CH14", voltagesCH14, "#c77130"));
         setChartData15(setChartData(times, "CH15", voltagesCH15, "#47dec2"));
-
-        /*if (ch0) {
-          voltagesCH0[i] = ;
-        }
-        if (ch1) {
-          voltagesCH1[i] = Math.floor(Math.random() * 2.0);
-        }
-        if (ch2) {
-          voltagesCH2[i] = Math.floor(Math.random() * 2.0);
-        }
-        if (ch3) {
-          voltagesCH3[i] = Math.floor(Math.random() * 2.0);
-        }
-        if (ch4) {
-          voltagesCH4[i] = Math.floor(Math.random() * 2.0);
-        }
-        if (ch5) {
-          voltagesCH5[i] = Math.floor(Math.random() * 2.0);
-        }
-        if (ch6) {
-          voltagesCH6[i] = Math.floor(Math.random() * 2.0);
-        }
-        if (ch7) {
-          voltagesCH7[i] = Math.floor(Math.random() * 2.0);
-        }
-        if (ch8) {
-          voltagesCH8[i] = Math.floor(Math.random() * 2.0);
-        }
-        if (ch9) {
-          voltagesCH9[i] = Math.floor(Math.random() * 2.0);
-        }
-        if (ch10) {
-          voltagesCH10[i] = Math.floor(Math.random() * 2.0);
-        }
-        if (ch11) {
-          voltagesCH11[i] = Math.floor(Math.random() * 2.0);
-        }
-        if (ch12) {
-          voltagesCH12[i] = Math.floor(Math.random() * 2.0);
-        }
-        if (ch13) {
-          voltagesCH13[i] = Math.floor(Math.random() * 2.0);
-        }
-        if (ch14) {
-          voltagesCH14[i] = Math.floor(Math.random() * 2.0);
-        }
-        if (ch15) {
-          voltagesCH15[i] = Math.floor(Math.random() * 2.0);
-        }*/
         
         console.log(data);
         console.log("measurementTimeUs: " + measurementTimeUs);
@@ -737,201 +894,188 @@ function LogicAnalyzer({tokenId, deviceType}) {
         console.log("triggered: " + triggered);
         console.log("triggerTimestampUs: " + triggerTimestampUs);
         console.log("warnings:" + warnings);
-        //data["warnings"]
+        for (let i = 0; i < data["warnings"].length; i++) {
+          warnings += data["warnings"][String(i)]["value"];
+        }
+        setWarnings(warnings);
       }
     
   }
 
     const renderChart0 = (ch0) => {
-        if (ch0) {
-            return <div className="row"><div className="chart-logic-analyzer">                    
-            <Line type="line" 
+      if (ch0) {
+        return <div className="row"><div className="chart-logic-analyzer">                    
+              <Line type="line" 
                 data={chartData0} 
                 options={chartOptions} 
                 ref={chartRef}/>
-                    </div>
-                    </div>
+              </div></div>
+      }
     }
-    }
+
     const renderChart1 = (ch1) => {
-        if (ch1) {
-            return <div className="row"><div className="chart-logic-analyzer">                    
-            <Line type="line" 
+      if (ch1) {
+        return <div className="row"><div className="chart-logic-analyzer">                    
+              <Line type="line" 
                 data={chartData1} 
                 options={chartOptions} 
                 ref={chartRef}/>
-                    </div>
-                    </div>
-    }
+              </div></div>
+      }
     }
 
     const renderChart2 = (ch2) => {
-        if (ch2) {
-            return <div className="row"><div className="chart-logic-analyzer">                    
-            <Line type="line" 
+      if (ch2) {
+        return <div className="row"><div className="chart-logic-analyzer">                    
+              <Line type="line" 
                 data={chartData2} 
                 options={chartOptions} 
                 ref={chartRef}/>
-                    </div>
-                    </div>
-    }
+              </div></div>
+      }
     }
 
     const renderChart3 = (ch3) => {
-        if (ch3) {
-            return <div className="row"><div className="chart-logic-analyzer">                    
-            <Line type="line" 
+      if (ch3) {
+        return <div className="row"><div className="chart-logic-analyzer">                    
+              <Line type="line" 
                 data={chartData3} 
                 options={chartOptions} 
                 ref={chartRef}/>
-                    </div>
-                    </div>
-    }
+              </div></div>
+      }
     }
 
     const renderChart4 = (ch4) => {
-        if (ch4) {
-            return <div className="row"><div className="chart-logic-analyzer">                    
-            <Line type="line" 
+      if (ch4) {
+        return <div className="row"><div className="chart-logic-analyzer">                    
+              <Line type="line" 
                 data={chartData4} 
                 options={chartOptions} 
                 ref={chartRef}/>
-                    </div>
-                    </div>
-    }
+              </div></div>
+      }
     }
 
     const renderChart5 = (ch5) => {
-        if (ch5) {
-            return <div className="row"><div className="chart-logic-analyzer">                    
-            <Line type="line" 
+      if (ch5) {
+        return <div className="row"><div className="chart-logic-analyzer">                    
+              <Line type="line" 
                 data={chartData5} 
                 options={chartOptions} 
                 ref={chartRef}/>
-                    </div>
-                    </div>
-    }
+              </div></div>
+      }
     }
 
     const renderChart6 = (ch6) => {
-        if (ch6) {
-            return <div className="row"><div className="chart-logic-analyzer">                    
-            <Line type="line" 
+      if (ch6) {
+        return <div className="row"><div className="chart-logic-analyzer">                    
+              <Line type="line" 
                 data={chartData6} 
                 options={chartOptions} 
                 ref={chartRef}/>
-                    </div>
-                    </div>
-    }
+              </div></div>
+      }
     }
 
     const renderChart7 = (ch7) => {
-        if (ch7) {
-            return <div className="row"><div className="chart-logic-analyzer">                    
-            <Line type="line" 
+      if (ch7) {
+        return <div className="row"><div className="chart-logic-analyzer">                    
+              <Line type="line" 
                 data={chartData7} 
                 options={chartOptions} 
                 ref={chartRef}/>
-                    </div>
-                    </div>
-    }
+              </div></div>
+      }
     }
 
     const renderChart8 = (ch8) => {
-        if (ch8) {
-            return <div className="row"><div className="chart-logic-analyzer">                    
-            <Line type="line" 
+      if (ch8) {
+        return <div className="row"><div className="chart-logic-analyzer">                    
+              <Line type="line" 
                 data={chartData8} 
                 options={chartOptions} 
                 ref={chartRef}/>
-                    </div>
-                    </div>
+              </div></div>
+      }
     }
-    }
-
 
     const renderChart9 = (ch9) => {
-        if (ch9) {
-            return <div className="row"><div className="chart-logic-analyzer">                    
-            <Line type="line" 
+      if (ch9) {
+        return <div className="row"><div className="chart-logic-analyzer">                    
+              <Line type="line" 
                 data={chartData9} 
                 options={chartOptions} 
                 ref={chartRef}/>
-                    </div>
-                    </div>
-    }
+              </div></div>
+      }
     }
 
     const renderChart10 = (ch10) => {
-        if (ch10) {
-            return <div className="row"><div className="chart-logic-analyzer">                    
-            <Line type="line" 
+      if (ch10) {
+        return <div className="row"><div className="chart-logic-analyzer">                    
+              <Line type="line" 
                 data={chartData10} 
                 options={chartOptions} 
                 ref={chartRef}/>
-                    </div>
-                    </div>
-    }
+              </div></div>
+      }
     }
 
     const renderChart11 = (ch11) => {
-        if (ch11) {
-            return <div className="row"><div className="chart-logic-analyzer">                    
-            <Line type="line" 
+      if (ch11) {
+        return <div className="row"><div className="chart-logic-analyzer">                    
+              <Line type="line" 
                 data={chartData11} 
                 options={chartOptions} 
                 ref={chartRef}/>
-                    </div>
-                    </div>
-    }
+              </div></div>  
+      }
     }
 
     const renderChart12 = (ch12) => {
-        if (ch12) {
-            return <div className="row"><div className="chart-logic-analyzer">                    
-            <Line type="line" 
+      if (ch12) {
+        return <div className="row"><div className="chart-logic-analyzer">                    
+              <Line type="line" 
                 data={chartData12} 
                 options={chartOptions} 
                 ref={chartRef}/>
-                    </div>
-                    </div>
-    }
+              </div></div>
+      }
     }
 
     const renderChart13 = (ch13) => {
-        if (ch13) {
-            return <div className="row"><div className="chart-logic-analyzer">                    
-            <Line type="line" 
+      if (ch13) {
+        return <div className="row"><div className="chart-logic-analyzer">                    
+              <Line type="line" 
                 data={chartData13} 
                 options={chartOptions} 
                 ref={chartRef}/>
-                    </div>
-                    </div>
-    }
+              </div></div>
+      }
     }
 
     const renderChart14 = (ch14) => {
-        if (ch14) {
-            return <div className="row"><div className="chart-logic-analyzer">                    
-            <Line type="line" 
+      if (ch14) {
+        return <div className="row"><div className="chart-logic-analyzer">                    
+              <Line type="line" 
                 data={chartData14} 
                 options={chartOptions} 
                 ref={chartRef}/>
-                    </div>
-                    </div>
-    }
+              </div></div>      
+      }
     }
 
     const renderChart15 = (ch15) => {
-        if (ch15) {
-            return <div className="row"><div className="chart-logic-analyzer">                    
-            <Line type="line" 
+      if (ch15) {
+        return <div className="row"><div className="chart-logic-analyzer">                    
+              <Line type="line" 
                 data={chartData15} 
                 options={chartOptions} 
                 ref={chartRef}/>
-                    </div>
-                    </div>
-    }
+              </div></div>
+      }
     }
 
     const [xStepSize, setXStepSize] = useState(1);
@@ -939,9 +1083,6 @@ function LogicAnalyzer({tokenId, deviceType}) {
 
     const [xScaleOptions, setXScaleOptions] = useState(
         { title: { display: false }, grid: { color: "#393b3d", }, ticks: { stepSize: xStepSize, color: "black", font: {size: 14} }, type: 'linear', min: 294, max: 306 }
-      );
-      const [yScaleOptions, setYScaleOptions] = useState(
-        { title: { display: false }, grid: { color: "#393b3d", }, ticks: { stepSize: 1, color: "white", font: {size: 14} }, min: 0.0, max: 1.0 }
       );
 
     const [chartOptions, setChartOptions] = useState(
@@ -953,7 +1094,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
           plugins: { legend: { labels: { color: "white" } } },
           scales: { 
             x: xScaleOptions,
-            y: yScaleOptions
+            y: { title: { display: false }, grid: { color: "#393b3d", }, ticks: { stepSize: 1, color: "white", font: {size: 14} }, min: 0.0, max: 1.0 }
           },
         }
     );
@@ -1018,24 +1159,21 @@ function LogicAnalyzer({tokenId, deviceType}) {
     }
   }
 
-    const changeButton = () => {
-      if (defaultMode === "record-data") {
-        configureScalesForLiveMode(horizontalScale);
-      } 
+  const onLiveCaptureButton = () => {
+    if (defaultMode === "record-data") {
+      configureScalesForLiveMode(horizontalScale);
+    } 
+    setDefaultMode("live-data");
+    if (isRun) {
+      setIsRun(false);
+      clearInterval(intervalID);
+    } else {
+      setIsRun(true);
+      setIntervalID(setInterval(() => refreshChartData(), 1000));
+    }
+  };
 
-      setDefaultMode("live-data");
-      console.log("isFirstCapture: " + isFirstCapture);
-      if (isRun) {
-        setIsRun(false);
-        clearInterval(intervalID);
-      } else {
-        setIsRun(true);
-        setIsFirstCapture(true);
-        setIntervalID(setInterval(() => refreshChartData(), 1000));
-      }
-    };
-
-    const changeRecordButton = () => {
+    const onRecordButton = () => {
       if (defaultMode === "live-data") {
         configureScalesForRecordMode(horizontalScale);
       }
@@ -1043,8 +1181,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
       console.log("heree");
       setIsRecordRun(true);
       console.log(selectedTimeout);
-      let i = setInterval(() => refreshChartRecordData(), 1000);
-      setTimeout(function() { setIsRecordRun(false); clearInterval( i ); currentIteration = 0; }, 1000 * (Number(selectedTimeout)));
+      let i = setInterval(() => refreshChartRecordData(), 2000);
+      setTimeout(function() { setIsRecordRun(false); clearInterval( i ); currentIteration = 0; }, 2000 * ((Number(selectedTimeout))+1));
     };
 
     const onTimeoutValueChange = (e) => {
@@ -1062,8 +1200,6 @@ function LogicAnalyzer({tokenId, deviceType}) {
         try {
           await fetchChartData(ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7,
             ch8, ch9, ch10, ch11, ch12, ch13, ch14, ch15);
-        //   setChartData(data);
-          setIsFirstCapture(false);
         } catch (error) {
           console.error("Error fetching chart data:", error);
         }
@@ -1073,8 +1209,6 @@ function LogicAnalyzer({tokenId, deviceType}) {
         try {
           await fetchChartRecordData(ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7,
             ch8, ch9, ch10, ch11, ch12, ch13, ch14, ch15);
-        //   setChartData(data);
-          // setIsFirstCapture(false);
         } catch (error) {
           console.error("Error fetching chart record data:", error);
         }
@@ -1111,7 +1245,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
           { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 1, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(selectedTimeout)) * 1000000 / 2 - 6, max: (Number(selectedTimeout)) * 1000000 / 2 + 6 }
         );
         setChartSpecOptions(setChartSpecOptionsUnified(1, (Number(selectedTimeout)) * 1000000 / 2 - 6, (Number(selectedTimeout)) * 1000000 / 2 + 6));
-        setChartOptions(setChartOptionsUnified(1, (Number(selectedTimeout)) * 1000000 / 2 - 6, (Number(selectedTimeout)) * 1000000 / 2 + 6, yScaleOptions));
+        setChartOptions(setChartOptionsUnified(1, (Number(selectedTimeout)) * 1000000 / 2 - 6, (Number(selectedTimeout)) * 1000000 / 2 + 6));
         break;
       case "10us":
         setXStepSize(10);
@@ -1122,7 +1256,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
           { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 10, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(selectedTimeout)) * 1000000 / 2 - 60, max: (Number(selectedTimeout)) * 1000000 / 2 + 60 }
         );
         setChartSpecOptions(setChartSpecOptionsUnified(10, (Number(selectedTimeout)) * 1000000 / 2 - 60, (Number(selectedTimeout)) * 1000000 / 2 + 60));
-        setChartOptions(setChartOptionsUnified(10, (Number(selectedTimeout)) * 1000000 / 2 - 60, (Number(selectedTimeout)) * 1000000 / 2 + 60, yScaleOptions));
+        setChartOptions(setChartOptionsUnified(10, (Number(selectedTimeout)) * 1000000 / 2 - 60, (Number(selectedTimeout)) * 1000000 / 2 + 60));
         break;
       case "50us":
         setXCenterValue((Number(selectedTimeout)) * 1000000 / 2);
@@ -1133,7 +1267,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
           { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 50, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: true, min: (Number(selectedTimeout)) * 1000000 / 2 - 300, max: (Number(selectedTimeout)) * 1000000 / 2 + 300 }
         );
         setChartSpecOptions(setChartSpecOptionsUnified(50, (Number(selectedTimeout)) * 1000000 / 2 - 300, (Number(selectedTimeout)) * 1000000 / 2 + 300));
-        setChartOptions(setChartOptionsUnified(50, (Number(selectedTimeout)) * 1000000 / 2 - 300, (Number(selectedTimeout)) * 1000000 / 2 + 300, yScaleOptions));
+        setChartOptions(setChartOptionsUnified(50, (Number(selectedTimeout)) * 1000000 / 2 - 300, (Number(selectedTimeout)) * 1000000 / 2 + 300));
         break;
       case "20us":
         setXStepSize(20);
@@ -1144,7 +1278,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
           { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 20, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(selectedTimeout)) * 1000000 / 2 - 130, max: (Number(selectedTimeout)) * 1000000 / 2 + 110 }
         );
         setChartSpecOptions(setChartSpecOptionsUnified(20, (Number(selectedTimeout)) * 1000000 / 2 - 130, (Number(selectedTimeout)) * 1000000 / 2 + 110));
-        setChartOptions(setChartOptionsUnified(20, (Number(selectedTimeout)) * 1000000 / 2 - 130, (Number(selectedTimeout)) * 1000000 / 2 + 110, yScaleOptions));
+        setChartOptions(setChartOptionsUnified(20, (Number(selectedTimeout)) * 1000000 / 2 - 130, (Number(selectedTimeout)) * 1000000 / 2 + 110));
         break;
       default:
         setXStepSize(xStepSize);
@@ -1165,7 +1299,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
           { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 1, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 294, max: 306 }
         );
         setChartSpecOptions(setChartSpecOptionsUnified(1, 294, 306));
-        setChartOptions(setChartOptionsUnified(1, 294, 306, yScaleOptions));
+        setChartOptions(setChartOptionsUnified(1, 294, 306));
         break;
       case "10us":
         setXStepSize(10);
@@ -1176,7 +1310,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
           { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 10, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 240, max: 360 }
         );
         setChartSpecOptions(setChartSpecOptionsUnified(10, 240, 360));
-        setChartOptions(setChartOptionsUnified(10, 240, 360, yScaleOptions));
+        setChartOptions(setChartOptionsUnified(10, 240, 360));
         break;
       case "50us":
         setXStepSize(50);
@@ -1184,7 +1318,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
           { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 50, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: true, min: 0, max: 600 }
         );
         setChartSpecOptions(setChartSpecOptionsUnified(50, 0, 600));
-        setChartOptions(setChartOptionsUnified(50, 0, 600, yScaleOptions));
+        setChartOptions(setChartOptionsUnified(50, 0, 600));
         break;
       case "20us":
         setXStepSize(20);
@@ -1195,7 +1329,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
           { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 20, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 170, max: 410 }
         );
         setChartSpecOptions(setChartSpecOptionsUnified(20, 170, 410));
-        setChartOptions(setChartOptionsUnified(20, 170, 410, yScaleOptions));
+        setChartOptions(setChartOptionsUnified(20, 170, 410));
         break;
       default:
         setXStepSize(xStepSize);
@@ -1222,10 +1356,21 @@ function LogicAnalyzer({tokenId, deviceType}) {
     setXScaleOptions(
       { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: xStepSize, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(e.target.value) - 6 * xStepSize), max: (Number(e.target.value) + 6 * xStepSize) }
     );
-    setChartOptions(setChartOptionsUnified(xStepSize, (Number(e.target.value) - 6 * xStepSize), (Number(e.target.value) + 6 * xStepSize), yScaleOptions));
+    setChartOptions(setChartOptionsUnified(xStepSize, (Number(e.target.value) - 6 * xStepSize), (Number(e.target.value) + 6 * xStepSize)));
     setChartSpecOptions(setChartSpecOptionsUnified(xStepSize, (Number(e.target.value) - 6 * xStepSize), (Number(e.target.value) + 6 * xStepSize)));
   }
-      
+
+  const renderSampleHz = (sampleRateHz) => {
+    return <div>{sampleRateHz}</div>
+  }
+
+  const renderMeasurementTimeUs = (measurementTimeUs) => {
+    return <div>{measurementTimeUs}</div>
+  }
+  
+  const renderWarnings = (warnings) => {
+    return <div>{warnings}</div>
+  }
 
     return (
         <div>
@@ -1249,13 +1394,20 @@ function LogicAnalyzer({tokenId, deviceType}) {
             {renderChartXAxis(listChannels)}
             <div className="col-6 my-auto mx-auto">
               <button className="btn btn-md btn-primary m-2" disabled={isRecordRun}
-              onClick={changeButton}><i className={isRun ? "bi bi-pause" : "bi bi-caret-right"}></i></button>
+              onClick={onLiveCaptureButton}><i className={isRun ? "bi bi-pause" : "bi bi-caret-right"}></i></button>
 
               <button className="btn btn-md btn-primary m-2" disabled={isRecordRun || isRun}
-              onClick={changeRecordButton}><i className="bi bi-record-circle"></i></button>
+              onClick={onRecordButton}><i className="bi bi-record-circle"></i></button>
 
               <button className="btn btn-md btn-primary m-2" 
               onClick={saveWaveform}><i className="bi bi-download"></i></button>
+            </div>
+            <div className="logic-analyzer-backend-params">
+              {renderSampleHz(sampleRateHz)}
+              {renderMeasurementTimeUs(measurementTimeUs)}
+            </div>
+            <div className="logic-analyzer-warnings">
+              {renderWarnings(warnings)}
             </div>
           <div className="">
             <div className="">
@@ -1393,7 +1545,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
                     {listChannels.map((channel)=> {
                         return (
                             <option key={channel}>
-                                CH{channel}
+                                {channel}
                             </option>
                         )
                     })}

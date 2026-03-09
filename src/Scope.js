@@ -137,7 +137,6 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
   const [yScaleOptions, setYScaleOptions] = useState(
     { title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: yStepSize, color: "white", font: {size: 14} }, min: -4.0, max: 4.0 }
   );
-  const [buttonName, setButtonName] = useState("Run");
   const [isCH1Enabled, setIsCH1Enabled] = useState(true);
   const [isCH2Enabled, setIsCH2Enabled] = useState(false);
   const [isRun, setIsRun] = useState(false);
@@ -176,11 +175,9 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
   const changeButton = () => {
     console.log("isFirstCapture: " + isFirstCapture);
     if (isRun) {
-      setButtonName("Run");
       setIsRun(false);
       clearInterval(intervalID);
     } else {
-      setButtonName("Stop");
       setIsRun(true);
       setIsFirstCapture(true);
       setIntervalID(setInterval(() => refreshChartData(), 1000));
