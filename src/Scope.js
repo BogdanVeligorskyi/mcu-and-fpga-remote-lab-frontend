@@ -28,115 +28,109 @@ function ScopeChart({tokenId, deviceType}) {
   let voltagesCH2 = [];
 
   // fetch voltage values from backend
-const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
+  const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
 
-  let requestOptions;
+    let requestOptions;
 
-  console.log("fetchChartData");
-  if (process.env.REACT_APP_IS_FRONTEND_DEV_MODE.toUpperCase() === "TRUE") {
-    console.log("in here");
-    for (let i = 0; i < 600; i++) {
-      voltagesCH1[i] = Math.floor(Math.random() * 4.0);
-      voltagesCH2[i] = 0;
-      times[i] = i+1;
-    }
-  } else {
-
-  // fetch data for channel 1
-  if (isCH1Enabled) {
-    if (times.length === 0) {
-      requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
-        body: JSON.stringify({ channel: 0, isFirstCapture: 1}),
-        credentials: 'include'
+    console.log("fetchChartData");
+    if (process.env.REACT_APP_IS_FRONTEND_DEV_MODE.toUpperCase() === "TRUE") {
+      console.log("in here");
+      for (let i = 0; i < 600; i++) {
+        voltagesCH1[i] = Math.floor(Math.random() * 4.0);
+        voltagesCH2[i] = 0;
+        times[i] = i+1;
       }
     } else {
-      requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
-        body: JSON.stringify({ channel: 0, isFirstCapture: 0}),
-        credentials: 'include'
-      }
-    }
-    let response = await fetch(getUrlForRequest('/api/scope/get-scope-data'), 
-    requestOptions);
-    let data = await response.json();
-    voltagesCH1 = data["voltages"];
-    if (times.length === 0) {
-      times = data["times"];
-    }
-  } else {
-    voltagesCH1 = [];
-  }
 
-  // fetch data for channel 2
-  if (isCH2Enabled) {
-    if (times.length === 0) {
-      requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
-        body: JSON.stringify({ channel: 1, isFirstCapture: 1}),
-        credentials: 'include'
+      // fetch data for channel 1
+      if (isCH1Enabled) {
+        if (times.length === 0) {
+          requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
+            body: JSON.stringify({ channel: 0, isFirstCapture: 1}),
+            credentials: 'include'
+          }
+        } else {
+          requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
+            body: JSON.stringify({ channel: 0, isFirstCapture: 0}),
+            credentials: 'include'
+          }
+        }
+        let response = await fetch(getUrlForRequest('/api/scope/get-scope-data'), requestOptions);
+        let data = await response.json();
+        voltagesCH1 = data["voltages"];
+        if (times.length === 0) {
+          times = data["times"];
+        }
+      } else {
+        voltagesCH1 = [];
       }
-    } else {
-      requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
-        body: JSON.stringify({ channel: 1, isFirstCapture: 0}),
-        credentials: 'include'
+
+      // fetch data for channel 2
+      if (isCH2Enabled) {
+        if (times.length === 0) {
+          requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
+            body: JSON.stringify({ channel: 1, isFirstCapture: 1}),
+            credentials: 'include'
+          }
+        } else {
+          requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
+            body: JSON.stringify({ channel: 1, isFirstCapture: 0}),
+            credentials: 'include'
+          }
+        }
+        let response = await fetch(getUrlForRequest('/api/scope/get-scope-data'), requestOptions);
+        let data = await response.json();
+        voltagesCH2 = data["voltages"];
+        if (times.length === 0) {
+          times = data["times"];
+        }
+      } else {
+        voltagesCH2 = [];
       }
     }
-    let response = await fetch(getUrlForRequest('/api/scope/get-scope-data'), 
-    requestOptions);
-    let data = await response.json();
-    voltagesCH2 = data["voltages"];
-    if (times.length === 0) {
-      times = data["times"];
-    }
-  } else {
-    voltagesCH2 = [];
-  }
-}
   
-  //console.log(voltages);
-  //console.log(times);  
-  return {
-    labels: times,
-    datasets: [
-      {
-        label: "CH1",
-        data: voltagesCH1,
-        borderColor: "yellow",
-        borderWidth: 5
-      },
-      {
-        label: "CH2",
-        data: voltagesCH2,
-        borderColor: "#0d99d1",
-        borderWidth: 5
-      }
-    ]
+    return {
+      labels: times,
+      datasets: [
+        {
+          label: "CH1",
+          data: voltagesCH1,
+          borderColor: "yellow",
+          borderWidth: 5
+        },
+        {
+          label: "CH2",
+          data: voltagesCH2,
+          borderColor: "#0d99d1",
+          borderWidth: 5
+        }
+      ]
+    }
   }
-}
 
   const chartRef = useRef(null);
   const [verticalScale, setVerticalScale] = useState("1.0");
   const [horizontalScale, setHorizontalScale] = useState("1us");
   const [xCenterValue, setXCenterValue] = useState(300);
   const [yCenterValue, setYCenterValue] = useState(0.0);
+  const [xScaleMin, setXScaleMin] = useState(294);
+  const [xScaleMax, setXScaleMax] = useState(306);
+  const [yScaleMin, setYScaleMin] = useState(-4);
+  const [yScaleMax, setYScaleMax] = useState(4);
   const [xInputMin, setXInputMin] = useState();
   const [yInputMin, setYInputMin] = useState();
   const [xInputMax, setXInputMax] = useState();
   const [yInputMax, setYInputMax] = useState();
   const [xStepSize, setXStepSize] = useState(1);
   const [yStepSize, setYStepSize] = useState(0.005);
-  const [xScaleOptions, setXScaleOptions] = useState(
-    { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: xStepSize, color: "white", font: {size: 14} }, type: 'linear', min: 0, max: 600 }
-  );
-  const [yScaleOptions, setYScaleOptions] = useState(
-    { title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: yStepSize, color: "white", font: {size: 14} }, min: -4.0, max: 4.0 }
-  );
   const [isCH1Enabled, setIsCH1Enabled] = useState(true);
   const [isCH2Enabled, setIsCH2Enabled] = useState(false);
   const [isRun, setIsRun] = useState(false);
@@ -149,8 +143,8 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
       maintainAspectRatio: false,
       plugins: { legend: { labels: { color: "white" } } },
       scales: { 
-        x: xScaleOptions,
-        y: yScaleOptions
+        x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: xStepSize, color: "white", font: {size: 14} }, type: 'linear', min: 0, max: 600 },
+        y: { title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: yStepSize, color: "white", font: {size: 14} }, min: -4.0, max: 4.0 }
       },
     }
   );
@@ -195,6 +189,41 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
     }
   };
 
+  const setXChartOptionsUnified = (xStepSize, xAtZero, xMinValue, xMaxValue) => {
+    return { 
+      title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, 
+      grid: { color: "#393b3d", }, 
+      ticks: { stepSize: xStepSize, color: "white", font: {size: 14} }, 
+      type: 'linear', 
+      beginAtZero: xAtZero, 
+      min: xMinValue, 
+      max: xMaxValue 
+    }
+  }
+
+  const setYChartOptionsUnified = (yStepSize, yAtZero, yMinValue, yMaxValue) => {
+    return { 
+      title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, 
+      grid: { color: "#393b3d", }, 
+      ticks: { stepSize: yStepSize, color: "white", font: {size: 14} }, 
+      min: yMinValue, max: yMaxValue 
+    }
+  }
+
+  const setChartOptionsUnified = (xStepSize, xAtZero, xMinValue, xMaxValue, 
+    yStepSize, yAtZero, yMinValue, yMaxValue) => {
+    return {
+      elements: { point: { radius: 0, } },
+      animation: { duration: 100 },
+      maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: "white" } } },
+      scales: { 
+        x: setXChartOptionsUnified(xStepSize, xAtZero, xMinValue, xMaxValue),
+        y: setYChartOptionsUnified(yStepSize, yAtZero, yMinValue, yMaxValue)
+      },
+    }
+  }
+
   // handler for 'Save Waveform' button
   const saveWaveform = () => {
     if (chartRef === null) {
@@ -202,9 +231,9 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
     }
     let a = document.createElement('a');
     a.href = chartRef.current.toBase64Image();
-    a.download = 'waveform.png';
+    a.download = 'scope_waveform.png';
     a.click();
-};
+  };
 
   const renderScaleScroll = (scaleName) => {
     if (scaleName.toUpperCase() === "X") {
@@ -251,41 +280,20 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
     setIsCH2Enabled(!isCH2Enabled);
   };
 
+
   const onXScaleInputChange = e => {
+    setXScaleMax((Number(e.target.value) + 6 * xStepSize));
+    setXScaleMin((Number(e.target.value) - 6 * xStepSize));
     setXCenterValue(e.target.value);
-    setXScaleOptions(
-      { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: xStepSize, color: "white", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(e.target.value) - 6 * xStepSize), max: (Number(e.target.value) + 6 * xStepSize) }
-    );
-    setChartOptions(
-      {
-        elements: { point: { radius: 0, } },
-        animation: { duration: 100 },
-        maintainAspectRatio: false,
-        plugins: { legend: { labels: { color: "white" } } },
-        scales: { 
-          x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: xStepSize, color: "white", font: {size: 14} }, type: 'linear', beginAtZero: false, min: (Number(e.target.value) - 6 * xStepSize), max: (Number(e.target.value) + 6 * xStepSize) },
-          y: yScaleOptions
-        },
-      }
-    );
+    setChartOptions(setChartOptionsUnified(xStepSize, false, (Number(e.target.value) - 6 * xStepSize), (Number(e.target.value) + 6 * xStepSize), yStepSize, false, yScaleMin, yScaleMax),
+  );
   }
 
   const onYScaleInputChange = e => {
+    setYScaleMax((Number(e.target.value) + 5 * yStepSize));
+    setYScaleMin((Number(e.target.value) - 5 * yStepSize));
     setYCenterValue(e.target.value);
-    setYScaleOptions(
-      { title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: yStepSize, color: "white", font: {size: 14} }, min: (Number(e.target.value) - 5 * yStepSize), max: (Number(e.target.value) + 5 * yStepSize ) }
-    );
-    setChartOptions(
-      {
-        elements: { point: { radius: 0, } },
-        animation: { duration: 100 },
-        maintainAspectRatio: false,
-        plugins: { legend: { labels: { color: "white" } } },
-        scales: { 
-          x: xScaleOptions,
-          y: { title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: yStepSize, color: "white", font: {size: 14} }, min: (Number(e.target.value) - 5 * yStepSize), max: (Number(e.target.value) + 5 * yStepSize ) }
-        },
-      });
+    setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, yStepSize, false, (Number(e.target.value) - 5 * yStepSize), (Number(e.target.value) + 5 * yStepSize)));
   }
 
   // handler for Y-scale change
@@ -297,169 +305,72 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
         setYCenterValue(0);
         setYInputMin(-3.975);
         setYInputMax(3.975);
-        setYScaleOptions(
-          { title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 0.005, color: "white", font: {size: 14} }, min: -0.025, max: 0.025 }
-        );
-        setChartOptions(
-          {
-            elements: { point: { radius: 0, } },
-            animation: { duration: 100 },
-            maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: "white" } } },
-            scales: { 
-              x: xScaleOptions,
-              y: { title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 0.005, color: "white", font: {size: 14} }, min: -0.025, max: 0.025 }
-            },
-          }
-        );
+        setYScaleMin(-0.025);
+        setYScaleMax(0.025);
+        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 0.005, false, -0.025, 0.025));
         break;
       case "10m":
         setYStepSize(0.01);
         setYCenterValue(0);
         setYInputMin(-3.95);
         setYInputMax(3.95);
-        setYScaleOptions(
-          { title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 0.01, color: "white", font: {size: 14} }, min: -0.05, max: 0.05 }
-        );
-        setChartOptions(
-          {
-            elements: { point: { radius: 0, } },
-            animation: { duration: 100 },
-            maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: "white" } } },
-            scales: { 
-              x: xScaleOptions,
-              y: { title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 0.01, color: "white", font: {size: 14} }, min: -0.05, max: 0.05 }
-            },
-          }
-        );
+        setYScaleMin(-0.05);
+        setYScaleMax(0.05);
+        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 0.01, false, -0.05, 0.05));
         break;
       case "20m":
         setYStepSize(0.02);
         setYCenterValue(0);
         setYInputMin(-3.9);
         setYInputMax(3.9);
-        setYScaleOptions(
-          { title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 0.02, color: "white", font: {size: 14} }, min: -0.1, max: 0.1 }
-        );
-        setChartOptions(
-          {
-            elements: { point: { radius: 0, } },
-            animation: { duration: 100 },
-            maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: "white" } } },
-            scales: { 
-              x: xScaleOptions,
-              y: { title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 0.02, color: "white", font: {size: 14} }, min: -0.1, max: 0.1 }
-            },
-          }
-        );
+        setYScaleMin(-0.1);
+        setYScaleMax(0.1);
+        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 0.02, false, -0.1, 0.1));
         break;  
       case "50m":
         setYStepSize(0.05);
         setYCenterValue(0);
         setYInputMin(-3.75);
         setYInputMax(3.75);
-        setYScaleOptions(
-          { title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 0.05, color: "white", font: {size: 14} }, min: -0.25, max: 0.25 }
-        );
-        setChartOptions(
-          {
-            elements: { point: { radius: 0, } },
-            animation: { duration: 100 },
-            maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: "white" } } },
-            scales: { 
-              x: xScaleOptions,
-              y: { title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 0.05, color: "white", font: {size: 14} }, min: -0.25, max: 0.25 }
-            },
-          }
-        );
+        setYScaleMin(-0.25);
+        setYScaleMax(0.25);
+        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 0.05, false, -0.25, 0.25));
         break;
       case "0.1":
         setYStepSize(0.1);
         setYCenterValue(0);
         setYInputMin(-3.5);
         setYInputMax(3.5);
-        setYScaleOptions(
-          { title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 0.1, color: "white", font: {size: 14} }, min: -0.5, max: 0.5 }
-        );
-        setChartOptions(
-          {
-            elements: { point: { radius: 0, } },
-            animation: { duration: 100 },
-            maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: "white" } } },
-            scales: { 
-              x: xScaleOptions,
-              y: { title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 0.1, color: "white", font: {size: 14} }, min: -0.5, max: 0.5 }
-            },
-          }
-        );
+        setYScaleMin(-0.5);
+        setYScaleMax(0.5);
+        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 0.1, false, -0.5, 0.5));
         break;
       case "0.2":
         setYStepSize(0.2);
         setYCenterValue(0);
         setYInputMin(-3.0);
         setYInputMax(3.0);
-        setYScaleOptions(
-          { title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 0.2, color: "white", font: {size: 14} }, min: -1.0, max: 1.0 }
-        );
-        setChartOptions(
-          {
-            elements: { point: { radius: 0, } },
-            animation: { duration: 100 },
-            maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: "white" } } },
-            scales: { 
-              x: xScaleOptions,
-              y: { title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 0.2, color: "white", font: {size: 14} }, min: -1.0, max: 1.0 }
-            },
-          }
-        );
+        setYScaleMin(-1.0);
+        setYScaleMax(1.0);
+        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 0.2, false, -1.0, 1.0));
         break;
       case "0.5":
         setYStepSize(0.5);
         setYCenterValue(0);
         setYInputMin(-1.5);
         setYInputMax(1.5);
-        setYScaleOptions(
-          { title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 0.5, color: "white", font: {size: 14} }, min: -2.5, max: 2.5 }
-        );
-        setChartOptions(
-          {
-            elements: { point: { radius: 0, } },
-            animation: { duration: 100 },
-            maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: "white" } } },
-            scales: { 
-              x: xScaleOptions,
-              y: { title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 0.5, color: "white", font: {size: 14} }, min: -2.5, max: 2.5 }
-            },
-          }
-        );
+        setYScaleMin(-2.5);
+        setYScaleMax(2.5);
+        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 0.5, false, -2.5, 2.5));
         break;
       case "1.0":
         setYStepSize(1.0);
-        setYScaleOptions(
-          { title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 1.0, color: "white", font: {size: 14} }, min: -4.0, max: 4.0 }
-        );
-        setChartOptions(
-          {
-            elements: { point: { radius: 0, } },
-            animation: { duration: 100 },
-            maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: "white" } } },
-            scales: { 
-              x: xScaleOptions,
-              y: { title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 1.0, color: "white", font: {size: 14} }, min: -4.0, max: 4.0 }
-            },
-          }
-        );
+        setYScaleMin(-4.0);
+        setYScaleMax(4.0);
+        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 1.0, false, -4.0, 4.0));
         break;
       default:
         setYStepSize(yStepSize);
-        setYScaleOptions(yScaleOptions);
         setChartOptions(chartOptions);
     }
   };
@@ -474,85 +385,36 @@ const fetchChartData = async (isCH1Enabled, isCH2Enabled) => {
         setXCenterValue(300);
         setXInputMin(6);
         setXInputMax(594);
-        setXScaleOptions(
-          { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 1, color: "white", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 294, max: 306 }
-        );
-        setChartOptions(
-          {
-            elements: { point: { radius: 0, } },
-            animation: { duration: 100 },
-            maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: "white" } } },
-            scales: { 
-              x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 1, color: "white", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 294, max: 306 },
-              y: yScaleOptions
-            },
-          }
-        );
+        setXScaleMin(294);
+        setXScaleMax(306);
+        setChartOptions(setChartOptionsUnified(1, false, 294, 306, yStepSize, false, yScaleMin, yScaleMax));
         break;
       case "10us":
         setXStepSize(10);
         setXCenterValue(300);
         setXInputMin(60);
         setXInputMax(540);
-        setXScaleOptions(
-          { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 10, color: "white", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 240, max: 360 }
-        );
-        setChartOptions(
-          {
-            elements: { point: { radius: 0, } },
-            animation: { duration: 100 },
-            maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: "white" } } },
-            scales: { 
-              x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 10, color: "white", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 240, max: 360 },
-              y: yScaleOptions
-            },
-          }
-        );
-        break;
-      case "50us":
-        setXStepSize(50);
-        setXScaleOptions(
-          { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 50, color: "white", font: {size: 14} }, type: 'linear', beginAtZero: true, min: 0, max: 600 }
-        );
-        setChartOptions(
-          {
-            elements: { point: { radius: 0, } },
-            animation: { duration: 100 },
-            maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: "white" } } },
-            scales: { 
-              x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 50, color: "white", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 0, max: 600 },
-              y: yScaleOptions
-            },
-          }
-        );
+        setXScaleMin(240);
+        setXScaleMax(360);
+        setChartOptions(setChartOptionsUnified(10, false, 240, 360, yStepSize, false, yScaleMin, yScaleMax));       
         break;
       case "20us":
         setXStepSize(20);
         setXCenterValue(300);
         setXInputMin(120);
         setXInputMax(480);
-        setXScaleOptions(
-          { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 20, color: "white", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 170, max: 410 }
-        );
-        setChartOptions(
-          {
-            elements: { point: { radius: 0, } },
-            animation: { duration: 100 },
-            maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: "white" } } },
-            scales: { 
-              x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: 20, color: "white", font: {size: 14} }, type: 'linear', beginAtZero: false, min: 170, max: 410 },
-              y: yScaleOptions
-            },
-          }
-        );
+        setXScaleMin(170);
+        setXScaleMax(410);
+        setChartOptions(setChartOptionsUnified(20, false, 170, 410, yStepSize, false, yScaleMin, yScaleMax));
+        break;
+      case "50us":
+        setXStepSize(50);
+        setXScaleMin(0);
+        setXScaleMax(600);
+        setChartOptions(setChartOptionsUnified(50, true, 0, 600, yStepSize, false, yScaleMin, yScaleMax));
         break;
       default:
         setXStepSize(xStepSize);
-        setXScaleOptions(xScaleOptions);
         setChartOptions(chartOptions);
     }
   };

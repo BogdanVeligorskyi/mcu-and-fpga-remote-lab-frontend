@@ -22,1115 +22,869 @@ Chart.register({
 
 function LogicAnalyzer({tokenId, deviceType}) {
 
-    let voltagesCH0 = [];
-    let voltagesCH1 = [];
-    let voltagesCH2 = [];
-    let voltagesCH3 = [];
-    let voltagesCH4 = [];
-    let voltagesCH5 = [];
-    let voltagesCH6 = [];
-    let voltagesCH7 = [];
-    let voltagesCH8 = [];
-    let voltagesCH9 = [];
-    let voltagesCH10 = [];
-    let voltagesCH11 = [];
-    let voltagesCH12 = [];
-    let voltagesCH13 = [];
-    let voltagesCH14 = [];
-    let voltagesCH15 = [];
-    let times = [];
-    let currentIteration = 0;
+  let voltagesCH0 = [];
+  let voltagesCH1 = [];
+  let voltagesCH2 = [];
+  let voltagesCH3 = [];
+  let voltagesCH4 = [];
+  let voltagesCH5 = [];
+  let voltagesCH6 = [];
+  let voltagesCH7 = [];
+  let voltagesCH8 = [];
+  let voltagesCH9 = [];
+  let voltagesCH10 = [];
+  let voltagesCH11 = [];
+  let voltagesCH12 = [];
+  let voltagesCH13 = [];
+  let voltagesCH14 = [];
+  let voltagesCH15 = [];
+  let times = [];
+  let currentIteration = 0;
 
-    const chartRef = useRef(null);
-    const [ch0, setCh0] = useState(false);
-    const [ch1, setCh1] = useState(false);
-    const [ch2, setCh2] = useState(false);
-    const [ch3, setCh3] = useState(false);
-    const [ch4, setCh4] = useState(false);
-    const [ch5, setCh5] = useState(false);
-    const [ch6, setCh6] = useState(false);
-    const [ch7, setCh7] = useState(false);
-    const [ch8, setCh8] = useState(false);
-    const [ch9, setCh9] = useState(false);
-    const [ch10, setCh10] = useState(false);
-    const [ch11, setCh11] = useState(false);
-    const [ch12, setCh12] = useState(false);
-    const [ch13, setCh13] = useState(false);
-    const [ch14, setCh14] = useState(false);
-    const [ch15, setCh15] = useState(false);
-    const [triggerType, setTriggerType] = useState("falling");
-    const [isRun, setIsRun] = useState(false);
-    const [isRecordRun, setIsRecordRun] = useState(false);
-    const [defaultMode, setDefaultMode] = useState("live-data");
-    const [intervalID, setIntervalID] = useState(); 
+  const chartRef = useRef(null);
+  const [ch0, setCh0] = useState(false);
+  const [ch1, setCh1] = useState(false);
+  const [ch2, setCh2] = useState(false);
+  const [ch3, setCh3] = useState(false);
+  const [ch4, setCh4] = useState(false);
+  const [ch5, setCh5] = useState(false);
+  const [ch6, setCh6] = useState(false);
+  const [ch7, setCh7] = useState(false);
+  const [ch8, setCh8] = useState(false);
+  const [ch9, setCh9] = useState(false);
+  const [ch10, setCh10] = useState(false);
+  const [ch11, setCh11] = useState(false);
+  const [ch12, setCh12] = useState(false);
+  const [ch13, setCh13] = useState(false);
+  const [ch14, setCh14] = useState(false);
+  const [ch15, setCh15] = useState(false);
+  const [triggerType, setTriggerType] = useState("immediate");
+  const [isRun, setIsRun] = useState(false);
+  const [isRecordRun, setIsRecordRun] = useState(false);
+  const [defaultMode, setDefaultMode] = useState("live-data");
+  const [intervalID, setIntervalID] = useState(); 
     
-    const [xInputMin, setXInputMin] = useState(294);
-    const [xInputMax, setXInputMax] = useState(306);
-    const [xCenterValue, setXCenterValue] = useState(300);
+  const [xInputMin, setXInputMin] = useState(294);
+  const [xInputMax, setXInputMax] = useState(306);
+  const [xCenterValue, setXCenterValue] = useState(300);
 
-    const [listChannels, setListChannels] = useState([]);
+  const [listChannels, setListChannels] = useState([]);
         
-    const [selectedChannel, setSelectedChannel] = useState();
-    const [selectedTimeout, setSelectedTimeout] = useState(1);
+  const [selectedChannel, setSelectedChannel] = useState();
+  const [selectedTimeout, setSelectedTimeout] = useState(1);
 
-    const [sampleRateHz, setSampleRateHz] = useState();
-    const [measurementTimeUs, setMeasurementTimeUs] = useState();
-    const [warnings, setWarnings] = useState("");
+  const [sampleRateHz, setSampleRateHz] = useState();
+  const [measurementTimeUs, setMeasurementTimeUs] = useState();
+  const [warnings, setWarnings] = useState("");
 
-    const listTimeout = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+  const listTimeout = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
-    const addNewChannelToList = (newChannel) => {
-      let temp = [...listChannels, newChannel];
-      temp.sort();
-      setListChannels(temp);
-    }
-
-    const removeChannelFromList = (channelName) => {
-      let arr = [...listChannels];
-      var index = arr.indexOf(channelName);
-      if (index !== -1) {
-        arr.splice(index, 1);
-        setListChannels(arr);
-      }
-    }
-
-    const onTriggerTypeChange = e => {
-      setTriggerType(e.target.value);
-    }
-
-    const onChannel0Change = () => {
-      setCh0(!ch0);  
-      if (!ch0) {
-        addNewChannelToList(0);       
-      } else {
-        removeChannelFromList(0);
-      }
-    }
-
-    const onChannel1Change = () => {
-      setCh1(!ch1);
-      if (!ch1) {
-        addNewChannelToList(1);       
-      } else {
-        removeChannelFromList(1);
-      }
-    }
-
-    const onChannel2Change = () => {
-      setCh2(!ch2);
-      if (!ch2) {
-        addNewChannelToList(2);       
-      } else {
-        removeChannelFromList(2);
-      }
-    }
-
-    const onChannel3Change = () => {
-      setCh3(!ch3);
-      if (!ch3) {
-        addNewChannelToList(3);       
-      } else {
-        removeChannelFromList(3);
-      }
-    }
-
-    const onChannel4Change = () => {
-      setCh4(!ch4);
-      if (!ch4) {
-        addNewChannelToList(4);       
-      } else {
-        removeChannelFromList(4);
-      }
-    }
-
-    const onChannel5Change = () => {
-      setCh5(!ch5);
-      if (!ch5) {
-        addNewChannelToList(5);       
-      } else {
-        removeChannelFromList(5);
-      }
-    }
-
-    const onChannel6Change = () => {
-      setCh6(!ch6);
-      if (!ch6) {
-        addNewChannelToList(6);       
-      } else {
-        removeChannelFromList(6);
-      }
-    }
-
-    const onChannel7Change = () => {
-      setCh7(!ch7);
-      if (!ch7) {
-        addNewChannelToList(7);       
-      } else {
-        removeChannelFromList(7);
-      }
-    }
-
-    const onChannel8Change = () => {
-      setCh8(!ch8);
-      if (!ch8) {
-        addNewChannelToList(8);       
-      } else {
-        removeChannelFromList(8);
-      }
-    }
-
-    const onChannel9Change = () => {
-      setCh9(!ch9);
-      if (!ch9) {
-        addNewChannelToList(9);       
-      } else {
-        removeChannelFromList(9);
-      }
-    }
-
-    const onChannel10Change = () => {
-      setCh10(!ch10);
-      if (!ch10) {
-        addNewChannelToList(10);       
-      } else {
-        removeChannelFromList(10);
-      }
-    }
-
-    const onChannel11Change = () => {
-      setCh11(!ch11);
-      if (!ch11) {
-        addNewChannelToList(11);       
-      } else {
-        removeChannelFromList(11);
-      }
-    }
-
-    const onChannel12Change = () => {
-      setCh12(!ch12);
-      if (!ch12) {
-        addNewChannelToList(12);       
-      } else {
-        removeChannelFromList(12);
-      }
-    }
-
-    const onChannel13Change = () => {
-      setCh13(!ch13);
-      if (!ch13) {
-        addNewChannelToList(13);       
-      } else {
-        removeChannelFromList(13);
-      }
-    }
-
-    const onChannel14Change = () => {
-      setCh14(!ch14);
-      if (!ch14) {
-        addNewChannelToList(14);       
-      } else {
-        removeChannelFromList(14);
-      }
-    }
-
-    const onChannel15Change = () => {
-      setCh15(!ch15);
-      if (!ch15) {
-        addNewChannelToList(15);       
-      } else {
-        removeChannelFromList(15);
-      }
-    }
-
-    const setChartData = (times, labelName, voltagesArr, color) => {
-      return {
-        labels: times,
-        datasets: [
-        {
-          label: labelName,
-          data: voltagesArr,
-          borderColor: color,
-          borderWidth: 1,
-          stepped: true
-        }
-        ]
-      }
-    }
-
-    const setChartOptionsUnified = (step, minValue, maxValue) => {
-      return {
-        elements: { point: { radius: 0, } },
-        spanGaps: false,
-        animation: false,
-        maintainAspectRatio: false,
-        plugins: { legend: { labels: { color: "white" } } },
-        scales: { 
-          x: { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: step, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: minValue, max: maxValue},
-          y: { title: { display: false }, grid: { color: "#393b3d", }, ticks: { stepSize: 1, color: "white", font: {size: 14} }, min: 0.0, max: 1.0 }
-        },
-      }
-    }
-
-    const setChartSpecOptionsUnified = (step, minValue, maxValue) => {
-      return {
-        elements: { point: { radius: 0, } },
-        spanGaps: false,
-        animation: false,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
-        scales: { 
-          x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { display: true, stepSize: step, color: "white", font: {size: 14} }, type: 'linear', min: minValue, max: maxValue },
-          y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 20, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
-        },
-      }
-    }
-
-    // get data fron logic analyzer in record mode
-    const fetchChartRecordData = async (ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7,
-      ch8, ch9, ch10, ch11, ch12, ch13, ch14, ch15) => {
-        if (process.env.REACT_APP_IS_FRONTEND_DEV_MODE.toUpperCase() === "TRUE") {
-          for (let i = currentIteration * 1000000; i < ((currentIteration + 1) * 1000000); i++) {
-            if (ch0) {
-              voltagesCH0[i] = Math.floor(Math.random() * 2.0);
-            }
-            if (ch1) {
-              voltagesCH1[i] = Math.floor(Math.random() * 2.0);
-            }
-            if (ch2) {
-              voltagesCH2[i] = Math.floor(Math.random() * 2.0);
-            }
-            if (ch3) {
-              voltagesCH3[i] = Math.floor(Math.random() * 2.0);
-            }
-            if (ch4) {
-              voltagesCH4[i] = Math.floor(Math.random() * 2.0);
-            }
-            if (ch5) {
-              voltagesCH5[i] = Math.floor(Math.random() * 2.0);
-            }
-            if (ch6) {
-              voltagesCH6[i] = Math.floor(Math.random() * 2.0);
-            }
-            if (ch7) {
-              voltagesCH7[i] = Math.floor(Math.random() * 2.0);
-            }
-            if (ch8) {
-              voltagesCH8[i] = Math.floor(Math.random() * 2.0);
-            }
-            if (ch9) {
-              voltagesCH9[i] = Math.floor(Math.random() * 2.0);
-            }
-            if (ch10) {
-              voltagesCH10[i] = Math.floor(Math.random() * 2.0);
-            }
-            if (ch11) {
-              voltagesCH11[i] = Math.floor(Math.random() * 2.0);
-            }
-            if (ch12) {
-              voltagesCH12[i] = Math.floor(Math.random() * 2.0);
-            }
-            if (ch13) {
-              voltagesCH13[i] = Math.floor(Math.random() * 2.0);
-            }
-            if (ch14) {
-              voltagesCH14[i] = Math.floor(Math.random() * 2.0);
-            }
-            if (ch15) {
-              voltagesCH15[i] = Math.floor(Math.random() * 2.0);
-            }
-            times[i] = i+1;
-          }
-          setChartData0(setChartData(times, "CH0", voltagesCH0, "yellow"));
-          setChartData1(setChartData(times, "CH1", voltagesCH1, "#0d99d1"));
-          setChartData2(setChartData(times, "CH2", voltagesCH2, "green"));
-          setChartData3(setChartData(times, "CH3", voltagesCH3, "red"));
-          setChartData4(setChartData(times, "CH4", voltagesCH4, "orange"));
-          setChartData5(setChartData(times, "CH5", voltagesCH5, "pink"));
-          setChartData6(setChartData(times, "CH6", voltagesCH6, "brown"));
-          setChartData7(setChartData(times, "CH7", voltagesCH7, "purple"));
-          setChartData8(setChartData(times, "CH8", voltagesCH8, "#917833"));
-          setChartData9(setChartData(times, "CH9", voltagesCH9, "#5110e8"));
-          setChartData10(setChartData(times, "CH10", voltagesCH10, "#f2070b"));
-          setChartData11(setChartData(times, "CH11", voltagesCH11, "#d9c80f"));
-          setChartData12(setChartData(times, "CH12", voltagesCH12, "#797adb"));
-          setChartData13(setChartData(times, "CH13", voltagesCH13, "#32d4ed"));
-          setChartData14(setChartData(times, "CH14", voltagesCH14, "#c77130"));
-          setChartData15(setChartData(times, "CH15", voltagesCH15, "#47dec2"));
-        
-        currentIteration++;
-
-        // online mode
-        } else {
-          let trigger = (triggerType !== "immediate" ? "edge" : "immediate");
-          let requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
-            body: JSON.stringify({ 
-              measurementTimeUs: 1000000, 
-              channels: listChannels,
-              trigger: {
-                type: trigger,
-                channel: Number(selectedChannel),
-                edge: triggerType,
-                timeoutSec: Number(selectedTimeout),
-              }
-            }),
-            credentials: 'include'
-          }
-          console.log(trigger);
-          console.log(triggerType);
-          console.log(selectedChannel);
-          console.log(selectedTimeout);
-          console.log("current iteration: " + currentIteration);
-          let response = await fetch(getUrlForRequest('/api/logic-analyzer/capture'), requestOptions);
-          let data = await response.json();
-
-          let measurementTimeUs = data["measurementTimeUs"];
-          let sampleRateHz = data["sampleRateHz"];
-          let triggered = data["triggered"];
-          let triggerTimestampUs = data["triggerTimestampUs"];
-          let warnings = data["warnings"];
-          console.log(data["channels"].length);
-          setMeasurementTimeUs("Measurement time: " + measurementTimeUs + " us");
-          setSampleRateHz("Sample rate: " + sampleRateHz + " Hz");
-          for (let k = (currentIteration * 1000000); k < ((currentIteration + 1) * 1000000); k++) {
-            for (let j = 0; j < listChannels.length; j++) {
-              let channel = data["channels"][(String(j))]["channel"];
-              if (channel === 0) {
-                let channelTransitions = data["channels"][(String(j))]["transitions"];
-                for (let m = 0; m < channelTransitions.length; m++) {
-                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === (k % 1000000)) {
-                    voltagesCH0[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                    console.log("AA");
-                  } else {
-                    voltagesCH0[k] = voltagesCH0[k-1];
-                  }
-                }
-              }  
-              if (channel === 1) {
-                let channelTransitions = data["channels"][(String(j))]["transitions"];
-                for (let m = 0; m < channelTransitions.length; m++) {
-                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                    voltagesCH1[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                  } else {
-                    voltagesCH1[k] = voltagesCH1[k-1];
-                  }
-                }
-              }
-              if (channel === 2) {
-                let channelTransitions = data["channels"][(String(j))]["transitions"];
-                for (let m = 0; m < channelTransitions.length; m++) {
-                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                    voltagesCH2[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                  } else {
-                    voltagesCH2[k] = voltagesCH2[k-1];
-                  }
-                }
-              }
-              if (channel === 3) {
-                let channelTransitions = data["channels"][(String(j))]["transitions"];
-                for (let m = 0; m < channelTransitions.length; m++) {
-                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                    voltagesCH3[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                  } else {
-                    voltagesCH3[k] = voltagesCH3[k-1];
-                  }
-                }
-              }
-              if (channel === 4) {
-                let channelTransitions = data["channels"][(String(j))]["transitions"];
-                for (let m = 0; m < channelTransitions.length; m++) {
-                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                    voltagesCH4[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                  } else {
-                    voltagesCH4[k] = voltagesCH4[k-1];
-                }
-                }
-              }
-              if (channel === 5) {
-                let channelTransitions = data["channels"][(String(j))]["transitions"];
-                for (let m = 0; m < channelTransitions.length; m++) {
-                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                    voltagesCH5[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                  } else {
-                    voltagesCH5[k] = voltagesCH5[k-1];
-                  }
-                }
-              }
-              if (channel === 6) {
-                let channelTransitions = data["channels"][(String(j))]["transitions"];
-                for (let m = 0; m < channelTransitions.length; m++) {
-                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                    voltagesCH6[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                  } else {
-                    voltagesCH6[k] = voltagesCH6[k-1];
-                  }
-                }
-              }
-              if (channel === 7) {
-                let channelTransitions = data["channels"][(String(j))]["transitions"];
-                for (let m = 0; m < channelTransitions.length; m++) {
-                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                    voltagesCH7[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                  } else {
-                    voltagesCH7[k] = voltagesCH7[k-1];
-                  }
-                }
-              }
-              if (channel === 8) {
-                let channelTransitions = data["channels"][(String(j))]["transitions"];
-                for (let m = 0; m < channelTransitions.length; m++) {
-                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                    voltagesCH8[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                  } else {
-                    voltagesCH8[k] = voltagesCH8[k-1];
-                  }
-                }
-              }
-              if (channel === 9) {
-                let channelTransitions = data["channels"][(String(j))]["transitions"];
-                for (let m = 0; m < channelTransitions.length; m++) {
-                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                    voltagesCH9[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                  } else {
-                    voltagesCH9[k] = voltagesCH9[k-1];
-                  }
-                }
-              }
-              if (channel === 10) {
-                let channelTransitions = data["channels"][(String(j))]["transitions"];
-                for (let m = 0; m < channelTransitions.length; m++) {
-                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                    voltagesCH10[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                  } else {
-                    voltagesCH10[k] = voltagesCH10[k-1];
-                  }
-                }
-              }
-              if (channel === 11) {
-                let channelTransitions = data["channels"][(String(j))]["transitions"];
-                for (let m = 0; m < channelTransitions.length; m++) {
-                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                    voltagesCH11[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                  } else {
-                    voltagesCH11[k] = voltagesCH11[k-1];
-                  }
-                }
-              }
-              if (channel === 12) {
-                let channelTransitions = data["channels"][(String(j))]["transitions"];
-                for (let m = 0; m < channelTransitions.length; m++) {
-                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                    voltagesCH12[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                  } else {
-                    voltagesCH12[k] = voltagesCH12[k-1];
-                  }
-                }
-              }
-              if (channel === 13) {
-                let channelTransitions = data["channels"][(String(j))]["transitions"];
-                for (let m = 0; m < channelTransitions.length; m++) {
-                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                    voltagesCH13[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                  } else {
-                    voltagesCH13[k] = voltagesCH13[k-1];
-                  }
-                }
-              }
-              if (channel === 14) {
-                let channelTransitions = data["channels"][(String(j))]["transitions"];
-                for (let m = 0; m < channelTransitions.length; m++) {
-                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                    voltagesCH14[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                  } else {
-                    voltagesCH14[k] = voltagesCH14[k-1];
-                  }
-                }
-              }
-              if (channel === 15) {
-                let channelTransitions = data["channels"][(String(j))]["transitions"];
-                for (let m = 0; m < channelTransitions.length; m++) {
-                  if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                    voltagesCH15[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                  } else {
-                    voltagesCH15[k] = voltagesCH15[k-1];
-                  }
-                }
-              }
-              times[k] = k+1;
-              //console.log(channel);
-            }
-          }
-          setChartData0(setChartData(times, "CH0", voltagesCH0, "yellow"));
-          setChartData1(setChartData(times, "CH1", voltagesCH1, "#0d99d1"));
-          setChartData2(setChartData(times, "CH2", voltagesCH2, "green"));
-          setChartData3(setChartData(times, "CH3", voltagesCH3, "red"));
-          setChartData4(setChartData(times, "CH4", voltagesCH4, "orange"));
-          setChartData5(setChartData(times, "CH5", voltagesCH5, "pink"));
-          setChartData6(setChartData(times, "CH6", voltagesCH6, "brown"));
-          setChartData7(setChartData(times, "CH7", voltagesCH7, "purple"));
-          setChartData8(setChartData(times, "CH8", voltagesCH8, "#917833"));
-          setChartData9(setChartData(times, "CH9", voltagesCH9, "#5110e8"));
-          setChartData10(setChartData(times, "CH10", voltagesCH10, "#f2070b"));
-          setChartData11(setChartData(times, "CH11", voltagesCH11, "#d9c80f"));
-          setChartData12(setChartData(times, "CH12", voltagesCH12, "#797adb"));
-          setChartData13(setChartData(times, "CH13", voltagesCH13, "#32d4ed"));
-          setChartData14(setChartData(times, "CH14", voltagesCH14, "#c77130"));
-          setChartData15(setChartData(times, "CH15", voltagesCH15, "#47dec2"));
-        
-          console.log(data);
-          console.log("measurementTimeUs: " + measurementTimeUs);
-          console.log("sampleRateHz: " + sampleRateHz);
-          console.log("triggered: " + triggered);
-          console.log("triggerTimestampUs: " + triggerTimestampUs);
-          console.log("warnings:" + warnings);
-          for (let i = 0; i < data["warnings"].length; i++) {
-            warnings += data["warnings"][String(i)]["value"];
-          }
-          setWarnings(warnings);
-          currentIteration++;
-        }
-    
+  const addNewChannelToList = (newChannel) => {
+    let temp = [...listChannels, newChannel];
+    temp.sort();
+    setListChannels(temp);
   }
 
-    // fetch voltage values from backend
-    const fetchChartData = async (ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7,
-        ch8, ch9, ch10, ch11, ch12, ch13, ch14, ch15) => {
-    
-      let requestOptions;
-    
-      console.log("fetchChartData");
+  const removeChannelFromList = (channelName) => {
+    let arr = [...listChannels];
+    var index = arr.indexOf(channelName);
+    if (index !== -1) {
+      arr.splice(index, 1);
+      setListChannels(arr);
+    }
+  }
 
-      // offline mode
-      if (process.env.REACT_APP_IS_FRONTEND_DEV_MODE.toUpperCase() === "TRUE") {
-        for (let i = 0; i < 600; i++) {
-          if (ch0) {
-            voltagesCH0[i] = Math.floor(Math.random() * 2.0);
-          }
-          if (ch1) {
-            voltagesCH1[i] = Math.floor(Math.random() * 2.0);
-          }
-          if (ch2) {
-            voltagesCH2[i] = Math.floor(Math.random() * 2.0);
-          }
-          if (ch3) {
-            voltagesCH3[i] = Math.floor(Math.random() * 2.0);
-          }
-          if (ch4) {
-            voltagesCH4[i] = Math.floor(Math.random() * 2.0);
-          }
-          if (ch5) {
-            voltagesCH5[i] = Math.floor(Math.random() * 2.0);
-          }
-          if (ch6) {
-            voltagesCH6[i] = Math.floor(Math.random() * 2.0);
-          }
-          if (ch7) {
-            voltagesCH7[i] = Math.floor(Math.random() * 2.0);
-          }
-          if (ch8) {
-            voltagesCH8[i] = Math.floor(Math.random() * 2.0);
-          }
-          if (ch9) {
-            voltagesCH9[i] = Math.floor(Math.random() * 2.0);
-          }
-          if (ch10) {
-            voltagesCH10[i] = Math.floor(Math.random() * 2.0);
-          }
-          if (ch11) {
-            voltagesCH11[i] = Math.floor(Math.random() * 2.0);
-          }
-          if (ch12) {
-            voltagesCH12[i] = Math.floor(Math.random() * 2.0);
-          }
-          if (ch13) {
-            voltagesCH13[i] = Math.floor(Math.random() * 2.0);
-          }
-          if (ch14) {
-            voltagesCH14[i] = Math.floor(Math.random() * 2.0);
-          }
-          if (ch15) {
-            voltagesCH15[i] = Math.floor(Math.random() * 2.0);
-          }
+  const onTriggerTypeChange = e => {
+    setTriggerType(e.target.value);
+  }
+
+  const onChannel0Change = () => {
+    setCh0(!ch0);  
+    if (!ch0) {
+      addNewChannelToList(0);       
+    } else {
+      removeChannelFromList(0);
+    }
+  }
+
+  const onChannel1Change = () => {
+    setCh1(!ch1);
+    if (!ch1) {
+      addNewChannelToList(1);       
+    } else {
+      removeChannelFromList(1);
+    }
+  }
+
+  const onChannel2Change = () => {
+    setCh2(!ch2);
+    if (!ch2) {
+      addNewChannelToList(2);       
+    } else {
+      removeChannelFromList(2);
+    }
+  }
+
+  const onChannel3Change = () => {
+    setCh3(!ch3);
+    if (!ch3) {
+      addNewChannelToList(3);       
+    } else {
+      removeChannelFromList(3);
+    }
+  }
+
+  const onChannel4Change = () => {
+    setCh4(!ch4);
+    if (!ch4) {
+      addNewChannelToList(4);       
+    } else {
+      removeChannelFromList(4);
+    }
+  }
+
+  const onChannel5Change = () => {
+    setCh5(!ch5);
+    if (!ch5) {
+      addNewChannelToList(5);       
+    } else {
+      removeChannelFromList(5);
+    }
+  }
+
+  const onChannel6Change = () => {
+    setCh6(!ch6);
+    if (!ch6) {
+      addNewChannelToList(6);       
+    } else {
+      removeChannelFromList(6);
+    }
+  }
+
+  const onChannel7Change = () => {
+    setCh7(!ch7);
+    if (!ch7) {
+      addNewChannelToList(7);       
+    } else {
+      removeChannelFromList(7);
+    }
+  }
+
+  const onChannel8Change = () => {
+    setCh8(!ch8);
+    if (!ch8) {
+      addNewChannelToList(8);       
+    } else {
+      removeChannelFromList(8);
+    }
+  }
+
+  const onChannel9Change = () => {
+    setCh9(!ch9);
+    if (!ch9) {
+      addNewChannelToList(9);       
+    } else {
+      removeChannelFromList(9);
+    }
+  }
+
+  const onChannel10Change = () => {
+    setCh10(!ch10);
+    if (!ch10) {
+      addNewChannelToList(10);       
+    } else {
+      removeChannelFromList(10);
+    }
+  }
+
+  const onChannel11Change = () => {
+    setCh11(!ch11);
+    if (!ch11) {
+      addNewChannelToList(11);       
+    } else {
+      removeChannelFromList(11);
+    }
+  }
+
+  const onChannel12Change = () => {
+    setCh12(!ch12);
+    if (!ch12) {
+      addNewChannelToList(12);       
+    } else {
+      removeChannelFromList(12);
+    }
+  }
+
+  const onChannel13Change = () => {
+    setCh13(!ch13);
+    if (!ch13) {
+      addNewChannelToList(13);       
+    } else {
+      removeChannelFromList(13);
+    }
+  }
+
+  const onChannel14Change = () => {
+    setCh14(!ch14);
+    if (!ch14) {
+      addNewChannelToList(14);       
+    } else {
+      removeChannelFromList(14);
+    }
+  }
+
+  const onChannel15Change = () => {
+    setCh15(!ch15);
+    if (!ch15) {
+      addNewChannelToList(15);       
+    } else {
+      removeChannelFromList(15);
+    }
+  }
+
+  const setChartData = (times, labelName, voltagesArr, color) => {
+    return {
+      labels: times,
+      datasets: [
+      {
+        label: labelName,
+        data: voltagesArr,
+        borderColor: color,
+        borderWidth: 1,
+        stepped: true
+      }
+      ]
+    }
+  }
+
+  const setChartOptionsUnified = (step, minValue, maxValue) => {
+    return {
+      elements: { point: { radius: 0, } },
+      spanGaps: false,
+      animation: false,
+      maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: "white" } } },
+      scales: { 
+        x: { title: { display: true, text: "Time, us", color: "black", font: {size: 18} }, grid: { color: "#393b3d", }, ticks: { stepSize: step, color: "black", font: {size: 14} }, type: 'linear', beginAtZero: false, min: minValue, max: maxValue},
+        y: { title: { display: false }, grid: { color: "#393b3d", }, ticks: { stepSize: 1, color: "white", font: {size: 14} }, min: 0.0, max: 1.0 }
+      },
+    }
+  }
+
+  const setChartSpecOptionsUnified = (step, minValue, maxValue) => {
+    return {
+      elements: { point: { radius: 0, } },
+      spanGaps: false,
+      animation: false,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
+      scales: { 
+        x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { display: true, stepSize: step, color: "white", font: {size: 14} }, type: 'linear', min: minValue, max: maxValue },
+        y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 20, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
+      },
+    }
+  }
+
+  // get data fron logic analyzer in record mode
+  const fetchChartRecordData = async () => {
+    
+    // offline mode
+    if (process.env.REACT_APP_IS_FRONTEND_DEV_MODE.toUpperCase() === "TRUE") {
+      for (let i = currentIteration * 1000000; i < ((currentIteration + 1) * 1000000); i++) {
+        randomiseValuesForLogicAnalyzer(i);
+      }
           
-          times[i] = i+1;
-        }
-        setChartData0(setChartData(times, "CH0", voltagesCH0, "yellow"));
-        setChartData1(setChartData(times, "CH1", voltagesCH1, "#0d99d1"));
-        setChartData2(setChartData(times, "CH2", voltagesCH2, "green"));
-        setChartData3(setChartData(times, "CH3", voltagesCH3, "red"));
-        setChartData4(setChartData(times, "CH4", voltagesCH4, "orange"));
-        setChartData5(setChartData(times, "CH5", voltagesCH5, "pink"));
-        setChartData6(setChartData(times, "CH6", voltagesCH6, "brown"));
-        setChartData7(setChartData(times, "CH7", voltagesCH7, "purple"));
-        setChartData8(setChartData(times, "CH8", voltagesCH8, "#917833"));
-        setChartData9(setChartData(times, "CH9", voltagesCH9, "#5110e8"));
-        setChartData10(setChartData(times, "CH10", voltagesCH10, "#f2070b"));
-        setChartData11(setChartData(times, "CH11", voltagesCH11, "#d9c80f"));
-        setChartData12(setChartData(times, "CH12", voltagesCH12, "#797adb"));
-        setChartData13(setChartData(times, "CH13", voltagesCH13, "#32d4ed"));
-        setChartData14(setChartData(times, "CH14", voltagesCH14, "#c77130"));
-        setChartData15(setChartData(times, "CH15", voltagesCH15, "#47dec2"));
-
-        // online mode
-      } else {
-        let trigger = (triggerType !== "immediate" ? "edge" : "immediate");
-        console.log(trigger);
-        console.log(listChannels);
-        requestOptions = {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
-          body: JSON.stringify({ 
-            measurementTimeUs: 600, 
-            channels: listChannels,
-            trigger: {
-              type: "immediate",
-              channel: Number(selectedChannel),
-              edge: "immediate",
-              timeoutSec: 0,
-            }
-          }),
-          credentials: 'include'
-        }
-        let response = await fetch(getUrlForRequest('/api/logic-analyzer/capture'), requestOptions);
-        let data = await response.json();
-
-        let measurementTimeUs = data["measurementTimeUs"];
-        let sampleRateHz = data["sampleRateHz"];
-        let triggered = data["triggered"];
-        let triggerTimestampUs = data["triggerTimestampUs"];
-        let warnings = data["warnings"];
-        console.log(data["channels"].length);
-        setMeasurementTimeUs("Measurement time: " + measurementTimeUs + " us");
-        setSampleRateHz("Sample rate: " + sampleRateHz + " Hz");
-        for (let k = 0; k < 600; k++) {
-          for (let j = 0; j < listChannels.length; j++) {
-            let channel = data["channels"][(String(j))]["channel"];
-            if (channel === 0) {
-              let channelTransitions = data["channels"][(String(j))]["transitions"];
-              for (let m = 0; m < channelTransitions.length; m++) {
-                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                  voltagesCH0[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                  console.log("AA");
-                } else {
-                  voltagesCH0[k] = voltagesCH0[k-1];
-                }
-              }
-            }  
-            if (channel === 1) {
-              let channelTransitions = data["channels"][(String(j))]["transitions"];
-              for (let m = 0; m < channelTransitions.length; m++) {
-                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                  voltagesCH1[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                } else {
-                  voltagesCH1[k] = voltagesCH1[k-1];
-                }
-              }
-            }
-            if (channel === 2) {
-              let channelTransitions = data["channels"][(String(j))]["transitions"];
-              for (let m = 0; m < channelTransitions.length; m++) {
-                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                  voltagesCH2[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                } else {
-                  voltagesCH2[k] = voltagesCH2[k-1];
-                }
-              }
-            }
-            if (channel === 3) {
-              let channelTransitions = data["channels"][(String(j))]["transitions"];
-              for (let m = 0; m < channelTransitions.length; m++) {
-                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                  voltagesCH3[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                } else {
-                  voltagesCH3[k] = voltagesCH3[k-1];
-                }
-              }
-            }
-            if (channel === 4) {
-              let channelTransitions = data["channels"][(String(j))]["transitions"];
-              for (let m = 0; m < channelTransitions.length; m++) {
-                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                  voltagesCH4[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                } else {
-                  voltagesCH4[k] = voltagesCH4[k-1];
-                }
-              }
-            }
-            if (channel === 5) {
-              let channelTransitions = data["channels"][(String(j))]["transitions"];
-              for (let m = 0; m < channelTransitions.length; m++) {
-                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                  voltagesCH5[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                } else {
-                  voltagesCH5[k] = voltagesCH5[k-1];
-                }
-              }
-            }
-            if (channel === 6) {
-              let channelTransitions = data["channels"][(String(j))]["transitions"];
-              for (let m = 0; m < channelTransitions.length; m++) {
-                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                  voltagesCH6[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                } else {
-                  voltagesCH6[k] = voltagesCH6[k-1];
-                }
-              }
-            }
-            if (channel === 7) {
-              let channelTransitions = data["channels"][(String(j))]["transitions"];
-              for (let m = 0; m < channelTransitions.length; m++) {
-                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                  voltagesCH7[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                } else {
-                  voltagesCH7[k] = voltagesCH7[k-1];
-                }
-              }
-            }
-            if (channel === 8) {
-              let channelTransitions = data["channels"][(String(j))]["transitions"];
-              for (let m = 0; m < channelTransitions.length; m++) {
-                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                  voltagesCH8[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                } else {
-                  voltagesCH8[k] = voltagesCH8[k-1];
-                }
-              }
-            }
-            if (channel === 9) {
-              let channelTransitions = data["channels"][(String(j))]["transitions"];
-              for (let m = 0; m < channelTransitions.length; m++) {
-                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                  voltagesCH9[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                } else {
-                  voltagesCH9[k] = voltagesCH9[k-1];
-                }
-              }
-            }
-            if (channel === 10) {
-              let channelTransitions = data["channels"][(String(j))]["transitions"];
-              for (let m = 0; m < channelTransitions.length; m++) {
-                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                  voltagesCH10[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                } else {
-                  voltagesCH10[k] = voltagesCH10[k-1];
-                }
-              }
-            }
-            if (channel === 11) {
-              let channelTransitions = data["channels"][(String(j))]["transitions"];
-              for (let m = 0; m < channelTransitions.length; m++) {
-                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                  voltagesCH11[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                } else {
-                  voltagesCH11[k] = voltagesCH11[k-1];
-                }
-              }
-            }
-            if (channel === 12) {
-              let channelTransitions = data["channels"][(String(j))]["transitions"];
-              for (let m = 0; m < channelTransitions.length; m++) {
-                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                  voltagesCH12[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                } else {
-                  voltagesCH12[k] = voltagesCH12[k-1];
-                }
-              }
-            }
-            if (channel === 13) {
-              let channelTransitions = data["channels"][(String(j))]["transitions"];
-              for (let m = 0; m < channelTransitions.length; m++) {
-                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                  voltagesCH13[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                } else {
-                  voltagesCH13[k] = voltagesCH13[k-1];
-                }
-              }
-            }
-            if (channel === 14) {
-              let channelTransitions = data["channels"][(String(j))]["transitions"];
-              for (let m = 0; m < channelTransitions.length; m++) {
-                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                  voltagesCH14[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                } else {
-                  voltagesCH14[k] = voltagesCH14[k-1];
-                }
-              }
-            }
-            if (channel === 15) {
-              let channelTransitions = data["channels"][(String(j))]["transitions"];
-              for (let m = 0; m < channelTransitions.length; m++) {
-                if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                  voltagesCH15[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                } else {
-                  voltagesCH15[k] = voltagesCH15[k-1];
-                }
-              }
-            }
-          times[k] = k;
-          //console.log(channel);
-        }
-        }
-        setChartData0(setChartData(times, "CH0", voltagesCH0, "yellow"));
-        setChartData1(setChartData(times, "CH1", voltagesCH1, "#0d99d1"));
-        setChartData2(setChartData(times, "CH2", voltagesCH2, "green"));
-        setChartData3(setChartData(times, "CH3", voltagesCH3, "red"));
-        setChartData4(setChartData(times, "CH4", voltagesCH4, "orange"));
-        setChartData5(setChartData(times, "CH5", voltagesCH5, "pink"));
-        setChartData6(setChartData(times, "CH6", voltagesCH6, "brown"));
-        setChartData7(setChartData(times, "CH7", voltagesCH7, "purple"));
-        setChartData8(setChartData(times, "CH8", voltagesCH8, "#917833"));
-        setChartData9(setChartData(times, "CH9", voltagesCH9, "#5110e8"));
-        setChartData10(setChartData(times, "CH10", voltagesCH10, "#f2070b"));
-        setChartData11(setChartData(times, "CH11", voltagesCH11, "#d9c80f"));
-        setChartData12(setChartData(times, "CH12", voltagesCH12, "#797adb"));
-        setChartData13(setChartData(times, "CH13", voltagesCH13, "#32d4ed"));
-        setChartData14(setChartData(times, "CH14", voltagesCH14, "#c77130"));
-        setChartData15(setChartData(times, "CH15", voltagesCH15, "#47dec2"));
+      setDataForAllCharts();
         
-        console.log(data);
-        console.log("measurementTimeUs: " + measurementTimeUs);
-        console.log("sampleRateHz: " + sampleRateHz);
-        console.log("triggered: " + triggered);
-        console.log("triggerTimestampUs: " + triggerTimestampUs);
-        console.log("warnings:" + warnings);
-        for (let i = 0; i < data["warnings"].length; i++) {
-          warnings += data["warnings"][String(i)]["value"];
-        }
-        setWarnings(warnings);
+      currentIteration++;
+
+    // online mode
+    } else {
+      let trigger = (triggerType !== "immediate" ? "edge" : "immediate");
+      let requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
+        body: JSON.stringify({ 
+          measurementTimeUs: 1000000, 
+          channels: listChannels,
+          trigger: {
+            type: trigger,
+            channel: Number(selectedChannel),
+            edge: triggerType,
+            timeoutSec: Number(selectedTimeout),
+          }
+        }),
+        credentials: 'include'
       }
-    
+      console.log(trigger);
+      console.log(triggerType);
+      console.log(selectedChannel);
+      console.log(selectedTimeout);
+      console.log("current iteration: " + currentIteration);
+      let response = await fetch(getUrlForRequest('/api/logic-analyzer/capture'), requestOptions);
+      let data = await response.json();
+      let measurementTimeUs = data["measurementTimeUs"];
+      let sampleRateHz = data["sampleRateHz"];
+      let triggered = data["triggered"];
+      let triggerTimestampUs = data["triggerTimestampUs"];
+      let warnings = data["warnings"];
+      console.log(data["channels"].length);
+      setMeasurementTimeUs("Measurement time: " + measurementTimeUs + " us");
+      setSampleRateHz("Sample rate: " + sampleRateHz + " Hz");
+      for (let k = (currentIteration * 1000000); k < ((currentIteration + 1) * 1000000); k++) {
+        for (let j = 0; j < listChannels.length; j++) {
+          getChannelTransitions(data, k, j);          
+          times[k] = k+1;
+        }
+      }
+      setDataForAllCharts();
+      console.log(data);
+      console.log("measurementTimeUs: " + measurementTimeUs);
+      console.log("sampleRateHz: " + sampleRateHz);
+      console.log("triggered: " + triggered);
+      console.log("triggerTimestampUs: " + triggerTimestampUs);
+      console.log("warnings:" + warnings);
+      for (let i = 0; i < data["warnings"].length; i++) {
+        warnings += data["warnings"][String(i)]["value"];
+      }
+      setWarnings(warnings);
+      currentIteration++;
+    }
   }
 
-    const renderChart0 = (ch0) => {
-      if (ch0) {
-        return <div className="row"><div className="chart-logic-analyzer">                    
+  const setDataForAllCharts = () => {
+    setChartData0(setChartData(times, "CH0", voltagesCH0, "yellow"));
+    setChartData1(setChartData(times, "CH1", voltagesCH1, "#0d99d1"));
+    setChartData2(setChartData(times, "CH2", voltagesCH2, "green"));
+    setChartData3(setChartData(times, "CH3", voltagesCH3, "red"));
+    setChartData4(setChartData(times, "CH4", voltagesCH4, "orange"));
+    setChartData5(setChartData(times, "CH5", voltagesCH5, "pink"));
+    setChartData6(setChartData(times, "CH6", voltagesCH6, "brown"));
+    setChartData7(setChartData(times, "CH7", voltagesCH7, "purple"));
+    setChartData8(setChartData(times, "CH8", voltagesCH8, "#917833"));
+    setChartData9(setChartData(times, "CH9", voltagesCH9, "#5110e8"));
+    setChartData10(setChartData(times, "CH10", voltagesCH10, "#f2070b"));
+    setChartData11(setChartData(times, "CH11", voltagesCH11, "#d9c80f"));
+    setChartData12(setChartData(times, "CH12", voltagesCH12, "#797adb"));
+    setChartData13(setChartData(times, "CH13", voltagesCH13, "#32d4ed"));
+    setChartData14(setChartData(times, "CH14", voltagesCH14, "#c77130"));
+    setChartData15(setChartData(times, "CH15", voltagesCH15, "#47dec2"));
+  }
+
+  // get random values for LA channels (offline mode)
+  const randomiseValuesForLogicAnalyzer = (i) => {
+    if (ch0) {
+      voltagesCH0[i] = Math.floor(Math.random() * 2.0);
+    }
+    if (ch1) {
+      voltagesCH1[i] = Math.floor(Math.random() * 2.0);
+    }
+    if (ch2) {
+      voltagesCH2[i] = Math.floor(Math.random() * 2.0);
+    }
+    if (ch3) {
+      voltagesCH3[i] = Math.floor(Math.random() * 2.0);
+    }
+    if (ch4) {
+      voltagesCH4[i] = Math.floor(Math.random() * 2.0);
+    }
+    if (ch5) {
+      voltagesCH5[i] = Math.floor(Math.random() * 2.0);
+    }
+    if (ch6) {
+      voltagesCH6[i] = Math.floor(Math.random() * 2.0);
+    }
+    if (ch7) {
+      voltagesCH7[i] = Math.floor(Math.random() * 2.0);
+    }
+    if (ch8) {
+      voltagesCH8[i] = Math.floor(Math.random() * 2.0);
+    }
+    if (ch9) {
+      voltagesCH9[i] = Math.floor(Math.random() * 2.0);
+    }
+    if (ch10) {
+      voltagesCH10[i] = Math.floor(Math.random() * 2.0);
+    }
+    if (ch11) {
+      voltagesCH11[i] = Math.floor(Math.random() * 2.0);
+    }
+    if (ch12) {
+      voltagesCH12[i] = Math.floor(Math.random() * 2.0);
+    }
+    if (ch13) {
+      voltagesCH13[i] = Math.floor(Math.random() * 2.0);
+    }
+    if (ch14) {
+      voltagesCH14[i] = Math.floor(Math.random() * 2.0);
+    }
+    if (ch15) {
+      voltagesCH15[i] = Math.floor(Math.random() * 2.0);
+    }        
+    times[i] = i+1;
+  }
+
+  const getChannelTransitions = (data, k, j) => {
+    let channel = data["channels"][(String(j))]["channel"];
+          if (channel === 0) {
+            let channelTransitions = data["channels"][(String(j))]["transitions"];
+            for (let m = 0; m < channelTransitions.length; m++) {
+              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                voltagesCH0[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+                //console.log("AA");
+              } else {
+                voltagesCH0[k] = voltagesCH0[k-1];
+              }
+            }
+          }  
+          if (channel === 1) {
+            let channelTransitions = data["channels"][(String(j))]["transitions"];
+            for (let m = 0; m < channelTransitions.length; m++) {
+              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                voltagesCH1[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+              } else {
+                voltagesCH1[k] = voltagesCH1[k-1];
+              }
+            }
+          }
+          if (channel === 2) {
+            let channelTransitions = data["channels"][(String(j))]["transitions"];
+            for (let m = 0; m < channelTransitions.length; m++) {
+              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                voltagesCH2[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+              } else {
+                voltagesCH2[k] = voltagesCH2[k-1];
+              }
+            }
+          }
+          if (channel === 3) {
+            let channelTransitions = data["channels"][(String(j))]["transitions"];
+            for (let m = 0; m < channelTransitions.length; m++) {
+              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                voltagesCH3[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+              } else {
+                voltagesCH3[k] = voltagesCH3[k-1];
+              }
+            }
+          }
+          if (channel === 4) {
+            let channelTransitions = data["channels"][(String(j))]["transitions"];
+            for (let m = 0; m < channelTransitions.length; m++) {
+              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                voltagesCH4[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+              } else {
+                voltagesCH4[k] = voltagesCH4[k-1];
+              }
+            }
+          }
+          if (channel === 5) {
+            let channelTransitions = data["channels"][(String(j))]["transitions"];
+            for (let m = 0; m < channelTransitions.length; m++) {
+              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                voltagesCH5[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+              } else {
+                voltagesCH5[k] = voltagesCH5[k-1];
+              }
+            }
+          }
+          if (channel === 6) {
+            let channelTransitions = data["channels"][(String(j))]["transitions"];
+            for (let m = 0; m < channelTransitions.length; m++) {
+              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                voltagesCH6[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+              } else {
+                voltagesCH6[k] = voltagesCH6[k-1];
+              }
+            }
+          }
+          if (channel === 7) {
+            let channelTransitions = data["channels"][(String(j))]["transitions"];
+            for (let m = 0; m < channelTransitions.length; m++) {
+              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                voltagesCH7[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+              } else {
+                voltagesCH7[k] = voltagesCH7[k-1];
+              }
+            }
+          }
+          if (channel === 8) {
+            let channelTransitions = data["channels"][(String(j))]["transitions"];
+            for (let m = 0; m < channelTransitions.length; m++) {
+              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                voltagesCH8[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+              } else {
+                voltagesCH8[k] = voltagesCH8[k-1];
+              }
+            }
+          }
+          if (channel === 9) {
+            let channelTransitions = data["channels"][(String(j))]["transitions"];
+            for (let m = 0; m < channelTransitions.length; m++) {
+              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                voltagesCH9[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+              } else {
+                voltagesCH9[k] = voltagesCH9[k-1];
+              }
+            }
+          }
+          if (channel === 10) {
+            let channelTransitions = data["channels"][(String(j))]["transitions"];
+            for (let m = 0; m < channelTransitions.length; m++) {
+              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                voltagesCH10[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+              } else {
+                voltagesCH10[k] = voltagesCH10[k-1];
+              }
+            }
+          }
+          if (channel === 11) {
+            let channelTransitions = data["channels"][(String(j))]["transitions"];
+            for (let m = 0; m < channelTransitions.length; m++) {
+              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                voltagesCH11[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+              } else {
+                voltagesCH11[k] = voltagesCH11[k-1];
+              }
+            }
+          }
+          if (channel === 12) {
+            let channelTransitions = data["channels"][(String(j))]["transitions"];
+            for (let m = 0; m < channelTransitions.length; m++) {
+              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                voltagesCH12[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+              } else {
+                voltagesCH12[k] = voltagesCH12[k-1];
+              }
+            }
+          }
+          if (channel === 13) {
+            let channelTransitions = data["channels"][(String(j))]["transitions"];
+            for (let m = 0; m < channelTransitions.length; m++) {
+              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                voltagesCH13[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+              } else {
+                voltagesCH13[k] = voltagesCH13[k-1];
+              }
+            }
+          }
+          if (channel === 14) {
+            let channelTransitions = data["channels"][(String(j))]["transitions"];
+            for (let m = 0; m < channelTransitions.length; m++) {
+              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                voltagesCH14[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+              } else {
+                voltagesCH14[k] = voltagesCH14[k-1];
+              }
+            }
+          }
+          if (channel === 15) {
+            let channelTransitions = data["channels"][(String(j))]["transitions"];
+            for (let m = 0; m < channelTransitions.length; m++) {
+              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
+                voltagesCH15[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
+              } else {
+                voltagesCH15[k] = voltagesCH15[k-1];
+              }
+            }
+          }
+  } 
+
+  // fetch voltage values in real time (last 600 us)
+  const fetchChartData = async () => {
+    
+    let requestOptions;
+    
+    console.log("fetchChartData");
+
+    // offline mode
+    if (process.env.REACT_APP_IS_FRONTEND_DEV_MODE.toUpperCase() === "TRUE") {
+      for (let i = 0; i < 600; i++) {
+        randomiseValuesForLogicAnalyzer(i);
+      }
+        
+      setDataForAllCharts();
+
+    // online mode
+    } else {
+      let trigger = (triggerType !== "immediate" ? "edge" : "immediate");
+      console.log(trigger);
+      console.log(listChannels);
+      requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
+        body: JSON.stringify({ 
+          measurementTimeUs: 600, 
+          channels: listChannels,
+          trigger: {
+            type: "immediate",
+            channel: Number(selectedChannel),
+            edge: "immediate",
+            timeoutSec: 0,
+          }
+        }),
+        credentials: 'include'
+      }
+      let response = await fetch(getUrlForRequest('/api/logic-analyzer/capture'), requestOptions);
+      let data = await response.json();
+      let measurementTimeUs = data["measurementTimeUs"];
+      let sampleRateHz = data["sampleRateHz"];
+      let triggered = data["triggered"];
+      let triggerTimestampUs = data["triggerTimestampUs"];
+      let warnings = data["warnings"];
+      console.log(data["channels"].length);
+      setMeasurementTimeUs("Measurement time: " + measurementTimeUs + " us");
+      setSampleRateHz("Sample rate: " + sampleRateHz + " Hz");
+      for (let k = 0; k < 600; k++) {
+        for (let j = 0; j < listChannels.length; j++) {
+          getChannelTransitions(data, k, j);
+          times[k] = k;
+        }
+      }
+        
+      setDataForAllCharts();
+        
+      console.log(data);
+      console.log("measurementTimeUs: " + measurementTimeUs);
+      console.log("sampleRateHz: " + sampleRateHz);
+      console.log("triggered: " + triggered);
+      console.log("triggerTimestampUs: " + triggerTimestampUs);
+      console.log("warnings:" + warnings);
+      for (let i = 0; i < data["warnings"].length; i++) {
+        warnings += data["warnings"][String(i)]["value"];
+      }
+      setWarnings(warnings);
+    }
+  }
+
+  const renderChart0 = (ch0) => {
+    if (ch0) {
+      return <div className="row"><div className="chart-logic-analyzer">                    
               <Line type="line" 
                 data={chartData0} 
                 options={chartOptions} 
                 ref={chartRef}/>
               </div></div>
-      }
     }
+  }
 
-    const renderChart1 = (ch1) => {
-      if (ch1) {
-        return <div className="row"><div className="chart-logic-analyzer">                    
+  const renderChart1 = (ch1) => {
+    if (ch1) {
+      return <div className="row"><div className="chart-logic-analyzer">                    
               <Line type="line" 
                 data={chartData1} 
                 options={chartOptions} 
                 ref={chartRef}/>
               </div></div>
-      }
     }
+  }
 
-    const renderChart2 = (ch2) => {
-      if (ch2) {
-        return <div className="row"><div className="chart-logic-analyzer">                    
+  const renderChart2 = (ch2) => {
+    if (ch2) {
+      return <div className="row"><div className="chart-logic-analyzer">                    
               <Line type="line" 
                 data={chartData2} 
                 options={chartOptions} 
                 ref={chartRef}/>
               </div></div>
-      }
     }
+  }
 
-    const renderChart3 = (ch3) => {
-      if (ch3) {
-        return <div className="row"><div className="chart-logic-analyzer">                    
+  const renderChart3 = (ch3) => {
+    if (ch3) {
+      return <div className="row"><div className="chart-logic-analyzer">                    
               <Line type="line" 
                 data={chartData3} 
                 options={chartOptions} 
                 ref={chartRef}/>
               </div></div>
-      }
     }
+  }
 
-    const renderChart4 = (ch4) => {
-      if (ch4) {
-        return <div className="row"><div className="chart-logic-analyzer">                    
+  const renderChart4 = (ch4) => {
+    if (ch4) {
+      return <div className="row"><div className="chart-logic-analyzer">                    
               <Line type="line" 
                 data={chartData4} 
                 options={chartOptions} 
                 ref={chartRef}/>
               </div></div>
-      }
     }
+  }
 
-    const renderChart5 = (ch5) => {
-      if (ch5) {
-        return <div className="row"><div className="chart-logic-analyzer">                    
+  const renderChart5 = (ch5) => {
+    if (ch5) {
+      return <div className="row"><div className="chart-logic-analyzer">                    
               <Line type="line" 
                 data={chartData5} 
                 options={chartOptions} 
                 ref={chartRef}/>
               </div></div>
-      }
     }
+  }
 
-    const renderChart6 = (ch6) => {
-      if (ch6) {
-        return <div className="row"><div className="chart-logic-analyzer">                    
+  const renderChart6 = (ch6) => {
+    if (ch6) {
+      return <div className="row"><div className="chart-logic-analyzer">                    
               <Line type="line" 
                 data={chartData6} 
                 options={chartOptions} 
                 ref={chartRef}/>
               </div></div>
-      }
     }
+  }
 
-    const renderChart7 = (ch7) => {
-      if (ch7) {
-        return <div className="row"><div className="chart-logic-analyzer">                    
+  const renderChart7 = (ch7) => {
+    if (ch7) {
+      return <div className="row"><div className="chart-logic-analyzer">                    
               <Line type="line" 
                 data={chartData7} 
                 options={chartOptions} 
                 ref={chartRef}/>
               </div></div>
-      }
     }
+  }
 
-    const renderChart8 = (ch8) => {
-      if (ch8) {
-        return <div className="row"><div className="chart-logic-analyzer">                    
+  const renderChart8 = (ch8) => {
+    if (ch8) {
+      return <div className="row"><div className="chart-logic-analyzer">                    
               <Line type="line" 
                 data={chartData8} 
                 options={chartOptions} 
                 ref={chartRef}/>
               </div></div>
-      }
     }
+  }
 
-    const renderChart9 = (ch9) => {
-      if (ch9) {
-        return <div className="row"><div className="chart-logic-analyzer">                    
+  const renderChart9 = (ch9) => {
+    if (ch9) {
+      return <div className="row"><div className="chart-logic-analyzer">                    
               <Line type="line" 
                 data={chartData9} 
                 options={chartOptions} 
                 ref={chartRef}/>
               </div></div>
-      }
     }
+  }
 
-    const renderChart10 = (ch10) => {
-      if (ch10) {
-        return <div className="row"><div className="chart-logic-analyzer">                    
+  const renderChart10 = (ch10) => {
+    if (ch10) {
+      return <div className="row"><div className="chart-logic-analyzer">                    
               <Line type="line" 
                 data={chartData10} 
                 options={chartOptions} 
                 ref={chartRef}/>
               </div></div>
-      }
     }
+  }
 
-    const renderChart11 = (ch11) => {
-      if (ch11) {
-        return <div className="row"><div className="chart-logic-analyzer">                    
+  const renderChart11 = (ch11) => {
+    if (ch11) {
+      return <div className="row"><div className="chart-logic-analyzer">                    
               <Line type="line" 
                 data={chartData11} 
                 options={chartOptions} 
                 ref={chartRef}/>
               </div></div>  
-      }
     }
+  }
 
-    const renderChart12 = (ch12) => {
-      if (ch12) {
-        return <div className="row"><div className="chart-logic-analyzer">                    
+  const renderChart12 = (ch12) => {
+    if (ch12) {
+      return <div className="row"><div className="chart-logic-analyzer">                    
               <Line type="line" 
                 data={chartData12} 
                 options={chartOptions} 
                 ref={chartRef}/>
               </div></div>
-      }
     }
+  }
 
-    const renderChart13 = (ch13) => {
-      if (ch13) {
-        return <div className="row"><div className="chart-logic-analyzer">                    
+  const renderChart13 = (ch13) => {
+    if (ch13) {
+      return <div className="row"><div className="chart-logic-analyzer">                    
               <Line type="line" 
                 data={chartData13} 
                 options={chartOptions} 
                 ref={chartRef}/>
               </div></div>
-      }
     }
+  }
 
-    const renderChart14 = (ch14) => {
-      if (ch14) {
-        return <div className="row"><div className="chart-logic-analyzer">                    
+  const renderChart14 = (ch14) => {
+    if (ch14) {
+      return <div className="row"><div className="chart-logic-analyzer">                    
               <Line type="line" 
                 data={chartData14} 
                 options={chartOptions} 
                 ref={chartRef}/>
               </div></div>      
-      }
     }
+  }
 
-    const renderChart15 = (ch15) => {
-      if (ch15) {
-        return <div className="row"><div className="chart-logic-analyzer">                    
+  const renderChart15 = (ch15) => {
+    if (ch15) {
+      return <div className="row"><div className="chart-logic-analyzer">                    
               <Line type="line" 
                 data={chartData15} 
                 options={chartOptions} 
                 ref={chartRef}/>
               </div></div>
-      }
     }
+  }
 
-    const [xStepSize, setXStepSize] = useState(1);
-    const [horizontalScale, setHorizontalScale] = useState("1us");
+  const [xStepSize, setXStepSize] = useState(1);
+  const [horizontalScale, setHorizontalScale] = useState("1us");
 
-    const [xScaleOptions, setXScaleOptions] = useState(
-        { title: { display: false }, grid: { color: "#393b3d", }, ticks: { stepSize: xStepSize, color: "black", font: {size: 14} }, type: 'linear', min: 294, max: 306 }
-      );
+  const [xScaleOptions, setXScaleOptions] = useState(
+    { title: { display: false }, grid: { color: "#393b3d", }, ticks: { stepSize: xStepSize, color: "black", font: {size: 14} }, type: 'linear', min: 294, max: 306 }
+  );
 
-    const [chartOptions, setChartOptions] = useState(
-        {
-          elements: { point: { radius: 0, } },
-          spanGaps: false,
-          animation: false,
-          maintainAspectRatio: false,
-          plugins: { legend: { labels: { color: "white" } } },
-          scales: { 
-            x: xScaleOptions,
-            y: { title: { display: false }, grid: { color: "#393b3d", }, ticks: { stepSize: 1, color: "white", font: {size: 14} }, min: 0.0, max: 1.0 }
-          },
-        }
-    );
+  const [chartOptions, setChartOptions] = useState(
+    {
+      elements: { point: { radius: 0, } },
+      spanGaps: false,
+      animation: false,
+      maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: "white" } } },
+      scales: { 
+        x: xScaleOptions,
+        y: { title: { display: false }, grid: { color: "#393b3d", }, ticks: { stepSize: 1, color: "white", font: {size: 14} }, min: 0.0, max: 1.0 }
+      },
+    }
+  );
 
-    const [chartSpecOptions, setChartSpecOptions] = useState(
-      {
-        elements: { point: { radius: 0, } },
-        animation: false,
-        spanGaps: false,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
-        scales: { 
-          x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { display: true, stepSize: 1, color: "white", font: {size: 14} }, type: 'linear', min: 294, max: 306 },
-          y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 1, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
-        },
-      }
-    );
+  const [chartSpecOptions, setChartSpecOptions] = useState(
+    {
+      elements: { point: { radius: 0, } },
+      animation: false,
+      spanGaps: false,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false, labels: { color: "white", display: false } }, title: { display: false } },
+      scales: { 
+        x: { title: { display: true, text: "Time, us", color: "white", font: {size: 18} }, grid: { display: true, color: "#000000", }, ticks: { display: true, stepSize: 1, color: "white", font: {size: 14} }, type: 'linear', min: 294, max: 306 },
+        y: { title: { display: false, color: "white", font: {size: 18} }, grid: { display: false, color: "#FFFFFF", }, ticks: { stepSize: 1, color: "black", font: {size: 14} }, min: 0.0, max: 1.0 }
+      },
+    }
+  );
 
-    const [chartData0, setChartData0] = useState(setChartData([], "CH0", [], "yellow"));
-    const [chartData1, setChartData1] = useState(setChartData([], "CH1", [], "#0d99d1"));
-    const [chartData2, setChartData2] = useState(setChartData([], "CH2", [], "green"));
-    const [chartData3, setChartData3] = useState(setChartData([], "CH3", [], "red"));
-    const [chartData4, setChartData4] = useState(setChartData([], "CH4", [], "orange"));
-    const [chartData5, setChartData5] = useState(setChartData([], "CH5", [], "pink"));
-    const [chartData6, setChartData6] = useState(setChartData([], "CH6", [], "brown"));
-    const [chartData7, setChartData7] = useState(setChartData([], "CH7", [], "purple"));
-    const [chartData8, setChartData8] = useState(setChartData([], "CH8", [], "#917833"));
-    const [chartData9, setChartData9] = useState(setChartData([], "CH9", [], "#5110e8"));
-    const [chartData10, setChartData10] = useState(setChartData([], "CH10", [], "#f2070b"));
-    const [chartData11, setChartData11] = useState(setChartData([], "CH11", [], "#d9c80f"));
-    const [chartData12, setChartData12] = useState(setChartData([], "CH12", [], "#797adb"));
-    const [chartData13, setChartData13] = useState(setChartData([], "CH13", [], "#32d4ed"));
-    const [chartData14, setChartData14] = useState(setChartData([], "CH14", [], "#c77130"));
-    const [chartData15, setChartData15] = useState(setChartData([], "CH15", [], "#47dec2"));
+  const [chartData0, setChartData0] = useState(setChartData([], "CH0", [], "yellow"));
+  const [chartData1, setChartData1] = useState(setChartData([], "CH1", [], "#0d99d1"));
+  const [chartData2, setChartData2] = useState(setChartData([], "CH2", [], "green"));
+  const [chartData3, setChartData3] = useState(setChartData([], "CH3", [], "red"));
+  const [chartData4, setChartData4] = useState(setChartData([], "CH4", [], "orange"));
+  const [chartData5, setChartData5] = useState(setChartData([], "CH5", [], "pink"));
+  const [chartData6, setChartData6] = useState(setChartData([], "CH6", [], "brown"));
+  const [chartData7, setChartData7] = useState(setChartData([], "CH7", [], "purple"));
+  const [chartData8, setChartData8] = useState(setChartData([], "CH8", [], "#917833"));
+  const [chartData9, setChartData9] = useState(setChartData([], "CH9", [], "#5110e8"));
+  const [chartData10, setChartData10] = useState(setChartData([], "CH10", [], "#f2070b"));
+  const [chartData11, setChartData11] = useState(setChartData([], "CH11", [], "#d9c80f"));
+  const [chartData12, setChartData12] = useState(setChartData([], "CH12", [], "#797adb"));
+  const [chartData13, setChartData13] = useState(setChartData([], "CH13", [], "#32d4ed"));
+  const [chartData14, setChartData14] = useState(setChartData([], "CH14", [], "#c77130"));
+  const [chartData15, setChartData15] = useState(setChartData([], "CH15", [], "#47dec2"));
 
-    // handler for 'Save Waveform' button
+  // handler for 'Save Waveform' button
   const saveWaveform = () => {
     if (chartRef === null) {
       return;
@@ -1141,6 +895,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
     a.click();
   };
 
+  // render visible ticks only for the last chart 
   const renderChartXAxis = (listChannels) => {
     if (listChannels.length !== 0) {
       return <div className="row"><div className="chart-logic-analyzer-x">                    
@@ -1159,6 +914,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
     }
   }
 
+  // start/stop capturing data in real time mode (last 600 us)
   const onLiveCaptureButton = () => {
     if (defaultMode === "record-data") {
       configureScalesForLiveMode(horizontalScale);
@@ -1173,66 +929,66 @@ function LogicAnalyzer({tokenId, deviceType}) {
     }
   };
 
-    const onRecordButton = () => {
-      if (defaultMode === "live-data") {
-        configureScalesForRecordMode(horizontalScale);
-      }
-      setDefaultMode("record-data");
-      console.log("heree");
-      setIsRecordRun(true);
-      console.log(selectedTimeout);
-      let i = setInterval(() => refreshChartRecordData(), 2000);
-      setTimeout(function() { setIsRecordRun(false); clearInterval( i ); currentIteration = 0; }, 2000 * ((Number(selectedTimeout))+1));
-    };
+  // start/stop capturing data in capture mode (from 1 to 10 s)
+  const onRecordButton = () => {
+    if (defaultMode === "live-data") {
+      configureScalesForRecordMode(horizontalScale);
+    }
+    setDefaultMode("record-data");
+    console.log("heree");
+    setIsRecordRun(true);
+    console.log(selectedTimeout);
+    let i = setInterval(() => refreshChartRecordData(), 2000);
+    setTimeout(function() { setIsRecordRun(false); clearInterval( i ); currentIteration = 0; }, 2000 * ((Number(selectedTimeout))+1));
+  };
 
-    const onTimeoutValueChange = (e) => {
-      setSelectedTimeout(Number(e.target.value));
-      console.log(e.target.value);
-    };
+  const onTimeoutValueChange = (e) => {
+    setSelectedTimeout(Number(e.target.value));
+    console.log(e.target.value);
+  };
 
-    const onSelectedChannelValueChange = (e) => {
-      setSelectedChannel(Number(e.target.value));
-      console.log(e.target.value);
-    };
+  const onSelectedChannelValueChange = (e) => {
+    setSelectedChannel(Number(e.target.value));
+    console.log(e.target.value);
+  };
     
-      // refresh chart points according to values from oscilloscope
-      const refreshChartData = async () => {
-        try {
-          await fetchChartData(ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7,
-            ch8, ch9, ch10, ch11, ch12, ch13, ch14, ch15);
-        } catch (error) {
-          console.error("Error fetching chart data:", error);
-        }
-      };
+  // refresh chart points according to values from logic analyzer (live mode)
+  const refreshChartData = async () => {
+    try {
+      await fetchChartData();
+    } catch (error) {
+      console.error("Error fetching chart data:", error);
+    }
+  };
 
-      const refreshChartRecordData = async () => {
-        try {
-          await fetchChartRecordData(ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7,
-            ch8, ch9, ch10, ch11, ch12, ch13, ch14, ch15);
-        } catch (error) {
-          console.error("Error fetching chart record data:", error);
-        }
-      }
+  // refresh chart points according to values from logic analyzer (capture mode)
+  const refreshChartRecordData = async () => {
+    try {
+      await fetchChartRecordData();
+    } catch (error) {
+      console.error("Error fetching chart record data:", error);
+    }
+  }
 
-      const renderScaleScroll = (scaleName) => {
-        if (scaleName.toUpperCase() === "X") {
-          if (xStepSize === 50 && defaultMode === "live-data") {
-            return <div className="scope-scroll-slider-none"></div>;
-          } else {
-            return (
-              <input className="scope-scroll-slider"
-                type="range" 
-                id={("xScaleRangeLA")} 
-                name={("xScaleRangeLA")} 
-                title='Use this slider to move through X-Scale (LEFT/RIGHT)'
-                min={xInputMin} 
-                step={xStepSize} 
-                max={xInputMax}
-                value={xCenterValue} 
-                onChange={onXScaleInputChange} />);
-          }
-        }
+  const renderScaleScroll = (scaleName) => {
+    if (scaleName.toUpperCase() === "X") {
+      if (xStepSize === 50 && defaultMode === "live-data") {
+        return <div className="scope-scroll-slider-none"></div>;
+      } else {
+        return (
+          <input className="scope-scroll-slider"
+                 type="range" 
+                 id={("xScaleRangeLA")} 
+                 name={("xScaleRangeLA")} 
+                 title='Use this slider to move through X-Scale (LEFT/RIGHT)'
+                 min={xInputMin} 
+                 step={xStepSize} 
+                 max={xInputMax}
+                 value={xCenterValue} 
+                 onChange={onXScaleInputChange} />);
       }
+    }
+  }
 
   const configureScalesForRecordMode = (value) => {
     switch (value) {
@@ -1625,11 +1381,11 @@ function LogicAnalyzer({tokenId, deviceType}) {
                   </div>
                 </div>
                 {renderScaleScroll("X")}
-            </div>
               </div>
             </div>
+          </div>
         </div>
-        </div>
+      </div>
 
     );
 }
