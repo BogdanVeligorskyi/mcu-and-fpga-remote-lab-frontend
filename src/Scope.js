@@ -201,7 +201,7 @@ function ScopeChart({tokenId, deviceType}) {
     }
   }
 
-  const setYChartOptionsUnified = (yStepSize, yAtZero, yMinValue, yMaxValue) => {
+  const setYChartOptionsUnified = (yStepSize, yMinValue, yMaxValue) => {
     return { 
       title: { display: true, text: "Voltage, V", color: "white", font: {size: 18} }, 
       grid: { color: "#393b3d", }, 
@@ -211,7 +211,7 @@ function ScopeChart({tokenId, deviceType}) {
   }
 
   const setChartOptionsUnified = (xStepSize, xAtZero, xMinValue, xMaxValue, 
-    yStepSize, yAtZero, yMinValue, yMaxValue) => {
+    yStepSize, yMinValue, yMaxValue) => {
     return {
       elements: { point: { radius: 0, } },
       animation: { duration: 100 },
@@ -219,7 +219,7 @@ function ScopeChart({tokenId, deviceType}) {
       plugins: { legend: { labels: { color: "white" } } },
       scales: { 
         x: setXChartOptionsUnified(xStepSize, xAtZero, xMinValue, xMaxValue),
-        y: setYChartOptionsUnified(yStepSize, yAtZero, yMinValue, yMaxValue)
+        y: setYChartOptionsUnified(yStepSize, yMinValue, yMaxValue)
       },
     }
   }
@@ -285,7 +285,7 @@ function ScopeChart({tokenId, deviceType}) {
     setXScaleMax((Number(e.target.value) + 6 * xStepSize));
     setXScaleMin((Number(e.target.value) - 6 * xStepSize));
     setXCenterValue(e.target.value);
-    setChartOptions(setChartOptionsUnified(xStepSize, false, (Number(e.target.value) - 6 * xStepSize), (Number(e.target.value) + 6 * xStepSize), yStepSize, false, yScaleMin, yScaleMax),
+    setChartOptions(setChartOptionsUnified(xStepSize, false, (Number(e.target.value) - 6 * xStepSize), (Number(e.target.value) + 6 * xStepSize), yStepSize, yScaleMin, yScaleMax),
   );
   }
 
@@ -293,7 +293,7 @@ function ScopeChart({tokenId, deviceType}) {
     setYScaleMax((Number(e.target.value) + 5 * yStepSize));
     setYScaleMin((Number(e.target.value) - 5 * yStepSize));
     setYCenterValue(e.target.value);
-    setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, yStepSize, false, (Number(e.target.value) - 5 * yStepSize), (Number(e.target.value) + 5 * yStepSize)));
+    setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, yStepSize, (Number(e.target.value) - 5 * yStepSize), (Number(e.target.value) + 5 * yStepSize)));
   }
 
   // handler for Y-scale change
@@ -307,7 +307,7 @@ function ScopeChart({tokenId, deviceType}) {
         setYInputMax(3.975);
         setYScaleMin(-0.025);
         setYScaleMax(0.025);
-        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 0.005, false, -0.025, 0.025));
+        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 0.005, -0.025, 0.025));
         break;
       case "10m":
         setYStepSize(0.01);
@@ -316,7 +316,7 @@ function ScopeChart({tokenId, deviceType}) {
         setYInputMax(3.95);
         setYScaleMin(-0.05);
         setYScaleMax(0.05);
-        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 0.01, false, -0.05, 0.05));
+        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 0.01, -0.05, 0.05));
         break;
       case "20m":
         setYStepSize(0.02);
@@ -325,7 +325,7 @@ function ScopeChart({tokenId, deviceType}) {
         setYInputMax(3.9);
         setYScaleMin(-0.1);
         setYScaleMax(0.1);
-        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 0.02, false, -0.1, 0.1));
+        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 0.02, -0.1, 0.1));
         break;  
       case "50m":
         setYStepSize(0.05);
@@ -334,7 +334,7 @@ function ScopeChart({tokenId, deviceType}) {
         setYInputMax(3.75);
         setYScaleMin(-0.25);
         setYScaleMax(0.25);
-        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 0.05, false, -0.25, 0.25));
+        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 0.05, -0.25, 0.25));
         break;
       case "0.1":
         setYStepSize(0.1);
@@ -343,7 +343,7 @@ function ScopeChart({tokenId, deviceType}) {
         setYInputMax(3.5);
         setYScaleMin(-0.5);
         setYScaleMax(0.5);
-        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 0.1, false, -0.5, 0.5));
+        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 0.1, -0.5, 0.5));
         break;
       case "0.2":
         setYStepSize(0.2);
@@ -352,7 +352,7 @@ function ScopeChart({tokenId, deviceType}) {
         setYInputMax(3.0);
         setYScaleMin(-1.0);
         setYScaleMax(1.0);
-        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 0.2, false, -1.0, 1.0));
+        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 0.2, -1.0, 1.0));
         break;
       case "0.5":
         setYStepSize(0.5);
@@ -361,13 +361,13 @@ function ScopeChart({tokenId, deviceType}) {
         setYInputMax(1.5);
         setYScaleMin(-2.5);
         setYScaleMax(2.5);
-        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 0.5, false, -2.5, 2.5));
+        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 0.5, -2.5, 2.5));
         break;
       case "1.0":
         setYStepSize(1.0);
         setYScaleMin(-4.0);
         setYScaleMax(4.0);
-        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 1.0, false, -4.0, 4.0));
+        setChartOptions(setChartOptionsUnified(xStepSize, false, xScaleMin, xScaleMax, 1.0, -4.0, 4.0));
         break;
       default:
         setYStepSize(yStepSize);
@@ -387,7 +387,7 @@ function ScopeChart({tokenId, deviceType}) {
         setXInputMax(594);
         setXScaleMin(294);
         setXScaleMax(306);
-        setChartOptions(setChartOptionsUnified(1, false, 294, 306, yStepSize, false, yScaleMin, yScaleMax));
+        setChartOptions(setChartOptionsUnified(1, false, 294, 306, yStepSize, yScaleMin, yScaleMax));
         break;
       case "10us":
         setXStepSize(10);
@@ -396,7 +396,7 @@ function ScopeChart({tokenId, deviceType}) {
         setXInputMax(540);
         setXScaleMin(240);
         setXScaleMax(360);
-        setChartOptions(setChartOptionsUnified(10, false, 240, 360, yStepSize, false, yScaleMin, yScaleMax));       
+        setChartOptions(setChartOptionsUnified(10, false, 240, 360, yStepSize, yScaleMin, yScaleMax));       
         break;
       case "20us":
         setXStepSize(20);
@@ -405,13 +405,13 @@ function ScopeChart({tokenId, deviceType}) {
         setXInputMax(480);
         setXScaleMin(170);
         setXScaleMax(410);
-        setChartOptions(setChartOptionsUnified(20, false, 170, 410, yStepSize, false, yScaleMin, yScaleMax));
+        setChartOptions(setChartOptionsUnified(20, false, 170, 410, yStepSize, yScaleMin, yScaleMax));
         break;
       case "50us":
         setXStepSize(50);
         setXScaleMin(0);
         setXScaleMax(600);
-        setChartOptions(setChartOptionsUnified(50, true, 0, 600, yStepSize, false, yScaleMin, yScaleMax));
+        setChartOptions(setChartOptionsUnified(50, true, 0, 600, yStepSize, yScaleMin, yScaleMax));
         break;
       default:
         setXStepSize(xStepSize);

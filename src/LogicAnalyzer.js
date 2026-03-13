@@ -40,6 +40,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
   let voltagesCH15 = [];
   let times = [];
   let currentIteration = 0;
+  let currentTransition = 0;
 
   const chartRef = useRef(null);
   const [ch0, setCh0] = useState(false);
@@ -331,12 +332,15 @@ function LogicAnalyzer({tokenId, deviceType}) {
       console.log(data["channels"].length);
       setMeasurementTimeUs("Measurement time: " + measurementTimeUs + " us");
       setSampleRateHz("Sample rate: " + sampleRateHz + " Hz");
-      for (let k = (currentIteration * 1000000); k < ((currentIteration + 1) * 1000000); k++) {
-        for (let j = 0; j < listChannels.length; j++) {
-          getChannelTransitions(data, k, j);          
-          times[k] = k+1;
+
+      // look through each channel
+      for (let j = 0; j < listChannels.length; j++) {
+        currentTransition = 0;
+        for (let k = (currentIteration * 1000000); k < ((currentIteration + 1) * 1000000); k++) {
+          getChannelTransitions(data, k, j);
         }
       }
+      
       setDataForAllCharts();
       console.log(data);
       console.log("measurementTimeUs: " + measurementTimeUs);
@@ -425,168 +429,225 @@ function LogicAnalyzer({tokenId, deviceType}) {
   }
 
   const getChannelTransitions = (data, k, j) => {
-    let channel = data["channels"][(String(j))]["channel"];
-          if (channel === 0) {
-            let channelTransitions = data["channels"][(String(j))]["transitions"];
-            for (let m = 0; m < channelTransitions.length; m++) {
-              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                voltagesCH0[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-                //console.log("AA");
-              } else {
-                voltagesCH0[k] = voltagesCH0[k-1];
-              }
-            }
-          }  
-          if (channel === 1) {
-            let channelTransitions = data["channels"][(String(j))]["transitions"];
-            for (let m = 0; m < channelTransitions.length; m++) {
-              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                voltagesCH1[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-              } else {
-                voltagesCH1[k] = voltagesCH1[k-1];
-              }
-            }
-          }
-          if (channel === 2) {
-            let channelTransitions = data["channels"][(String(j))]["transitions"];
-            for (let m = 0; m < channelTransitions.length; m++) {
-              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                voltagesCH2[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-              } else {
-                voltagesCH2[k] = voltagesCH2[k-1];
-              }
-            }
-          }
-          if (channel === 3) {
-            let channelTransitions = data["channels"][(String(j))]["transitions"];
-            for (let m = 0; m < channelTransitions.length; m++) {
-              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                voltagesCH3[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-              } else {
-                voltagesCH3[k] = voltagesCH3[k-1];
-              }
-            }
-          }
-          if (channel === 4) {
-            let channelTransitions = data["channels"][(String(j))]["transitions"];
-            for (let m = 0; m < channelTransitions.length; m++) {
-              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                voltagesCH4[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-              } else {
-                voltagesCH4[k] = voltagesCH4[k-1];
-              }
-            }
-          }
-          if (channel === 5) {
-            let channelTransitions = data["channels"][(String(j))]["transitions"];
-            for (let m = 0; m < channelTransitions.length; m++) {
-              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                voltagesCH5[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-              } else {
-                voltagesCH5[k] = voltagesCH5[k-1];
-              }
-            }
-          }
-          if (channel === 6) {
-            let channelTransitions = data["channels"][(String(j))]["transitions"];
-            for (let m = 0; m < channelTransitions.length; m++) {
-              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                voltagesCH6[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-              } else {
-                voltagesCH6[k] = voltagesCH6[k-1];
-              }
-            }
-          }
-          if (channel === 7) {
-            let channelTransitions = data["channels"][(String(j))]["transitions"];
-            for (let m = 0; m < channelTransitions.length; m++) {
-              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                voltagesCH7[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-              } else {
-                voltagesCH7[k] = voltagesCH7[k-1];
-              }
-            }
-          }
-          if (channel === 8) {
-            let channelTransitions = data["channels"][(String(j))]["transitions"];
-            for (let m = 0; m < channelTransitions.length; m++) {
-              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                voltagesCH8[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-              } else {
-                voltagesCH8[k] = voltagesCH8[k-1];
-              }
-            }
-          }
-          if (channel === 9) {
-            let channelTransitions = data["channels"][(String(j))]["transitions"];
-            for (let m = 0; m < channelTransitions.length; m++) {
-              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                voltagesCH9[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-              } else {
-                voltagesCH9[k] = voltagesCH9[k-1];
-              }
-            }
-          }
-          if (channel === 10) {
-            let channelTransitions = data["channels"][(String(j))]["transitions"];
-            for (let m = 0; m < channelTransitions.length; m++) {
-              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                voltagesCH10[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-              } else {
-                voltagesCH10[k] = voltagesCH10[k-1];
-              }
-            }
-          }
-          if (channel === 11) {
-            let channelTransitions = data["channels"][(String(j))]["transitions"];
-            for (let m = 0; m < channelTransitions.length; m++) {
-              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                voltagesCH11[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-              } else {
-                voltagesCH11[k] = voltagesCH11[k-1];
-              }
-            }
-          }
-          if (channel === 12) {
-            let channelTransitions = data["channels"][(String(j))]["transitions"];
-            for (let m = 0; m < channelTransitions.length; m++) {
-              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                voltagesCH12[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-              } else {
-                voltagesCH12[k] = voltagesCH12[k-1];
-              }
-            }
-          }
-          if (channel === 13) {
-            let channelTransitions = data["channels"][(String(j))]["transitions"];
-            for (let m = 0; m < channelTransitions.length; m++) {
-              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                voltagesCH13[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-              } else {
-                voltagesCH13[k] = voltagesCH13[k-1];
-              }
-            }
-          }
-          if (channel === 14) {
-            let channelTransitions = data["channels"][(String(j))]["transitions"];
-            for (let m = 0; m < channelTransitions.length; m++) {
-              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                voltagesCH14[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-              } else {
-                voltagesCH14[k] = voltagesCH14[k-1];
-              }
-            }
-          }
-          if (channel === 15) {
-            let channelTransitions = data["channels"][(String(j))]["transitions"];
-            for (let m = 0; m < channelTransitions.length; m++) {
-              if (data["channels"][(String(j))]["transitions"][(String(m))]["tUs"] === k) {
-                voltagesCH15[k] = data["channels"][(String(j))]["transitions"][(String(m))]["value"];
-              } else {
-                voltagesCH15[k] = voltagesCH15[k-1];
-              }
-            }
-          }
+    
+      // init times array only once 
+      if (j === 0) {
+        times[k] = k;
+      }
+
+      // get channel number by id
+      let channel = data["channels"][(String(j))]["channel"];
+
+      if (channel === 0) {
+        if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
+          console.log();
+          currentTransition = 0;
+        }
+        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+          voltagesCH0[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
+          currentTransition++;
+        } else {
+          voltagesCH0[k] = voltagesCH0[k-1];
+        }    
+      }
+
+      if (channel === 1) {
+        if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
+          console.log();
+          currentTransition = 0;
+        }
+        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+          voltagesCH1[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
+          currentTransition++;
+        } else {
+          voltagesCH1[k] = voltagesCH1[k-1];
+        }    
+      }
+      
+      if (channel === 2) {
+        if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
+          console.log();
+          currentTransition = 0;
+        }
+        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+          voltagesCH2[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
+          currentTransition++;
+        } else {
+          voltagesCH2[k] = voltagesCH2[k-1];
+        }    
+      }
+
+      if (channel === 3) {
+        if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
+          console.log();
+          currentTransition = 0;
+        }
+        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+          voltagesCH3[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
+          currentTransition++;
+        } else {
+          voltagesCH3[k] = voltagesCH3[k-1];
+        }    
+      }
+      
+      if (channel === 4) {
+        if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
+          console.log();
+          currentTransition = 0;
+        }
+        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+          voltagesCH4[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
+          currentTransition++;
+        } else {
+          voltagesCH4[k] = voltagesCH4[k-1];
+        }    
+      }
+          
+      if (channel === 5) {
+        // last transition
+        if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
+          console.log();
+          currentTransition = 0;
+        }
+        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+          voltagesCH5[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
+          currentTransition++;
+        } else {
+          voltagesCH5[k] = voltagesCH5[k-1];
+        }    
+      }
+
+      if (channel === 6) {
+        if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
+          console.log();
+          currentTransition = 0;
+        }
+        if ((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000)) {
+          voltagesCH6[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
+          //console.log(voltagesCH6[k]);
+          currentTransition++;
+        } else {
+          voltagesCH6[k] = voltagesCH6[k-1];
+        }    
+      }
+      
+      if (channel === 7) {
+        if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
+          console.log();
+          currentTransition = 0;
+        }
+        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+          voltagesCH7[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
+          currentTransition++;
+        } else {
+          voltagesCH7[k] = voltagesCH7[k-1];
+        }    
+      }
+
+      if (channel === 8) {
+        if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
+          console.log();
+          currentTransition = 0;
+        }
+        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+          voltagesCH8[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
+          currentTransition++;
+        } else {
+          voltagesCH8[k] = voltagesCH8[k-1];
+        }    
+      }
+
+      if (channel === 9) {
+        if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
+          console.log();
+          currentTransition = 0;
+        }
+        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+          voltagesCH9[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
+          currentTransition++;
+        } else {
+          voltagesCH9[k] = voltagesCH9[k-1];
+        }    
+      }
+
+      if (channel === 10) {
+        if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
+          console.log();
+          currentTransition = 0;
+        }
+        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+          voltagesCH10[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
+          currentTransition++;
+        } else {
+          voltagesCH10[k] = voltagesCH10[k-1];
+        }    
+      }
+
+      if (channel === 11) {
+        if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
+          console.log();
+          currentTransition = 0;
+        }
+        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+          voltagesCH11[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
+          currentTransition++;
+        } else {
+          voltagesCH11[k] = voltagesCH11[k-1];
+        }    
+      }
+
+      if (channel === 12) {
+        if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
+          console.log();
+          currentTransition = 0;
+        }
+        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+          voltagesCH12[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
+          currentTransition++;
+        } else {
+          voltagesCH12[k] = voltagesCH12[k-1];
+        }    
+      }
+
+      if (channel === 13) {
+        if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
+          console.log();
+          currentTransition = 0;
+        }
+        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+          voltagesCH13[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
+          currentTransition++;
+        } else {
+          voltagesCH13[k] = voltagesCH13[k-1];
+        }    
+      }
+
+      if (channel === 14) {
+        if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
+          console.log();
+          currentTransition = 0;
+        }
+        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+          voltagesCH14[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
+          currentTransition++;
+        } else {
+          voltagesCH14[k] = voltagesCH14[k-1];
+        }    
+      }
+
+      if (channel === 15) {
+        if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
+          console.log();
+          currentTransition = 0;
+        }
+        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+          voltagesCH15[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
+          currentTransition++;
+        } else {
+          voltagesCH15[k] = voltagesCH15[k-1];
+        }    
+      }
+  
   } 
 
   // fetch voltage values in real time (last 600 us)
@@ -600,7 +661,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
     if (process.env.REACT_APP_IS_FRONTEND_DEV_MODE.toUpperCase() === "TRUE") {
       for (let i = 0; i < 600; i++) {
         randomiseValuesForLogicAnalyzer(i);
-      }
+        times[i] = i;
+      }     
         
       setDataForAllCharts();
 
@@ -634,10 +696,10 @@ function LogicAnalyzer({tokenId, deviceType}) {
       console.log(data["channels"].length);
       setMeasurementTimeUs("Measurement time: " + measurementTimeUs + " us");
       setSampleRateHz("Sample rate: " + sampleRateHz + " Hz");
-      for (let k = 0; k < 600; k++) {
-        for (let j = 0; j < listChannels.length; j++) {
+      for (let j = 0; j < listChannels.length; j++) {
+        currentTransition = 0;
+        for (let k = 0; k < 600; k++) {
           getChannelTransitions(data, k, j);
-          times[k] = k;
         }
       }
         
@@ -916,6 +978,10 @@ function LogicAnalyzer({tokenId, deviceType}) {
 
   // start/stop capturing data in real time mode (last 600 us)
   const onLiveCaptureButton = () => {
+    if (listChannels.length === 0) {
+      alert("No channels selected!");
+      return;
+    }
     if (defaultMode === "record-data") {
       configureScalesForLiveMode(horizontalScale);
     } 
@@ -931,6 +997,10 @@ function LogicAnalyzer({tokenId, deviceType}) {
 
   // start/stop capturing data in capture mode (from 1 to 10 s)
   const onRecordButton = () => {
+    if (listChannels.length === 0) {
+      alert("No channels selected!");
+      return;
+    }
     if (defaultMode === "live-data") {
       configureScalesForRecordMode(horizontalScale);
     }
