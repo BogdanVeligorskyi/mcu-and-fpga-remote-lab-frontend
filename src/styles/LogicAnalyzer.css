@@ -28,4 +28,17 @@
 
 .logic-analyzer-warnings {
   color: orange;
+  text-align: left;
+}
+
+@media(max-width: 576px) {
+  .logic-analyzer-scroll-slider {
+    width: 150px;  
+  }
+}
+
+@media(min-width: 576px) {
+  .logic-analyzer-scroll-slider {
+    width: 250px;  
+  }
 }

@@ -78,19 +78,62 @@ function LogicAnalyzer({tokenId, deviceType}) {
   const [measurementTimeUs, setMeasurementTimeUs] = useState();
   const [warnings, setWarnings] = useState("");
 
-  const listTimeout = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+  const listTimeout = ['1', '2'];
+
+  const clearAllChannelsData = () => {
+    voltagesCH0 = [];
+    voltagesCH1 = [];
+    voltagesCH2 = [];
+    voltagesCH3 = [];
+    voltagesCH4 = [];
+    voltagesCH5 = [];
+    voltagesCH6 = [];
+    voltagesCH7 = [];
+    voltagesCH8 = [];
+    voltagesCH9 = [];
+    voltagesCH10 = [];
+    voltagesCH11 = [];
+    voltagesCH12 = [];
+    voltagesCH13 = [];
+    voltagesCH14 = [];
+    voltagesCH15 = [];
+    setChartData0(setChartData(times, "CH0", [], "yellow"));
+    setChartData1(setChartData(times, "CH1", [], "#0d99d1"));
+    setChartData2(setChartData(times, "CH2", [], "green"));
+    setChartData3(setChartData(times, "CH3", [], "red"));
+    setChartData4(setChartData(times, "CH4", [], "orange"));
+    setChartData5(setChartData(times, "CH5", [], "pink"));
+    setChartData6(setChartData(times, "CH6", [], "brown"));
+    setChartData7(setChartData(times, "CH7", [], "purple"));
+    setChartData8(setChartData(times, "CH8", [], "#917833"));
+    setChartData9(setChartData(times, "CH9", [], "#5110e8"));
+    setChartData10(setChartData(times, "CH10", [], "#f2070b"));
+    setChartData11(setChartData(times, "CH11", [], "#d9c80f"));
+    setChartData12(setChartData(times, "CH12", [], "#797adb"));
+    setChartData13(setChartData(times, "CH13", [], "#32d4ed"));
+    setChartData14(setChartData(times, "CH14", [], "#c77130"));
+    setChartData15(setChartData(times, "CH15", [], "#47dec2"));
+  }
 
   const addNewChannelToList = (newChannel) => {
     let temp = [...listChannels, newChannel];
     temp.sort();
+    setSelectedChannel(newChannel);
     setListChannels(temp);
   }
 
   const removeChannelFromList = (channelName) => {
     let arr = [...listChannels];
     var index = arr.indexOf(channelName);
+
     if (index !== -1) {
       arr.splice(index, 1);
+      if (channelName === selectedChannel && arr.length > 0) {
+        setSelectedChannel(arr[0]);
+      }
+      if (channelName === selectedChannel && arr.length === 0) {
+        setSelectedChannel(-1);
+      }
       setListChannels(arr);
     }
   }
@@ -291,6 +334,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
     
     // offline mode
     if (process.env.REACT_APP_IS_FRONTEND_DEV_MODE.toUpperCase() === "TRUE") {
+      console.log("selectedChannel: " + selectedChannel);
       for (let i = currentIteration * 1000000; i < ((currentIteration + 1) * 1000000); i++) {
         randomiseValuesForLogicAnalyzer(i);
       }
@@ -328,14 +372,28 @@ function LogicAnalyzer({tokenId, deviceType}) {
       let sampleRateHz = data["sampleRateHz"];
       let triggered = data["triggered"];
       let triggerTimestampUs = data["triggerTimestampUs"];
-      let warnings = data["warnings"];
+      let warnings = "";
+      //let warnings = data["warnings"];
+      //console.log(data);
       console.log(data["channels"].length);
       setMeasurementTimeUs("Measurement time: " + measurementTimeUs + " us");
       setSampleRateHz("Sample rate: " + sampleRateHz + " Hz");
+      if (data["warnings"].length > 0) {
+        warnings = "Warnings: ";
+      } else {
+        warnings = warnings;
+      }
+      
+      for (let i = 0; i < data["warnings"].length; i++) {
+        warnings += String(data["warnings"][String(i)]);
+        warnings += "; ";
+      }
+      setWarnings(warnings);
 
       // look through each channel
       for (let j = 0; j < listChannels.length; j++) {
         currentTransition = 0;
+        console.log("curr iteration: " + currentIteration);
         for (let k = (currentIteration * 1000000); k < ((currentIteration + 1) * 1000000); k++) {
           getChannelTransitions(data, k, j);
         }
@@ -348,10 +406,6 @@ function LogicAnalyzer({tokenId, deviceType}) {
       console.log("triggered: " + triggered);
       console.log("triggerTimestampUs: " + triggerTimestampUs);
       console.log("warnings:" + warnings);
-      for (let i = 0; i < data["warnings"].length; i++) {
-        warnings += data["warnings"][String(i)]["value"];
-      }
-      setWarnings(warnings);
       currentIteration++;
     }
   }
@@ -981,7 +1035,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
     if (listChannels.length === 0) {
       alert("No channels selected!");
       return;
-    }
+    }  
     if (defaultMode === "record-data") {
       configureScalesForLiveMode(horizontalScale);
     } 
@@ -990,6 +1044,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
       setIsRun(false);
       clearInterval(intervalID);
     } else {
+      clearAllChannelsData();
       setIsRun(true);
       setIntervalID(setInterval(() => refreshChartData(), 1000));
     }
@@ -997,19 +1052,21 @@ function LogicAnalyzer({tokenId, deviceType}) {
 
   // start/stop capturing data in capture mode (from 1 to 10 s)
   const onRecordButton = () => {
+    currentIteration = 0;
     if (listChannels.length === 0) {
       alert("No channels selected!");
       return;
     }
+    clearAllChannelsData();
     if (defaultMode === "live-data") {
       configureScalesForRecordMode(horizontalScale);
     }
     setDefaultMode("record-data");
     console.log("heree");
     setIsRecordRun(true);
-    console.log(selectedTimeout);
+    console.log("selectedTimeout: " + selectedTimeout);
     let i = setInterval(() => refreshChartRecordData(), 2000);
-    setTimeout(function() { setIsRecordRun(false); clearInterval( i ); currentIteration = 0; }, 2000 * ((Number(selectedTimeout))+1));
+    setTimeout(function() { setIsRecordRun(false); clearInterval( i ); }, 2000 * ((Number(selectedTimeout))));
   };
 
   const onTimeoutValueChange = (e) => {
@@ -1046,7 +1103,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
         return <div className="scope-scroll-slider-none"></div>;
       } else {
         return (
-          <input className="scope-scroll-slider"
+          <input className="logic-analyzer-scroll-slider"
                  type="range" 
                  id={("xScaleRangeLA")} 
                  name={("xScaleRangeLA")} 
@@ -1225,8 +1282,8 @@ function LogicAnalyzer({tokenId, deviceType}) {
               <button className="btn btn-md btn-primary m-2" disabled={isRecordRun || isRun}
               onClick={onRecordButton}><i className="bi bi-record-circle"></i></button>
 
-              <button className="btn btn-md btn-primary m-2" 
-              onClick={saveWaveform}><i className="bi bi-download"></i></button>
+              {/* <button className="btn btn-md btn-primary m-2"  */}
+              {/* onClick={saveWaveform}><i className="bi bi-download"></i></button> */}
             </div>
             <div className="logic-analyzer-backend-params">
               {renderSampleHz(sampleRateHz)}
