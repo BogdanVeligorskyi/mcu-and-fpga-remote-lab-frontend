@@ -350,13 +350,13 @@ function LogicAnalyzer({tokenId, deviceType}) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': tokenId },
         body: JSON.stringify({ 
-          measurementTimeUs: 1000000, 
+          measurementTimeUs: Number(selectedTimeout) * 1000000, 
           channels: listChannels,
           trigger: {
             type: trigger,
             channel: Number(selectedChannel),
             edge: triggerType,
-            timeoutSec: Number(selectedTimeout),
+            timeoutSec: 10,
           }
         }),
         credentials: 'include'
@@ -389,12 +389,12 @@ function LogicAnalyzer({tokenId, deviceType}) {
         warnings += "; ";
       }
       setWarnings(warnings);
-
+      setIsRecordRun(false);
       // look through each channel
       for (let j = 0; j < listChannels.length; j++) {
         currentTransition = 0;
         console.log("curr iteration: " + currentIteration);
-        for (let k = (currentIteration * 1000000); k < ((currentIteration + 1) * 1000000); k++) {
+        for (let k = 0; k < ((Number(selectedTimeout)) * 1000000); k++) {
           getChannelTransitions(data, k, j);
         }
       }
@@ -407,6 +407,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
       console.log("triggerTimestampUs: " + triggerTimestampUs);
       console.log("warnings:" + warnings);
       currentIteration++;
+      
     }
   }
 
@@ -494,10 +495,9 @@ function LogicAnalyzer({tokenId, deviceType}) {
 
       if (channel === 0) {
         if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
-          console.log();
           currentTransition = 0;
         }
-        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+        if (((k === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k))) {
           voltagesCH0[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
           currentTransition++;
         } else {
@@ -507,10 +507,9 @@ function LogicAnalyzer({tokenId, deviceType}) {
 
       if (channel === 1) {
         if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
-          console.log();
           currentTransition = 0;
         }
-        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+        if (((k === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k))) {
           voltagesCH1[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
           currentTransition++;
         } else {
@@ -520,10 +519,9 @@ function LogicAnalyzer({tokenId, deviceType}) {
       
       if (channel === 2) {
         if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
-          console.log();
           currentTransition = 0;
         }
-        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+        if (((k === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k))) {
           voltagesCH2[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
           currentTransition++;
         } else {
@@ -533,10 +531,9 @@ function LogicAnalyzer({tokenId, deviceType}) {
 
       if (channel === 3) {
         if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
-          console.log();
           currentTransition = 0;
         }
-        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+        if (((k === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k))) {
           voltagesCH3[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
           currentTransition++;
         } else {
@@ -546,10 +543,9 @@ function LogicAnalyzer({tokenId, deviceType}) {
       
       if (channel === 4) {
         if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
-          console.log();
           currentTransition = 0;
         }
-        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+        if (((k === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k))) {
           voltagesCH4[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
           currentTransition++;
         } else {
@@ -560,10 +556,9 @@ function LogicAnalyzer({tokenId, deviceType}) {
       if (channel === 5) {
         // last transition
         if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
-          console.log();
           currentTransition = 0;
         }
-        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+        if (((k === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k))) {
           voltagesCH5[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
           currentTransition++;
         } else {
@@ -573,12 +568,10 @@ function LogicAnalyzer({tokenId, deviceType}) {
 
       if (channel === 6) {
         if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
-          console.log();
           currentTransition = 0;
         }
-        if ((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000)) {
+        if ((k === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k)) {
           voltagesCH6[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
-          //console.log(voltagesCH6[k]);
           currentTransition++;
         } else {
           voltagesCH6[k] = voltagesCH6[k-1];
@@ -587,10 +580,9 @@ function LogicAnalyzer({tokenId, deviceType}) {
       
       if (channel === 7) {
         if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
-          console.log();
           currentTransition = 0;
         }
-        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+        if (((k === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k))) {
           voltagesCH7[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
           currentTransition++;
         } else {
@@ -600,10 +592,9 @@ function LogicAnalyzer({tokenId, deviceType}) {
 
       if (channel === 8) {
         if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
-          console.log();
           currentTransition = 0;
         }
-        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+        if (((k === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k))) {
           voltagesCH8[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
           currentTransition++;
         } else {
@@ -613,10 +604,9 @@ function LogicAnalyzer({tokenId, deviceType}) {
 
       if (channel === 9) {
         if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
-          console.log();
           currentTransition = 0;
         }
-        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+        if (((k === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k))) {
           voltagesCH9[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
           currentTransition++;
         } else {
@@ -626,10 +616,9 @@ function LogicAnalyzer({tokenId, deviceType}) {
 
       if (channel === 10) {
         if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
-          console.log();
           currentTransition = 0;
         }
-        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+        if (((k === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k))) {
           voltagesCH10[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
           currentTransition++;
         } else {
@@ -639,10 +628,9 @@ function LogicAnalyzer({tokenId, deviceType}) {
 
       if (channel === 11) {
         if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
-          console.log();
           currentTransition = 0;
         }
-        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+        if (((k === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k))) {
           voltagesCH11[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
           currentTransition++;
         } else {
@@ -652,10 +640,9 @@ function LogicAnalyzer({tokenId, deviceType}) {
 
       if (channel === 12) {
         if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
-          console.log();
           currentTransition = 0;
         }
-        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+        if (((k === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k))) {
           voltagesCH12[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
           currentTransition++;
         } else {
@@ -665,10 +652,9 @@ function LogicAnalyzer({tokenId, deviceType}) {
 
       if (channel === 13) {
         if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
-          console.log();
           currentTransition = 0;
         }
-        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+        if (((k === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k))) {
           voltagesCH13[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
           currentTransition++;
         } else {
@@ -678,10 +664,9 @@ function LogicAnalyzer({tokenId, deviceType}) {
 
       if (channel === 14) {
         if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
-          console.log();
           currentTransition = 0;
         }
-        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+        if (((k === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k))) {
           voltagesCH14[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
           currentTransition++;
         } else {
@@ -691,10 +676,9 @@ function LogicAnalyzer({tokenId, deviceType}) {
 
       if (channel === 15) {
         if ((currentTransition === data["channels"][(String(j))]["transitions"].length)) {
-          console.log();
           currentTransition = 0;
         }
-        if (((k%1000000 === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k%1000000))) {
+        if (((k === 0) || data["channels"][(String(j))]["transitions"][(String(currentTransition))]["tUs"] === (k))) {
           voltagesCH15[k] = data["channels"][(String(j))]["transitions"][(String(currentTransition))]["value"];
           currentTransition++;
         } else {
@@ -759,7 +743,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
         
       setDataForAllCharts();
         
-      console.log(data);
+      //console.log(data);
       console.log("measurementTimeUs: " + measurementTimeUs);
       console.log("sampleRateHz: " + sampleRateHz);
       console.log("triggered: " + triggered);
@@ -1062,11 +1046,12 @@ function LogicAnalyzer({tokenId, deviceType}) {
       configureScalesForRecordMode(horizontalScale);
     }
     setDefaultMode("record-data");
-    console.log("heree");
+    //console.log("heree");
     setIsRecordRun(true);
     console.log("selectedTimeout: " + selectedTimeout);
-    let i = setInterval(() => refreshChartRecordData(), 2000);
-    setTimeout(function() { setIsRecordRun(false); clearInterval( i ); }, 2000 * ((Number(selectedTimeout))));
+    refreshChartRecordData();
+    /*let i = setInterval(() => , 2000);
+    setTimeout(function() { ; clearInterval( i ); }, 2000 * ((Number(selectedTimeout))));*/
   };
 
   const onTimeoutValueChange = (e) => {
