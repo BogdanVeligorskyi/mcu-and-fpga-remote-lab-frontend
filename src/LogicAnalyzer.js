@@ -78,7 +78,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
   const [measurementTimeUs, setMeasurementTimeUs] = useState();
   const [warnings, setWarnings] = useState("");
 
-  const listTimeout = ['1', '2'];
+  const listTimeout = ['0.01', '0.05', '0.1' , '0.25', '0.5', '1', '2'];
 
   const clearAllChannelsData = () => {
     voltagesCH0 = [];
@@ -335,7 +335,7 @@ function LogicAnalyzer({tokenId, deviceType}) {
     // offline mode
     if (process.env.REACT_APP_IS_FRONTEND_DEV_MODE.toUpperCase() === "TRUE") {
       console.log("selectedChannel: " + selectedChannel);
-      for (let i = currentIteration * 1000000; i < ((currentIteration + 1) * 1000000); i++) {
+      for (let i = 0; i < (Number(selectedTimeout) * 1000000); i++) {
         randomiseValuesForLogicAnalyzer(i);
       }
           
@@ -1493,6 +1493,15 @@ function LogicAnalyzer({tokenId, deviceType}) {
                   </div>
                 </div>
                 {renderScaleScroll("X")}
+                <input className="logic-analyzer-input-number"
+                 type="number" 
+                 id={("xMinRangeLA")} 
+                 name={("xMinRangeLA")} 
+                 min={xInputMin} 
+                 step={xStepSize} 
+                 max={xInputMax}
+                 value={xCenterValue} 
+                 onChange={onXScaleInputChange} />
               </div>
             </div>
           </div>

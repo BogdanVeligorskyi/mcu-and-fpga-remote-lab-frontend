@@ -31,6 +31,10 @@
   text-align: left;
 }
 
+.logic-analyzer-input-number {
+  width: 120px !important;
+}
+
 @media(max-width: 576px) {
   .logic-analyzer-scroll-slider {
     width: 150px;  

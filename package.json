@@ -45,6 +45,7 @@
     ]
   },
   "devDependencies": {
-    "env-cmd": "^10.1.0"
+    "env-cmd": "^10.1.0",
+    "@babel/plugin-proposal-private-property-in-object": "7.21.0-placeholder-for-preset-env.2"
   }
 }
